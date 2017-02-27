@@ -1,0 +1,374 @@
+# Copyright (C) 2016 WooCommerce Simplify Commerce Gateway
+# This file is distributed under the same license as the WooCommerce Simplify Commerce Gateway package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Simplify Commerce Gateway 1.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/woocommerce-gateway-simplify-"
+"commerce\n"
+"POT-Creation-Date: 2016-06-07 10:39:49+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:95
+#: includes/class-wc-addons-gateway-simplify-commerce.php:189
+#: includes/class-wc-gateway-simplify-commerce.php:422
+#: includes/class-wc-gateway-simplify-commerce.php:597
+msgid ""
+"Please make sure your card details have been entered correctly and that your "
+"browser supports JavaScript."
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:98
+#: includes/class-wc-addons-gateway-simplify-commerce.php:192
+#: includes/class-wc-gateway-simplify-commerce.php:425
+msgid ""
+"Developers: Please make sure that you're including jQuery and there are no "
+"JavaScript errors on the page."
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:115
+#: includes/class-wc-addons-gateway-simplify-commerce.php:212
+msgid "Error creating user in Simplify Commerce."
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:183
+#: includes/class-wc-addons-gateway-simplify-commerce.php:293
+#: includes/class-wc-gateway-simplify-commerce.php:497
+msgid ""
+"Sorry, the minimum allowed order total is 0.50 to use this payment method."
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:299
+#: includes/class-wc-addons-gateway-simplify-commerce.php:436
+msgid "Customer not found"
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:307
+#: includes/class-wc-gateway-simplify-commerce.php:504
+msgid "%s - Order #%s"
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:323
+#: includes/class-wc-gateway-simplify-commerce.php:523
+msgid "Simplify payment error: %s"
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:333
+#: includes/class-wc-addons-gateway-simplify-commerce.php:453
+#: includes/class-wc-gateway-simplify-commerce.php:533
+#: includes/class-wc-gateway-simplify-commerce.php:698
+msgid "Simplify payment approved (ID: %s, Auth Code: %s)"
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:337
+#: includes/class-wc-gateway-simplify-commerce.php:537
+msgid "Simplify payment declined"
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:339
+#: includes/class-wc-gateway-simplify-commerce.php:539
+msgid "Payment was declined - please try another card."
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:353
+#: includes/class-wc-addons-gateway-simplify-commerce.php:458
+msgid "Simplify Transaction Failed (%s)"
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:431
+msgid "%s - Pre-order for \"%s\""
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:431
+msgid "(Order #%s)"
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:455
+msgid "Payment was declined - the customer need to try another card."
+msgstr ""
+
+#: includes/class-wc-addons-gateway-simplify-commerce.php:502
+#: includes/class-wc-gateway-simplify-commerce.php:670
+msgid "Payment was declined by Simplify Commerce."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:24
+msgid "Simplify Commerce"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:25
+msgid ""
+"Take payments via Simplify Commerce - uses simplify.js to create card tokens "
+"and the Simplify Commerce SDK. Requires SSL when sandbox is disabled."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:26
+msgid "Use a new card"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:94
+msgid "Simplify Commerce by MasterCard"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:99
+msgid "Getting started"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:100
+#: includes/class-wc-gateway-simplify-commerce.php:106
+msgid ""
+"Simplify Commerce is your merchant account and payment gateway all rolled "
+"into one. Choose Simplify Commerce as your WooCommerce payment gateway to "
+"get access to your money quickly with a powerful, secure payment engine "
+"backed by MasterCard."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:102
+msgid "Sign up for Simplify Commerce"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:102
+msgid "Learn more"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:151
+msgid ""
+"Simplify Commerce Error: Simplify commerce requires PHP 5.3 and above. You "
+"are using version %s."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:157
+msgid ""
+"Simplify Commerce Error: Simplify currently only supports the US and "
+"Ireland. Your base country is set to %s."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:162
+msgid "Simplify Commerce Error: Please enter your public and private keys"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:167
+msgid ""
+"Simplify Commerce is enabled, but the <a href=\"%s\">force SSL option</a> is "
+"disabled; your checkout may not be secure! Please enable SSL and ensure your "
+"server has a valid SSL certificate - Simplify Commerce will only work in "
+"sandbox mode."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:198
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:199
+msgid "Enable Simplify Commerce"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:205
+msgid "Title"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:207
+msgid "This controls the title which the user sees during checkout."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:208
+msgid "Credit card"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:212
+msgid "Description"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:214
+msgid "This controls the description which the user sees during checkout."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:219
+msgid "Payment Mode"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:220
+msgid "Enable Hosted Payments"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:222
+msgid ""
+"Standard will display the credit card fields on your store (SSL required). "
+"%1$s Hosted Payments will display a Simplify Commerce modal dialog on your "
+"store (if SSL) or will redirect the customer to Simplify Commerce hosted "
+"page (if not SSL). %1$s Note: Hosted Payments need a new API Key pair with "
+"the hosted payments flag selected. %2$sFor more details check the Simplify "
+"Commerce docs%3$s."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:225
+msgid "Standard"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:226
+msgid "Hosted Payments"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:230
+msgid "Modal Color"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:232
+msgid "Set the color of the buttons and titles on the modal dialog."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:237
+msgid "Sandbox"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:238
+msgid "Enable Sandbox Mode"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:240
+msgid ""
+"Place the payment gateway in sandbox mode using sandbox API keys (real "
+"payments will not be taken)."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:244
+msgid "Sandbox Public Key"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:246
+#: includes/class-wc-gateway-simplify-commerce.php:253
+#: includes/class-wc-gateway-simplify-commerce.php:260
+#: includes/class-wc-gateway-simplify-commerce.php:267
+msgid "Get your API keys from your Simplify account: Settings > API Keys."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:251
+msgid "Sandbox Private Key"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:258
+msgid "Public Key"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:265
+msgid "Private Key"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:281
+msgid "TEST MODE ENABLED. Use a test card: %s"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:305
+msgid "Card Number"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:306
+msgid "Expiry Month"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:307
+msgid "Expiry Year"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:308
+msgid "is invalid"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:319
+#: includes/class-wc-gateway-simplify-commerce.php:333
+msgid "There was a problem adding this card."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:618
+msgid "Order #%s"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:641
+msgid ""
+"Thank you for your order, please click the button below to pay with credit "
+"card using Simplify Commerce by MasterCard."
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:650
+msgid "Pay Now"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:650
+msgid "Cancel order &amp; restore cart"
+msgstr ""
+
+#: includes/class-wc-gateway-simplify-commerce.php:734
+msgid "Refund was declined."
+msgstr ""
+
+#: woocommerce-gateway-simplify-commerce.php:153
+msgid ""
+"The plugin could not be activated. The minimum PHP version required for this "
+"plugin is %1$s. You are running %2$s."
+msgstr ""
+
+#: woocommerce-gateway-simplify-commerce.php:155
+msgid ""
+"The WooCommerce Simplify Commerce plugin has been deactivated. The minimum "
+"PHP version required for this plugin is %1$s. You are running %2$s."
+msgstr ""
+
+#: woocommerce-gateway-simplify-commerce.php:162
+msgid ""
+"The plugin could not be activated. The minimum WooCommerce version required "
+"for this plugin is %1$s. You are running %2$s."
+msgstr ""
+
+#: woocommerce-gateway-simplify-commerce.php:164
+msgid ""
+"The WooCommerce Simplify Commerce plugin has been deactivated. The minimum "
+"WooCommerce version required for this plugin is %1$s. You are running %2$s."
+msgstr ""
+
+#: woocommerce-gateway-simplify-commerce.php:171
+msgid "The plugin could not be activated. cURL is not installed."
+msgstr ""
+
+#: woocommerce-gateway-simplify-commerce.php:173
+msgid ""
+"The WooCommerce Simplify Commerce plugin has been deactivated. cURL is not "
+"installed."
+msgstr ""
+
+#: woocommerce-gateway-simplify-commerce.php:186
+msgid "Settings"
+msgstr ""
+
+#: woocommerce-gateway-simplify-commerce.php:187
+msgid "Docs"
+msgstr ""
+
+#: woocommerce-gateway-simplify-commerce.php:188
+msgid "Support"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WooCommerce Simplify Commerce Gateway"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/woocommerce-gateway-simplify-commerce/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"The Simplify Commerce gateway lets you to take credit card payments directly "
+"on your store. Requires PHP 5.3+"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Automattic"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://woothemes.com/"
+msgstr ""
