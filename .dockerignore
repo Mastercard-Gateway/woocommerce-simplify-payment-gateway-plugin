@@ -1,0 +1,7 @@
+.idea/
+*.iml
+.git/
+.gitignore
+./assets/
+docker-compose.yml
+Dockerfile
