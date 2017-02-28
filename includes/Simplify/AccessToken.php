@@ -1,4 +1,4 @@
-i<?php
+<?php
 /*
  * Copyright (c) 2013 - 2017 Mastercard International Incorporated
  * All rights reserved.
