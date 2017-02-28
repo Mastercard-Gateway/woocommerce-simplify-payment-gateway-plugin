@@ -38,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since       2.2.0
  * @version		1.0.0
  * @package		WooCommerce/Classes/Payment
- * @author 		WooThemes
+ * @author 		SimplifyCommerce
  */
 class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 

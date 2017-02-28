@@ -6,21 +6,25 @@ Tested up to: 4.5
 Stable tag: 1.0.2
 License: BSD 3-Clause
 
-The Simplify Commerce gateway for WooCommerce 2.6+ lets you to take credit card payments directly on your store.
+The Simplify Commerce payment gateway for WooCommerce 2.6+ lets you to take credit card payments directly on your WooCommerce store.
 
 == Description ==
 
 Start accepting credit card payments now. It’s that simple.
 
-Picking the right payments extension for your WooCommerce store is important. You need online payments that are easy to set up and use, reliable, and don’t get in the way of making a sale.
+Picking the right payment extension for your WooCommerce store is important. You need online payments that are easy to set up and use, reliable, and don’t get in the way of making a sale.
 
 Simplify Commerce by Mastercard gives you a merchant account and payment gateway in a single, secure package that takes just a few minutes to set up.
 
 === Why choose Simplify Commerce? ===
 
-* Low, flat rate of 2.85% + 30¢ per transaction
-* No hidden fees, no setup fees, no monthly fees
-* Funds are deposited in your merchant bank account in two business days
+With Simplify Commerce, you can easily integrate online payments from most major card brands and start selling right away. Our powerful dashboard and features, including e-invoices and recurring payments, make it easy to immediately meet your needs.
+Choose Simplify Commerce as your WooCommerce payment gateway to get access to your money quickly with a powerful, secured payment engine supplied by Mastercard.
+
+* 2.75% + 30¢ simple pricing
+* No setup fees.
+* No refund costs.
+* No monthly service fees (Subject to $10 minimum monthly processing fee).
 * Accept Mastercard, Visa, American Express, Discover, JCB and Diners Club transactions
 * Enjoy peace of mind from knowing your transactions are secure – all sensitive data is managed by Simplify Commerce
 
@@ -90,11 +94,5 @@ If you get stuck, you can ask for help in the Plugin Forum.
 
 == Changelog ==
 
-= 1.0.2 =
-* Fix javascript tokenization on guest checkout.
-
-= 1.0.1 =
-* Fixed uncaught exception.
-
 = 1.0.0 =
-* Initial release
+* Initial version
