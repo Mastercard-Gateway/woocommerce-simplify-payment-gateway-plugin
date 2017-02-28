@@ -6,7 +6,7 @@ ENV WOOCOMMERCE_VERSION 2.6.14
 COPY . /usr/src/wordpress/wp-content/plugins/simplifycommerce/
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends unzip wget \
+    && apt-get install -y --no-install-recommends unzip wget ntp\
     && wget https://downloads.wordpress.org/plugin/woocommerce.$WOOCOMMERCE_VERSION.zip -O /tmp/temp.zip \
     && cd /usr/src/wordpress/wp-content/plugins \
     && unzip /tmp/temp.zip \
