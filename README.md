@@ -1,10 +1,10 @@
 === WooCommerce Simplify Commerce Gateway ===
-Contributors: automattic, woothemes, akeda, allendav, royho, slash1andy, woosteve, spraveenitpro, mikedmoore, fernashes, shellbeezy, mikejolley
+Contributors: simplifycommerce
 Tags: credit card, simplify commerce, woocommerce, mastercard
 Requires at least: 4.4
 Tested up to: 4.5
 Stable tag: 1.0.2
-License: GPLv3
+License: BSD 3-Clause
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 The Simplify Commerce gateway for WooCommerce 2.6+ lets you to take credit card payments directly on your store.

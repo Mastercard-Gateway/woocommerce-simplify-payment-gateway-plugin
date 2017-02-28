@@ -366,9 +366,9 @@ msgid ""
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "Automattic"
+msgid "Simplify Commerce by Mastercard"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "http://woothemes.com/"
+msgid "http://www.simplify.com/"
 msgstr ""
