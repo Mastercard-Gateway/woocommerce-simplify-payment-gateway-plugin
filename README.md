@@ -15,14 +15,14 @@ Start accepting credit card payments now. It’s that simple.
 
 Picking the right payments extension for your WooCommerce store is important. You need online payments that are easy to set up and use, reliable, and don’t get in the way of making a sale.
 
-Simplify Commerce by MasterCard gives you a merchant account and payment gateway in a single, secure package that takes just a few minutes to set up.
+Simplify Commerce by Mastercard gives you a merchant account and payment gateway in a single, secure package that takes just a few minutes to set up.
 
 === Why choose Simplify Commerce? ===
 
 * Low, flat rate of 2.85% + 30¢ per transaction
 * No hidden fees, no setup fees, no monthly fees
 * Funds are deposited in your merchant bank account in two business days
-* Accept MasterCard, Visa, American Express, Discover, JCB and Diners Club transactions
+* Accept Mastercard, Visa, American Express, Discover, JCB and Diners Club transactions
 * Enjoy peace of mind from knowing your transactions are secure – all sensitive data is managed by Simplify Commerce
 
 === How to get started ===

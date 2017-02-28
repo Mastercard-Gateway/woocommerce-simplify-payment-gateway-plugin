@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name: WooCommerce Simplify Commerce Gateway
+ * Plugin Name: Simplify Commerce WooCommerce Gateway
  * Plugin URI: https://wordpress.org/plugins/woocommerce-gateway-simplify-commerce/
  * Description: The Simplify Commerce gateway lets you to take credit card payments directly on your store. Requires PHP 5.3+
- * Author: Automattic
- * Author URI: http://woothemes.com/
- * Version: 1.0.2
+ * Author: Simplify Commerce by Mastercard
+ * Author URI: http://simplify.com/
+ * Version: 1.0.0
  *
- * Copyright (c) 2016 Automattic
+ * Copyright (c) 2017 Mastercard
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

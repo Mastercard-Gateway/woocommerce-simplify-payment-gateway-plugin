@@ -111,7 +111,7 @@ msgid "Use a new card"
 msgstr ""
 
 #: includes/class-wc-gateway-simplify-commerce.php:94
-msgid "Simplify Commerce by MasterCard"
+msgid "Simplify Commerce by Mastercard"
 msgstr ""
 
 #: includes/class-wc-gateway-simplify-commerce.php:99
@@ -124,7 +124,7 @@ msgid ""
 "Simplify Commerce is your merchant account and payment gateway all rolled "
 "into one. Choose Simplify Commerce as your WooCommerce payment gateway to "
 "get access to your money quickly with a powerful, secure payment engine "
-"backed by MasterCard."
+"backed by Mastercard."
 msgstr ""
 
 #: includes/class-wc-gateway-simplify-commerce.php:102
@@ -290,7 +290,7 @@ msgstr ""
 #: includes/class-wc-gateway-simplify-commerce.php:641
 msgid ""
 "Thank you for your order, please click the button below to pay with credit "
-"card using Simplify Commerce by MasterCard."
+"card using Simplify Commerce by Mastercard."
 msgstr ""
 
 #: includes/class-wc-gateway-simplify-commerce.php:650
