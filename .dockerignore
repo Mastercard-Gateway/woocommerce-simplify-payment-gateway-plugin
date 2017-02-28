@@ -2,6 +2,6 @@
 *.iml
 .git/
 .gitignore
-./assets/
+./wordpress_org_assets/
 docker-compose.yml
 Dockerfile
