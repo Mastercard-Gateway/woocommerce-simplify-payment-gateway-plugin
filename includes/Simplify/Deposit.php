@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2015 MasterCard International Incorporated
+ * Copyright (c) 2013 - 2017 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -32,7 +32,7 @@ class Simplify_Deposit extends Simplify_Object {
        /**
         * Retrieve Simplify_Deposit objects.
         * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+        *     <dt><tt>filter</tt></dt>    <dd><table class="filter_list"><tr><td>filter.id</td><td>Filter by the deposit Id</td></tr><tr><td>filter.amount</td><td>Filter by the deposit amount (in the smallest unit of your currency)</td></tr><tr><td>filter.dateCreatedMin<sup>*</sup></td><td>Filter by the minimum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.dateCreatedMax<sup>*</sup></td><td>Filter by the maximum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.depositDateMin</td><td>Filter by the earliest deposit date you are searching for - Date in UTC millis</td></tr><tr><td>filter.depositDateMax</td><td>Filter by the latest deposit date you are searching for - Date in UTC millis</td></tr><tr><td>filter.creditCount</td><td>Filter by the creditCount figure for the deposit</td></tr><tr><td>filter.creditAmount</td><td>Filter by the creditAmount figure for the deposit</td></tr><tr><td>filter.debitCount</td><td>Filter by the debitCount figure for the deposit</td></tr><tr><td>filter.debitAmount</td><td>Filter by the debitAmount figure for the deposit</td></tr><tr><td>filter.netCount</td><td>Filter by the netCount figure for the deposit</td></tr><tr><td>filter.netAmount</td><td>Filter by the netAmount figure for the deposit</td></tr><tr><td>filter.q</td><td>You can use this to filter by different figures or strings - can be the Id, creditAmount or the debitAmount for the deposit</td></tr></table><br><sup>*</sup>Use dateCreatedMin with dateCreatedMax in the same filter if you want to search between two created dates  </dd>
         *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [min value: 0, max value: 50, default: 20]  </dd>
         *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [min value: 0, default: 0]  </dd>
         *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> amount</tt><tt> dateCreated</tt><tt> depositDate</tt>.</dd></dl>

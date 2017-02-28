@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2015 MasterCard International Incorporated
+ * Copyright (c) 2013 - 2017 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -31,11 +31,11 @@ class Simplify_Subscription extends Simplify_Object {
     /**
      * Creates an Simplify_Subscription object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
-     *     <dt><tt>amount</tt></dt>    <dd>Amount of the payment in the smallest unit of your currency. Example: 100 = $1.00USD </dd>
+     *     <dt><tt>amount</tt></dt>    <dd>Amount of the payment in the smallest unit of your currency. Example: 100 = $1.00 </dd>
      *     <dt><tt>billingCycle</tt></dt>    <dd>How the plan is billed to the customer. Values must be AUTO (indefinitely until the customer cancels) or FIXED (a fixed number of billing cycles). [default: AUTO] </dd>
      *     <dt><tt>billingCycleLimit</tt></dt>    <dd>The number of fixed billing cycles for a plan. Only used if the billingCycle parameter is set to FIXED. Example: 4 </dd>
      *     <dt><tt>coupon</tt></dt>    <dd>Coupon ID associated with the subscription </dd>
-     *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. [default: USD] </dd>
+     *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. </dd>
      *     <dt><tt>customer</tt></dt>    <dd>Customer that is enrolling in the subscription. </dd>
      *     <dt><tt>frequency</tt></dt>    <dd>Frequency of payment for the plan. Used in conjunction with frequencyPeriod. Valid values are "DAILY", "WEEKLY", "MONTHLY" and "YEARLY". </dd>
      *     <dt><tt>frequencyPeriod</tt></dt>    <dd>Period of frequency of payment for the plan. Example: if the frequency is weekly, and periodFrequency is 2, then the subscription is billed bi-weekly. </dd>
@@ -80,10 +80,10 @@ class Simplify_Subscription extends Simplify_Object {
        /**
         * Retrieve Simplify_Subscription objects.
         * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+        *     <dt><tt>filter</tt></dt>    <dd><table class="filter_list"><tr><td>filter.customer</td><td>Filter by the Id of the customer with the subscription</td></tr><tr><td>filter.plan</td><td>Filter by the Id of the plan linked to the subscription</td></tr><tr><td>filter.dateCreatedMin<sup>*</sup></td><td>Filter by the minimum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.dateCreatedMax<sup>*</sup></td><td>Filter by the maximum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.q</td><td>You can use this to filter by the Id, the name or the amount of the subscription</td></tr></table><br><sup>*</sup>Use dateCreatedMin with dateCreatedMax in the same filter if you want to search between two created dates  </dd>
         *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [min value: 0, max value: 50, default: 20]  </dd>
         *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [min value: 0, default: 0]  </dd>
-        *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> id</tt><tt> plan</tt>.</dd></dl>
+        *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> dateCreated</tt><tt> id</tt><tt> plan</tt>.</dd></dl>
         * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
         * @return    ResourceList a ResourceList object that holds the list of Subscription objects and the total
         *            number of Subscription objects available for the given criteria.
@@ -127,11 +127,11 @@ class Simplify_Subscription extends Simplify_Object {
          *
          * The properties that can be updated:
          * <dl style="padding-left:10px;">
-         *     <dt><tt>amount</tt></dt>    <dd>Amount of the payment in the smallest unit of your currency. Example: 100 = $1.00USD </dd>
+         *     <dt><tt>amount</tt></dt>    <dd>Amount of the payment in the smallest unit of your currency. Example: 100 = $1.00 </dd>
          *     <dt><tt>billingCycle</tt></dt>    <dd>How the plan is billed to the customer. Values must be AUTO (indefinitely until the customer cancels) or FIXED (a fixed number of billing cycles). [default: AUTO] </dd>
          *     <dt><tt>billingCycleLimit</tt></dt>    <dd>The number of fixed billing cycles for a plan. Only used if the billingCycle parameter is set to FIXED. Example: 4 </dd>
          *     <dt><tt>coupon</tt></dt>    <dd>Coupon being assigned to this subscription </dd>
-         *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. [default: USD] </dd>
+         *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. </dd>
          *     <dt><tt>frequency</tt></dt>    <dd>Frequency of payment for the plan. Used in conjunction with frequencyPeriod. Valid values are "DAILY", "WEEKLY", "MONTHLY" and "YEARLY". </dd>
          *     <dt><tt>frequencyPeriod</tt></dt>    <dd>Period of frequency of payment for the plan. Example: if the frequency is weekly, and periodFrequency is 2, then the subscription is billed bi-weekly. [min value: 1] </dd>
          *     <dt><tt>name</tt></dt>    <dd>Name describing subscription </dd>

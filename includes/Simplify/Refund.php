@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2015 MasterCard International Incorporated
+ * Copyright (c) 2013 - 2017 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -31,8 +31,8 @@ class Simplify_Refund extends Simplify_Object {
     /**
      * Creates an Simplify_Refund object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
-     *     <dt><tt>amount</tt></dt>    <dd>Amount of the refund in the smallest unit of your currency. Example: 100 = $1.00USD [min value: 1] <strong>required </strong></dd>
-     *     <dt><tt>payment</tt></dt>    <dd>ID of the payment for the refund <strong>required </strong></dd>
+     *     <dt><tt>amount</tt></dt>    <dd>Amount of the refund in the smallest unit of your currency. Example: 100 = $1.00 <strong>required </strong></dd>
+     *     <dt><tt>payment</tt></dt>    <dd>ID of the payment for the refund </dd>
      *     <dt><tt>reason</tt></dt>    <dd>Reason for the refund </dd>
      *     <dt><tt>reference</tt></dt>    <dd>Custom reference field to be used with outside systems. </dd>
      *     <dt><tt>replayId</tt></dt>    <dd>An identifier that can be sent to uniquely identify a refund request to facilitate retries due to I/O related issues. This identifier must be unique for your account (sandbox or live) across all of your refunds. If supplied, we will check for a refund on your account that matches this identifier. If found we will return an identical response to that of the original request. [max length: 50, min length: 1] </dd>
@@ -58,7 +58,7 @@ class Simplify_Refund extends Simplify_Object {
        /**
         * Retrieve Simplify_Refund objects.
         * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+        *     <dt><tt>filter</tt></dt>    <dd><table class="filter_list"><tr><td>filter.id</td><td>Filter by the refund Id</td></tr><tr><td>filter.text</td><td>Filter by the refund description text</td></tr><tr><td>filter.replayId</td><td>Filter by the compoundReplayId</td></tr><tr><td>filter.authCode</td><td>Filter by the authorization code (Not authorization ID)</td></tr><tr><td>filter.amount</td><td>Filter by the refund amount (in the smallest unit of your currency)</td></tr><tr><td>filter.dateCreatedMin<sup>*</sup></td><td>Filter by the minimum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.dateCreatedMax<sup>*</sup></td><td>Filter by the maximum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.deposit</td><td>Filter by the deposit id</td></tr><tr><td>filter.q</td><td>You can use this to filter by the Id, the authCode or the amount of the refund</td></tr></table><br><sup>*</sup>Use dateCreatedMin with dateCreatedMax in the same filter if you want to search between two created dates  </dd>
         *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [min value: 0, max value: 50, default: 20]  </dd>
         *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [min value: 0, default: 0]  </dd>
         *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> id</tt><tt> amount</tt><tt> description</tt><tt> dateCreated</tt><tt> paymentDate</tt>.</dd></dl>

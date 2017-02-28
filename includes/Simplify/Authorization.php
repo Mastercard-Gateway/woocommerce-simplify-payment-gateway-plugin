@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2015 MasterCard International Incorporated
+ * Copyright (c) 2013 - 2017 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -31,13 +31,13 @@ class Simplify_Authorization extends Simplify_Object {
     /**
      * Creates an Simplify_Authorization object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
-     *     <dt><tt>amount</tt></dt>    <dd>Amount of the payment (in the smallest unit of your currency). Example: 100 = $1.00USD <strong>required </strong></dd>
+     *     <dt><tt>amount</tt></dt>    <dd>Amount of the payment (in the smallest unit of your currency). Example: 100 = $1.00 <strong>required </strong></dd>
      *     <dt><tt>card.addressCity</tt></dt>    <dd>City of the cardholder. [max length: 50, min length: 2] </dd>
      *     <dt><tt>card.addressCountry</tt></dt>    <dd>Country code (ISO-3166-1-alpha-2 code) of residence of the cardholder. [max length: 2, min length: 2] </dd>
      *     <dt><tt>card.addressLine1</tt></dt>    <dd>Address of the cardholder. [max length: 255] </dd>
      *     <dt><tt>card.addressLine2</tt></dt>    <dd>Address of the cardholder if needed. [max length: 255] </dd>
-     *     <dt><tt>card.addressState</tt></dt>    <dd>State of residence of the cardholder. For the US, this is a 2-digit USPS code. [max length: 255, min length: 2] </dd>
-     *     <dt><tt>card.addressZip</tt></dt>    <dd>Postal code of the cardholder. The postal code size is between 5 and 9 characters in length and only contains numbers or letters. [max length: 9, min length: 3] </dd>
+     *     <dt><tt>card.addressState</tt></dt>    <dd>State of residence of the cardholder. State abbreviations should be used. [max length: 255] </dd>
+     *     <dt><tt>card.addressZip</tt></dt>    <dd>Postal code of the cardholder. The postal code size is between 5 and 9 characters in length and only contains numbers or letters. [max length: 32] </dd>
      *     <dt><tt>card.cvc</tt></dt>    <dd>CVC security code of the card. This is the code on the back of the card. Example: 123 </dd>
      *     <dt><tt>card.expMonth</tt></dt>    <dd>Expiration month of the card. Format is MM. Example: January = 01 [min value: 1, max value: 12] <strong>required </strong></dd>
      *     <dt><tt>card.expYear</tt></dt>    <dd>Expiration year of the card. Format is YY. Example: 2013 = 13 [min value: 0, max value: 99] <strong>required </strong></dd>
@@ -46,6 +46,39 @@ class Simplify_Authorization extends Simplify_Object {
      *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217) for the transaction. Must match the currency associated with your account. [default: USD] <strong>required </strong></dd>
      *     <dt><tt>customer</tt></dt>    <dd>ID of customer. If specified, card on file of customer will be used. </dd>
      *     <dt><tt>description</tt></dt>    <dd>Free form text field to be used as a description of the payment. This field is echoed back with the payment on any find or list operations. [max length: 1024] </dd>
+     *     <dt><tt>order.commodityCode</tt></dt>    <dd>Standard classification code for products and services. [max length: 5] </dd>
+     *     <dt><tt>order.customer</tt></dt>    <dd>ID of the customer associated with the order. </dd>
+     *     <dt><tt>order.customerEmail</tt></dt>    <dd>Customer email address. </dd>
+     *     <dt><tt>order.customerName</tt></dt>    <dd>Customer name. </dd>
+     *     <dt><tt>order.customerNote</tt></dt>    <dd>Additional notes provided by the customer. [max length: 255] </dd>
+     *     <dt><tt>order.customerReference</tt></dt>    <dd>A merchant reference for the customer. </dd>
+     *     <dt><tt>order.items.amount</tt></dt>    <dd>Cost of the item. </dd>
+     *     <dt><tt>order.items.description</tt></dt>    <dd>Description of the item. </dd>
+     *     <dt><tt>order.items.name</tt></dt>    <dd>Item name. </dd>
+     *     <dt><tt>order.items.product</tt></dt>    <dd>Product information associated with the item. </dd>
+     *     <dt><tt>order.items.quantity</tt></dt>    <dd>Quantity of the item contained in the order [min value: 1, max value: 999999, default: 1] <strong>required </strong></dd>
+     *     <dt><tt>order.items.reference</tt></dt>    <dd>A merchant reference for the item. [max length: 255] </dd>
+     *     <dt><tt>order.items.tax</tt></dt>    <dd>Taxes associated with the item. </dd>
+     *     <dt><tt>order.merchantNote</tt></dt>    <dd>Additional notes provided by the merchant. [max length: 255] </dd>
+     *     <dt><tt>order.payment</tt></dt>    <dd>ID of the payment associated with the order. </dd>
+     *     <dt><tt>order.reference</tt></dt>    <dd>A merchant reference for the order. [max length: 255] </dd>
+     *     <dt><tt>order.shippingAddress.city</tt></dt>    <dd>City, town, or municipality. [max length: 255, min length: 2] </dd>
+     *     <dt><tt>order.shippingAddress.country</tt></dt>    <dd>2-character country code. [max length: 2, min length: 2] </dd>
+     *     <dt><tt>order.shippingAddress.line1</tt></dt>    <dd>Street address. [max length: 255] </dd>
+     *     <dt><tt>order.shippingAddress.line2</tt></dt>    <dd>(Opt) Street address continued. [max length: 255] </dd>
+     *     <dt><tt>order.shippingAddress.name</tt></dt>    <dd>Name of the entity being shipped to. [max length: 255] </dd>
+     *     <dt><tt>order.shippingAddress.state</tt></dt>    <dd>State or province. [max length: 255] </dd>
+     *     <dt><tt>order.shippingAddress.zip</tt></dt>    <dd>Postal code. [max length: 32] </dd>
+     *     <dt><tt>order.shippingFromAddress.city</tt></dt>    <dd>City, town, or municipality. [max length: 255, min length: 2] </dd>
+     *     <dt><tt>order.shippingFromAddress.country</tt></dt>    <dd>2-character country code. [max length: 2, min length: 2] </dd>
+     *     <dt><tt>order.shippingFromAddress.line1</tt></dt>    <dd>Street address. [max length: 255] </dd>
+     *     <dt><tt>order.shippingFromAddress.line2</tt></dt>    <dd>(Opt) Street address continued. [max length: 255] </dd>
+     *     <dt><tt>order.shippingFromAddress.name</tt></dt>    <dd>Name of the entity performing the shipping. [max length: 255] </dd>
+     *     <dt><tt>order.shippingFromAddress.state</tt></dt>    <dd>State or province. [max length: 255] </dd>
+     *     <dt><tt>order.shippingFromAddress.zip</tt></dt>    <dd>Postal code. [max length: 32] </dd>
+     *     <dt><tt>order.shippingName</tt></dt>    <dd>Name of the entity being shipped to. </dd>
+     *     <dt><tt>order.source</tt></dt>    <dd>Order source. [default: WEB] <strong>required </strong></dd>
+     *     <dt><tt>order.status</tt></dt>    <dd>Status of the order. [default: INCOMPLETE] <strong>required </strong></dd>
      *     <dt><tt>reference</tt></dt>    <dd>Custom reference field to be used with outside systems. </dd>
      *     <dt><tt>replayId</tt></dt>    <dd>An identifier that can be sent to uniquely identify a payment request to facilitate retries due to I/O related issues. This identifier must be unique for your account (sandbox or live) across all of your payments. If supplied, we will check for a payment on your account that matches this identifier, and if one is found we will attempt to return an identical response of the original request. [max length: 50, min length: 1] </dd>
      *     <dt><tt>statementDescription.name</tt></dt>    <dd>Merchant name <strong>required </strong></dd>
@@ -88,7 +121,7 @@ class Simplify_Authorization extends Simplify_Object {
        /**
         * Retrieve Simplify_Authorization objects.
         * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+        *     <dt><tt>filter</tt></dt>    <dd><table class="filter_list"><tr><td>filter.id</td><td>Filter by the Authorization Id</td></tr><tr><td>filter.replayId</td><td>Filter by the compoundReplayId</td></tr><tr><td>filter.last4</td><td>Filter by the card number (last 4 digits)</td></tr><tr><td>filter.amount</td><td>Filter by the transaction amount (in the smallest unit of your currency)</td></tr><tr><td>filter.text</td><td>Filter by the description of the authorization</td></tr><tr><td>filter.amountMin & filter.amountMax</td><td>The filter amountMin must be used with amountMax to find authorizations with authorization values between the min and max</td></tr><tr><td>filter.dateCreatedMin<sup>*</sup></td><td>Filter by the minimum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.dateCreatedMax<sup>*</sup></td><td>Filter by the maximum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.deposit</td><td>Filter by the deposit id</td></tr><tr><td>filter.customer</td><td>Filter using the Id of the customer to find the authorizations for that customer</td></tr><tr><td>filter.status</td><td>Filter by the authorization status text</td></tr><tr><td>filter.authCode</td><td>Filter by the authorization code (Not the authorization ID)</td></tr><tr><td>filter.q</td><td>You can use this to filter by the ID, the authCode or the amount of the authorization</td></tr></table><br><sup>*</sup>Use dateCreatedMin with dateCreatedMax in the same filter if you want to search between two created dates  </dd>
         *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [min value: 0, max value: 50, default: 20]  </dd>
         *     <dt><tt>offset</tt></dt>    <dd>Used in pagination of the list. This is the start offset of the page. [min value: 0, default: 0]  </dd>
         *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> dateCreated</tt><tt> amount</tt><tt> id</tt><tt> description</tt><tt> paymentDate</tt>.</dd></dl>

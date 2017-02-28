@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2015 MasterCard International Incorporated
+ * Copyright (c) 2013 - 2017 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -31,7 +31,7 @@ class Simplify_InvoiceItem extends Simplify_Object {
     /**
      * Creates an Simplify_InvoiceItem object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
-     *     <dt><tt>amount</tt></dt>    <dd>Amount of the invoice item in the smallest unit of your currency. Example: 100 = $1.00USD [min value: -9999900, max value: 9999900] <strong>required </strong></dd>
+     *     <dt><tt>amount</tt></dt>    <dd>Amount of the invoice item in the smallest unit of your currency. Example: 100 = $1.00 <strong>required </strong></dd>
      *     <dt><tt>description</tt></dt>    <dd>Individual items of an invoice [max length: 1024] </dd>
      *     <dt><tt>invoice</tt></dt>    <dd>The ID of the invoice this item belongs to. </dd>
      *     <dt><tt>product</tt></dt>    <dd>Product ID this item relates to. </dd>
@@ -98,7 +98,7 @@ class Simplify_InvoiceItem extends Simplify_Object {
          *
          * The properties that can be updated:
          * <dl style="padding-left:10px;">
-         *     <dt><tt>amount</tt></dt>    <dd>Amount of the invoice item in the smallest unit of your currency. Example: 100 = $1.00USD [min value: 1] </dd>
+         *     <dt><tt>amount</tt></dt>    <dd>Amount of the invoice item in the smallest unit of your currency. Example: 100 = $1.00 [min value: 1] </dd>
          *     <dt><tt>description</tt></dt>    <dd>Individual items of an invoice </dd>
          *     <dt><tt>quantity</tt></dt>    <dd>Quantity of the item.  This total amount of the invoice item is the amount * quantity. [min value: 1, max value: 999999] </dd>
          *     <dt><tt>reference</tt></dt>    <dd>User defined reference field. </dd>

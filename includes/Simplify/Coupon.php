@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2015 MasterCard International Incorporated
+ * Copyright (c) 2013 - 2017 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -31,7 +31,7 @@ class Simplify_Coupon extends Simplify_Object {
     /**
      * Creates an Simplify_Coupon object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
-     *     <dt><tt>amountOff</tt></dt>    <dd>Amount off of the price of the product in the smallest units of the currency of the merchant. While this field is optional, you must provide either amountOff or percentOff for a coupon. Example: 100 = $1.00USD [min value: 1] </dd>
+     *     <dt><tt>amountOff</tt></dt>    <dd>Amount off of the price of the product in the smallest units of the currency of the merchant. While this field is optional, you must provide either amountOff or percentOff for a coupon. Example: 100 = $1.00 [min value: 1] </dd>
      *     <dt><tt>couponCode</tt></dt>    <dd>Code that identifies the coupon to be used. [min length: 2] <strong>required </strong></dd>
      *     <dt><tt>description</tt></dt>    <dd>A brief section that describes the coupon. </dd>
      *     <dt><tt>durationInMonths</tt></dt>    <dd>DEPRECATED - Duration in months that the coupon will be applied after it has first been selected. [min value: 1, max value: 9999] </dd>
@@ -77,7 +77,7 @@ class Simplify_Coupon extends Simplify_Object {
        /**
         * Retrieve Simplify_Coupon objects.
         * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+        *     <dt><tt>filter</tt></dt>    <dd><table class="filter_list"><tr><td>filter.id</td><td>Filter by the coupon Id</td></tr><tr><td>filter.text</td><td>Filter by the coupon code</td></tr><tr><td>filter.dateCreatedMin<sup>*</sup></td><td>Filter by the minimum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.dateCreatedMax<sup>*</sup></td><td>Filter by the maximum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.startDateMin</td><td>Filter by the minimum coupon start date you are searching for - Date in UTC millis</td></tr><tr><td>filter.startDateMax</td><td>Filter by the maximum coupon start date you are searching for - Date in UTC millis</td></tr><tr><td>filter.endDateMin</td><td>Filter by the minimum coupon end date you are searching for - Date in UTC millis</td></tr><tr><td>filter.endDateMax</td><td>Filter by the maximum coupon end date you are searching for - Date in UTC millis</td></tr></table><br><sup>*</sup>Use dateCreatedMin with dateCreatedMax in the same filter if you want to search between two created dates  </dd>
         *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [min value: 0, max value: 50, default: 20]  </dd>
         *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [min value: 0, default: 0]  </dd>
         *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> dateCreated</tt><tt> maxRedemptions</tt><tt> timesRedeemed</tt><tt> id</tt><tt> startDate</tt><tt> endDate</tt><tt> percentOff</tt><tt> couponCode</tt><tt> durationInMonths</tt><tt> numTimesApplied</tt><tt> amountOff</tt>.</dd></dl>

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2015 MasterCard International Incorporated
+ * Copyright (c) 2013 - 2017 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -31,7 +31,7 @@ class Simplify_Plan extends Simplify_Object {
     /**
      * Creates an Simplify_Plan object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
-     *     <dt><tt>amount</tt></dt>    <dd>Amount of payment for the plan in the smallest unit of your currency. Example: 100 = $1.00USD <strong>required </strong></dd>
+     *     <dt><tt>amount</tt></dt>    <dd>Amount of payment for the plan in the smallest unit of your currency. Example: 100 = $1.00 <strong>required </strong></dd>
      *     <dt><tt>billingCycle</tt></dt>    <dd>How the plan is billed to the customer. Values must be AUTO (indefinitely until the customer cancels) or FIXED (a fixed number of billing cycles). [default: AUTO] </dd>
      *     <dt><tt>billingCycleLimit</tt></dt>    <dd>The number of fixed billing cycles for a plan. Only used if the billingCycle parameter is set to FIXED. Example: 4 </dd>
      *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217) for the plan. Must match the currency associated with your account. [default: USD] <strong>required </strong></dd>
@@ -78,7 +78,7 @@ class Simplify_Plan extends Simplify_Object {
        /**
         * Retrieve Simplify_Plan objects.
         * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+        *     <dt><tt>filter</tt></dt>    <dd><table class="filter_list"><tr><td>filter.id</td><td>Filter by the plan Id</td></tr><tr><td>filter.text</td><td>Filter by the name of the plan</td></tr><tr><td>filter.frequency</td><td>Filter by the frequency of the plan</td></tr><tr><td>filter.amountMin & filter.amountMax</td><td>The filter amountMin must be used with amountMax to find plans with plan values between the min and max figures</td></tr><tr><td>filter.dateCreatedMin<sup>*</sup></td><td>Filter by the minimum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.dateCreatedMax<sup>*</sup></td><td>Filter by the maximum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.q</td><td>You can use this to filter by the Id, the name or the amount of the plan</td></tr></table><br><sup>*</sup>Use dateCreatedMin with dateCreatedMax in the same filter if you want to search between two created dates  </dd>
         *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [min value: 0, max value: 50, default: 20]  </dd>
         *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [min value: 0, default: 0]  </dd>
         *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> dateCreated</tt><tt> amount</tt><tt> frequency</tt><tt> name</tt><tt> id</tt>.</dd></dl>

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2015 MasterCard International Incorporated
+ * Copyright (c) 2013 - 2017 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -70,6 +70,7 @@ require_once(dirname(__FILE__) . '/Simplify/CardToken.php');
 require_once(dirname(__FILE__) . '/Simplify/Chargeback.php');
 require_once(dirname(__FILE__) . '/Simplify/Coupon.php');
 require_once(dirname(__FILE__) . '/Simplify/Customer.php');
+require_once(dirname(__FILE__) . '/Simplify/DataToken.php');
 require_once(dirname(__FILE__) . '/Simplify/Deposit.php');
 require_once(dirname(__FILE__) . '/Simplify/Event.php');
 require_once(dirname(__FILE__) . '/Simplify/FraudCheck.php');

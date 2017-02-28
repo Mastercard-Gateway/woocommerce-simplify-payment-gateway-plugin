@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2015 MasterCard International Incorporated
+ * Copyright (c) 2013 - 2017 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -45,7 +45,7 @@ class Simplify_Invoice extends Simplify_Object {
      *     <dt><tt>businessAddress.name</tt></dt>    <dd>The name of the business that is sending the invoice. [max length: 255] </dd>
      *     <dt><tt>businessAddress.state</tt></dt>    <dd>Address state of the business that is sending the invoice. [max length: 255] </dd>
      *     <dt><tt>businessAddress.zip</tt></dt>    <dd>Address zip of the business that is sending the invoice. [max length: 32] </dd>
-     *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. [max length: 3, min length: 3, default: USD] </dd>
+     *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. [max length: 3, min length: 3] </dd>
      *     <dt><tt>customer</tt></dt>    <dd>The customer ID of the customer we are invoicing.  This is optional if invoiceToCopy or a name and email are provided </dd>
      *     <dt><tt>customerTaxNo</tt></dt>    <dd>The tax number or VAT id of the person to whom the goods or services were supplied. [max length: 255] </dd>
      *     <dt><tt>discountRate</tt></dt>    <dd>The discount percent as a decimal e.g. 12.5.  This is used to calculate the discount amount which is subtracted from the total amount due before any tax is applied. [max length: 6] </dd>
@@ -53,14 +53,14 @@ class Simplify_Invoice extends Simplify_Object {
      *     <dt><tt>email</tt></dt>    <dd>The email of the customer we are invoicing.  This is optional if customer or invoiceToCopy is provided.  A new customer will be created using the the name and email. </dd>
      *     <dt><tt>invoiceId</tt></dt>    <dd>User defined invoice id. If not provided the system will generate a numeric id. [max length: 255] </dd>
      *     <dt><tt>invoiceToCopy</tt></dt>    <dd>The id of an existing invoice to be copied.  This is optional if customer or a name and email are provided </dd>
-     *     <dt><tt>items.amount</tt></dt>    <dd>Amount of the invoice item (the smallest unit of your currency). Example: 100 = $1.00USD [min value: -9999900, max value: 9999900] <strong>required </strong></dd>
+     *     <dt><tt>items.amount</tt></dt>    <dd>Amount of the invoice item (the smallest unit of your currency). Example: 100 = $1.00 <strong>required </strong></dd>
      *     <dt><tt>items.description</tt></dt>    <dd>The description of the invoice item. [max length: 1024] </dd>
      *     <dt><tt>items.invoice</tt></dt>    <dd>The ID of the invoice this item belongs to. </dd>
      *     <dt><tt>items.product</tt></dt>    <dd>The product this invoice item refers to. </dd>
      *     <dt><tt>items.quantity</tt></dt>    <dd>Quantity of the item.  This total amount of the invoice item is the amount * quantity. [min value: 1, max value: 999999, default: 1] </dd>
      *     <dt><tt>items.reference</tt></dt>    <dd>User defined reference field. [max length: 255] </dd>
      *     <dt><tt>items.tax</tt></dt>    <dd>The tax ID of the tax charge in the invoice item. </dd>
-     *     <dt><tt>lateFee</tt></dt>    <dd>The late fee amount that will be added to the invoice total is the due date is past due.  Value provided must be in the smallest unit of your currency. Example: 100 = $1.00USD [max value: 9999900] </dd>
+     *     <dt><tt>lateFee</tt></dt>    <dd>The late fee amount that will be added to the invoice total is the due date is past due.  Value provided must be in the smallest unit of your currency. Example: 100 = $1.00 </dd>
      *     <dt><tt>memo</tt></dt>    <dd>A memo that is displayed to the customer on the invoice payment screen. [max length: 4000] </dd>
      *     <dt><tt>name</tt></dt>    <dd>The name of the customer we are invoicing.  This is optional if customer or invoiceToCopy is provided.  A new customer will be created using the the name and email. [max length: 50, min length: 2] </dd>
      *     <dt><tt>note</tt></dt>    <dd>This field can be used to store a note that is not displayed to the customer. [max length: 4000] </dd>
@@ -112,7 +112,7 @@ class Simplify_Invoice extends Simplify_Object {
        /**
         * Retrieve Simplify_Invoice objects.
         * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+        *     <dt><tt>filter</tt></dt>    <dd><table class="filter_list"><tr><td>filter.id</td><td>Filter by the invoice Id</td></tr><tr><td>filter.amount</td><td>Filter by the invoice amount (in the smallest unit of your currency)</td></tr><tr><td>filter.text</td><td>Filter by the name of the invoice</td></tr><tr><td>filter.dateCreatedMin<sup>*</sup></td><td>Filter by the minimum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.dateCreatedMax<sup>*</sup></td><td>Filter by the maximum created date you are searching for - Date in UTC millis</td></tr><tr><td>filter.datePaidMin<sup>*</sup></td><td>Filter by the minimum invoice paid date you are searching for - Date in UTC millis</td></tr><tr><td>filter.datePaidMax<sup>*</sup></td><td>Filter by the maximum invoice paid date you are searching for - Date in UTC millis</td></tr><tr><td>filter.status</td><td>Filter by the status of the invoice</td></tr><tr><td>filter.statuses</td><td>Filter by multiple statuses of different invoices</td></tr><tr><td>filter.customer</td><td>Filter using the Id of the customer linked to the invoice</td></tr><tr><td>filter.type</td><td>Filter by the invoice type</td></tr><tr><td>filter.types</td><td>Filter by multiple invoice types</td></tr><tr><td>filter.invoiceId</td><td>Filter by the user defined invoice id</td></tr><tr><td>filter.reference</td><td>Filter by the invoice reference text</td></tr></table><br><sup>*</sup>The filters datePaidMin and datePaidMax can be used in the same filter if you want to search between the two dates. The same is for dateCreatedMin/dateCreatedMax.  </dd>
         *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [min value: 0, max value: 50, default: 20]  </dd>
         *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [min value: 0, default: 0]  </dd>
         *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> id</tt><tt> invoiceDate</tt><tt> dueDate</tt><tt> datePaid</tt><tt> customer</tt><tt> status</tt><tt> dateCreated</tt>.</dd></dl>
@@ -180,14 +180,14 @@ class Simplify_Invoice extends Simplify_Object {
          *     <dt><tt>dueDate</tt></dt>    <dd>The date invoice payment is due.  If a late fee is provided this will be added to the invoice total is the due date has past. </dd>
          *     <dt><tt>email</tt></dt>    <dd>The email of the customer we are invoicing.  This is optional if customer or invoiceToCopy is provided.  A new customer will be created using the the name and email. </dd>
          *     <dt><tt>invoiceId</tt></dt>    <dd>User defined invoice id. If not provided the system will generate a numeric id. [max length: 255] </dd>
-         *     <dt><tt>items.amount</tt></dt>    <dd>Amount of the invoice item in the smallest unit of your currency. Example: 100 = $1.00USD [min value: -9999900, max value: 9999900] <strong>required </strong></dd>
+         *     <dt><tt>items.amount</tt></dt>    <dd>Amount of the invoice item in the smallest unit of your currency. Example: 100 = $1.00 <strong>required </strong></dd>
          *     <dt><tt>items.description</tt></dt>    <dd>The description of the invoice item. [max length: 1024] </dd>
          *     <dt><tt>items.invoice</tt></dt>    <dd>The ID of the invoice this item belongs to. </dd>
          *     <dt><tt>items.product</tt></dt>    <dd>The Id of the product this item refers to. </dd>
          *     <dt><tt>items.quantity</tt></dt>    <dd>Quantity of the item.  This total amount of the invoice item is the amount * quantity. [min value: 1, max value: 999999, default: 1] </dd>
          *     <dt><tt>items.reference</tt></dt>    <dd>User defined reference field. [max length: 255] </dd>
          *     <dt><tt>items.tax</tt></dt>    <dd>The tax ID of the tax charge in the invoice item. </dd>
-         *     <dt><tt>lateFee</tt></dt>    <dd>The late fee amount that will be added to the invoice total is the due date is past due.  Value provided must be in the smallest unit of your currency. Example: 100 = $1.00USD [max value: 9999900] </dd>
+         *     <dt><tt>lateFee</tt></dt>    <dd>The late fee amount that will be added to the invoice total is the due date is past due.  Value provided must be in the smallest unit of your currency. Example: 100 = $1.00 </dd>
          *     <dt><tt>memo</tt></dt>    <dd>A memo that is displayed to the customer on the invoice payment screen. [max length: 4000] </dd>
          *     <dt><tt>name</tt></dt>    <dd>The name of the customer we are invoicing.  This is optional if customer or invoiceToCopy is provided.  A new customer will be created using the the name and email. [max length: 50, min length: 2] </dd>
          *     <dt><tt>note</tt></dt>    <dd>This field can be used to store a note that is not displayed to the customer. [max length: 4000] </dd>

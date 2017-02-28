@@ -27,32 +27,19 @@
  */
 
 
-class Simplify_CardToken extends Simplify_Object {
+class Simplify_DataToken extends Simplify_Object {
     /**
-     * Creates an Simplify_CardToken object
-     * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
-     *     <dt><tt>callback</tt></dt>    <dd>The URL callback for the cardtoken </dd>
-     *     <dt><tt>card.addressCity</tt></dt>    <dd>City of the cardholder. [max length: 50, min length: 2] </dd>
-     *     <dt><tt>card.addressCountry</tt></dt>    <dd>Country code (ISO-3166-1-alpha-2 code) of residence of the cardholder. [max length: 2, min length: 2] </dd>
-     *     <dt><tt>card.addressLine1</tt></dt>    <dd>Address of the cardholder. [max length: 255] </dd>
-     *     <dt><tt>card.addressLine2</tt></dt>    <dd>Address of the cardholder if needed. [max length: 255] </dd>
-     *     <dt><tt>card.addressState</tt></dt>    <dd>State of residence of the cardholder. State abbreviations should be used. [max length: 255] </dd>
-     *     <dt><tt>card.addressZip</tt></dt>    <dd>Postal code of the cardholder. The postal code size is between 5 and 9 in length and only contain numbers or letters. [max length: 32] </dd>
-     *     <dt><tt>card.cvc</tt></dt>    <dd>CVC security code of the card. This is the code on the back of the card. Example: 123 </dd>
-     *     <dt><tt>card.expMonth</tt></dt>    <dd>Expiration month of the card. Format is MM. Example: January = 01 [min value: 1, max value: 12] <strong>required </strong></dd>
-     *     <dt><tt>card.expYear</tt></dt>    <dd>Expiration year of the card. Format is YY. Example: 2013 = 13 [min value: 0, max value: 99] <strong>required </strong></dd>
-     *     <dt><tt>card.name</tt></dt>    <dd>Name as appears on the card. [max length: 50, min length: 2] </dd>
-     *     <dt><tt>card.number</tt></dt>    <dd>Card number as it appears on the card. [max length: 19, min length: 13] <strong>required </strong></dd>
-     *     <dt><tt>key</tt></dt>    <dd>Key used to create the card token. </dd></dl>
+     * Creates an Simplify_DataToken object
+     * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;"></dl>
      * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.<i/>
-     * @return    CardToken a CardToken object.
+     * @return    DataToken a DataToken object.
      */
-    static public function createCardToken($hash, $authentication = null) {
+    static public function createDataToken($hash, $authentication = null) {
 
         $args = func_get_args();
         $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
 
-        $instance = new Simplify_CardToken();
+        $instance = new Simplify_DataToken();
         $instance->setAll($hash);
 
         $object = Simplify_PaymentsApi::createObject($instance, $authentication);
@@ -62,18 +49,18 @@ class Simplify_CardToken extends Simplify_Object {
 
 
         /**
-         * Retrieve a Simplify_CardToken object from the API
+         * Retrieve a Simplify_DataToken object from the API
          *
-         * @param     string id  the id of the CardToken object to retrieve
+         * @param     string id  the id of the DataToken object to retrieve
          * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-         * @return    CardToken a CardToken object
+         * @return    DataToken a DataToken object
          */
-        static public function findCardToken($id, $authentication = null) {
+        static public function findDataToken($id, $authentication = null) {
 
             $args = func_get_args();
             $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
 
-            $val = new Simplify_CardToken();
+            $val = new Simplify_DataToken();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject($val, $authentication);
@@ -85,6 +72,6 @@ class Simplify_CardToken extends Simplify_Object {
      * @ignore
      */
     public function getClazz() {
-        return "CardToken";
+        return "DataToken";
     }
 }
