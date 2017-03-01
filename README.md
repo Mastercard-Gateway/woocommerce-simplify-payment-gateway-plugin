@@ -31,10 +31,10 @@ Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simpli
   ![Alt](./docs/Wordpress_Upload_Plugin.png "Upload zip file") 
    
 5. Plugin Settings 
-  ![Alt](./docs/SimplifyCommercePlugin_Settings.png "Upload zip file") 
+  ![Alt](./docs/SimplifyCommerce_Plugin_Settings.png "Upload zip file") 
    
 6. Enter API Keys and other settings
-  ![Alt](./docs/SimplifyCommercePlugin_APIKeys.png "Upload zip file") 
+  ![Alt](./docs/SimplifyCommerce_Plugin_APIKeys.png "Upload zip file") 
    
 
 ## Why choose Simplify Commerce?
