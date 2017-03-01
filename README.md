@@ -2,12 +2,12 @@
 
 The Simplify Commerce payment gateway plugin for WooCommerce 2.6+ lets you to take credit card payments directly on your WooCommerce store.
 
-## How to get started 
+## Getting Started 
 
-1. [Sign up for and confirm your Simplify Commerce live account here](https://www.simplify.com/commerce/partners/woocommerce#/).
-2. Get your live API key from Simplify at [Settings/API Keys](https://www.simplify.com/commerce/login/auth#/account/apiKeys).
-3. Follow the plugin installation instructions below 
-4. You're ready to take payments in your WooCommerce store!
+* [Sign up for and confirm your Simplify Commerce account here](https://www.simplify.com).
+* Get your API keys from Simplify at [Settings/API Keys](https://www.simplify.com/commerce/login/auth#/account/apiKeys).
+* Follow the plugin installation instructions below 
+* You're ready to take payments in your WooCommerce store!
 
 ## Installation
 
@@ -52,4 +52,6 @@ Yes it does - production and sandbox mode is driven by the API keys you use.
 
 For help setting up and configuring, please refer to our [support page](https://simplify.desk.com/customer/en/portal/articles/2639101-woocommerce-installation-guide)
 
+### License
+This software is Open Source, released under the BSD 3-Clause license. See [LICENSE.txt](license.txt) for more info.
 
