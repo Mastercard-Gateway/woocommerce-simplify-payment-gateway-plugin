@@ -52,7 +52,7 @@ Choose Simplify Commerce as your WooCommerce payment gateway to get access to yo
 ## Frequently Asked Questions
 
 ### What countries does this plugin support?
-Simplify Commerce currently supports the US and Ireland.
+Simplify Commerce currently supported in US and Ireland. We are constantly adding more countries. So, feel free to check back to see if we have the country you are looking for.
 
 ### Does this support recurring payments, like for subscriptions?
 Yes!
