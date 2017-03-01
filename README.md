@@ -21,9 +21,21 @@ Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simpli
 
 1. Download the plugin zip from here - 
 
-2. Screenshot 1
-
-3. Screenshot 2
+2. Add New Plugin
+  ![Alt](./docs/Wordpress_AddNew_plugin.png "Add New Plugin") 
+   
+3. Upload zip file
+  ![Alt](./docs/Wordpress_Upload_Plugin.png "Upload zip file") 
+   
+4. Activate Plugin
+  ![Alt](./docs/Wordpress_Upload_Plugin.png "Upload zip file") 
+   
+5. Plugin Settings 
+  ![Alt](./docs/SimplifyCommercePlugin_Settings.png "Upload zip file") 
+   
+6. Enter API Keys and other settings
+  ![Alt](./docs/SimplifyCommercePlugin_APIKeys.png "Upload zip file") 
+   
 
 ## Why choose Simplify Commerce?
 

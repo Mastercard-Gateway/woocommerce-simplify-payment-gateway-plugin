@@ -7,3 +7,4 @@ Dockerfile
 .dockerignore
 .DS_Store
 .ignore/
+./docs/
