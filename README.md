@@ -4,7 +4,7 @@ The Simplify Commerce payment gateway plugin for WooCommerce 2.6+ lets you to ta
 
 ## Getting Started 
 
-* [Sign up for and confirm your Simplify Commerce account here](https://www.simplify.com).
+* Sign up and confirm your Simplify Commerce account [here](https://www.simplify.com/commerce/login/signup).
 * Get your API keys from Simplify at [Settings/API Keys](https://www.simplify.com/commerce/login/auth#/account/apiKeys).
 * Follow the plugin installation instructions below 
 * You're ready to take payments in your WooCommerce store!
