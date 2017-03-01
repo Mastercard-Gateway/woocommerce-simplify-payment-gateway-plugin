@@ -2,8 +2,8 @@
 *.iml
 .git/
 .gitignore
-./wordpress_org_assets/
 docker-compose.yml
 Dockerfile
 .dockerignore
 .DS_Store
+.ignore/

@@ -1,1 +1,0 @@
- docker cp ./ woocommercesimplifygatewayplugin_woocommerce_1:/var/www/html/wp-content/plugins/simplifycommerce/

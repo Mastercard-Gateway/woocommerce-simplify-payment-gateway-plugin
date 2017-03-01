@@ -1,10 +1,4 @@
-=== WooCommerce Simplify Commerce Gateway ===
-Contributors: simplifycommerce
-Tags: credit card, simplify commerce, woocommerce, mastercard
-Requires at least: 4.4
-Tested up to: 4.5
-Stable tag: 1.0.2
-License: BSD 3-Clause
+=== Simplify Commerce Payment Gateway for WooCommerce ===
 
 The Simplify Commerce payment gateway for WooCommerce 2.6+ lets you to take credit card payments directly on your WooCommerce store.
 
@@ -32,7 +26,7 @@ Choose Simplify Commerce as your WooCommerce payment gateway to get access to yo
 
 1. [Sign up for and confirm your Simplify Commerce live account here](https://www.simplify.com/commerce/partners/woocommerce#/).
 2. Get your live API key from Simplify at [Settings/API Keys](https://www.simplify.com/commerce/login/auth#/account/apiKeys).
-3. Follow setup instructions from the [Simplify Commerce Documentation](http://docs.woothemes.com/document/simplify-commerce/).
+3. Follow the setup instructions below 
 4. You're ready to take payments in your WooCommerce store!
 
 == Installation ==
