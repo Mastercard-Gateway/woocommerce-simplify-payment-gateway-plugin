@@ -22,7 +22,7 @@ Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simpli
 1. Download the plugin zip from here - 
 
 2. Add New Plugin
-  ![Alt](./docs/Wordpress_AddNew_plugin.png "Add New Plugin") 
+  ![Alt](./docs/Wordpress_AddNew_Plugin.png "Add New Plugin") 
    
 3. Upload zip file
   ![Alt](./docs/Wordpress_Upload_Plugin.png "Upload zip file") 
