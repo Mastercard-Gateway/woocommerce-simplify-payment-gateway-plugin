@@ -26,7 +26,7 @@ Choose Simplify Commerce as your WooCommerce payment gateway to get access to yo
 
 1. [Sign up for and confirm your Simplify Commerce live account here](https://www.simplify.com/commerce/partners/woocommerce#/).
 2. Get your live API key from Simplify at [Settings/API Keys](https://www.simplify.com/commerce/login/auth#/account/apiKeys).
-3. Follow the setup instructions below 
+3. Follow the installation instructions below 
 4. You're ready to take payments in your WooCommerce store!
 
 == Installation ==
@@ -85,8 +85,3 @@ If you get stuck, you can ask for help in the Plugin Forum.
 
 1. The settings panel used to configure the gateway.
 2. Normal checkout with Simplify commerce.
-
-== Changelog ==
-
-= 1.0.0 =
-* Initial version
