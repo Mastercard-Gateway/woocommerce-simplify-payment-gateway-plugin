@@ -65,5 +65,5 @@ Yes it does - production and sandbox mode is driven by the API keys you use.
 For help setting up and configuring, please refer to our [support page](https://simplify.desk.com/customer/en/portal/articles/2639101-woocommerce-installation-guide)
 
 ### License
-This software is Open Source, released under the BSD 3-Clause license. See [LICENSE.txt](license.txt) for more info.
+This software is Open Source, released under the BSD 3-Clause license. See [LICENSE.txt](LICENSE.txt) for more info.
 
