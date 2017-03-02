@@ -80,7 +80,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$this->description     = $this->get_option( 'description' );
 		$this->enabled         = $this->get_option( 'enabled' );
 		$this->mode            = $this->get_option( 'mode', 'standard' );
-		$this->modal_color     = $this->get_option( 'modal_color', '#a46497' );
+		$this->modal_color     = $this->get_option( 'modal_color', '#333333' );
 		$this->sandbox         = $this->get_option( 'sandbox' );
 		$this->public_key      = $this->sandbox == 'no' ? $this->get_option( 'public_key' ) : $this->get_option( 'sandbox_public_key' );
 		$this->private_key     = $this->sandbox == 'no' ? $this->get_option( 'private_key' ) : $this->get_option( 'sandbox_private_key' );
