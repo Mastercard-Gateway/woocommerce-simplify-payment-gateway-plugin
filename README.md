@@ -19,7 +19,7 @@ Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simpli
 * PHP version 5.3 or greater
 * cURL
 
-1. Download the plugin zip from this [link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/raw/master/dist/simplifycommerce.zip)
+1. Download the plugin zip file from this [link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/raw/master/dist/simplifycommerce.zip)
 
 2. Add New Plugin
   ![Alt](./docs/Wordpress_AddNew_Plugin.png "Add New Plugin") 
@@ -52,7 +52,7 @@ Choose Simplify Commerce as your WooCommerce payment gateway to get access to yo
 ## Frequently Asked Questions
 
 ### What countries does this plugin support?
-Simplify Commerce currently supported in US and Ireland. We are constantly adding more countries. So, feel free to check back to see if we have the country you are looking for.
+Simplify Commerce currently supported in US and Ireland. We are constantly adding more countries. So, please check back to see if we have the country you are looking for.
 
 ### Does this support recurring payments, like for subscriptions?
 Yes!
