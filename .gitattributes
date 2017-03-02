@@ -5,4 +5,4 @@
 .dockerignore export-ignore
 docker-compose.yml export-ignore
 Dockerfile export-ignore
-make-zip.sh export-ignore
+make-dist.sh export-ignore
