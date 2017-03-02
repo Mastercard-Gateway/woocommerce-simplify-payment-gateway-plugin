@@ -203,13 +203,13 @@ class WC_Gateway_Simplify_Commerce_Loader {
 			return;
 		}
 
-		require_once( plugin_basename( 'includes/class-wc-gateway-simplify-commerce.php' ) );
+		require_once( plugin_basename( 'includes/class-payment-gateway.php' ) );
 
 		load_plugin_textdomain( 'woocommerce-gateway-simplify-commerce', false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) );
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateways' ) );
 
 		if ( $this->subscription_support_enabled ) {
-			require_once( plugin_basename( 'includes/class-wc-addons-gateway-simplify-commerce.php' ) );
+			require_once( plugin_basename( 'includes/class-subscription-addon.php' ) );
 		}
 	}
 
