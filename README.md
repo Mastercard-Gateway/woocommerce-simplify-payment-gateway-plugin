@@ -28,7 +28,7 @@ Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simpli
   ![Alt](./docs/Wordpress_Upload_Plugin.png "Upload zip file") 
    
 4. Activate Plugin
-  ![Alt](./docs/Wordpress_Upload_Plugin.png "Activate Plugin") 
+  ![Alt](./docs/Wordpress_Activate_Plugin.png "Activate Plugin") 
    
 5. Plugin Settings 
   ![Alt](./docs/SimplifyCommerce_Plugin_Settings.png "Plugin Settings") 
