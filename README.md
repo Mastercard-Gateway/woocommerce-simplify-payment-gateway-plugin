@@ -19,6 +19,7 @@ Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simpli
 * PHP version 5.3 or greater
 * cURL
 
+### Steps 
 1. Download the plugin zip file from this [link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/raw/master/dist/simplifycommerce.zip)
 
 2. Add New Plugin
