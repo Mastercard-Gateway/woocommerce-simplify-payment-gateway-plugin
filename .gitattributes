@@ -1,0 +1,8 @@
+/docs export-ignore
+/dist export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.dockerignore export-ignore
+docker-compose.yml export-ignore
+Dockerfile export-ignore
+make-zip.sh export-ignore
