@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Simplify Commerce Payment Gateway for WooCommerce Stores
+ * Plugin Name: Simplify Commerce Payment Gateway for WooCommerce
  * Plugin URI: https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/
  * Description: Simplify Commerce payment gateway plugin from Mastercard lets you to take credit card payments directly on your WooCommerce store. Requires PHP 5.3+ & WooCommerce 2.6+
  * Author: Simplify Commerce
@@ -172,8 +172,8 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	public function plugin_action_links( $links ) {
 		$plugin_links = array(
 			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' . __( 'Settings', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
-			'<a href="https://docs.woothemes.com/document/simplify-commerce/">' . __( 'Docs', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
-			'<a href="http://support.woothemes.com/">' . __( 'Support', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
+			'<a href="https://simplify.desk.com/customer/en/portal/articles/2639101-woocommerce-installation-guide">' . __( 'Docs', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
+			'<a href="https://simplify.desk.com/customer/en/portal/articles/2639101-woocommerce-installation-guide">' . __( 'Support', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
 		);
 		return array_merge( $plugin_links, $links );
 	}
