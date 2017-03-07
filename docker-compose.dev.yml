@@ -15,7 +15,9 @@ services:
    woocommerce:
      depends_on:
        - db
-     build: ./
+     build:
+      context: .
+      dockerfile: Dockerfile.dev
      ports:
        - "80:80"
      restart: always
