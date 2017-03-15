@@ -38,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @version		1.0.0
  * @author 		SimplifyCommerce
  */
-class WC_Subscription_Addon extends WC_Gateway_Simplify_Commerce {
+class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 	/**
 	 * Constructor.
@@ -113,9 +113,9 @@ class WC_Subscription_Addon extends WC_Gateway_Simplify_Commerce {
 	 * @return array
 	 * @throws Exception
 	 */
-	protected function process_subscription( $order, $cart_token = '' ) {
+	protected function process_subscription( $order, $customer_token_value = '' ) {
 		try {
-			if ( empty( $cart_token ) ) {
+			if ( empty( $customer_token_value ) ) {
 				$error_msg = __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.', 'woocommerce' );
 
 				if ( 'yes' == $this->sandbox ) {
@@ -125,21 +125,7 @@ class WC_Subscription_Addon extends WC_Gateway_Simplify_Commerce {
 				throw new Simplify_ApiException( $error_msg );
 			}
 
-			// Create customer
-			$customer = Simplify_Customer::createCustomer( array(
-				'token'     => $cart_token,
-				'email'     => $order->billing_email,
-				'name'      => trim( $order->get_formatted_billing_full_name() ),
-				'reference' => $order->id
-			) );
-
-			if ( is_object( $customer ) && '' != $customer->id ) {
-				$this->save_subscription_meta( $order->id, $customer->id );
-			} else {
-				$error_msg = __( 'Error creating user in Simplify Commerce.', 'woocommerce' );
-
-				throw new Simplify_ApiException( $error_msg );
-			}
+			$this->save_subscription_meta( $order->id, $customer_token_value );
 
 			$payment_response = $this->process_subscription_payment( $order, $order->get_total() );
 
@@ -280,20 +266,26 @@ class WC_Subscription_Addon extends WC_Gateway_Simplify_Commerce {
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
-		$cart_token = isset( $_POST['simplify_token'] ) ? wc_clean( $_POST['simplify_token'] ) : '';
 		$order      = wc_get_order( $order_id );
+
+		$customer_token_value = $this->get_customer_token($order);
 
 		// Processing subscription
 		if ( 'standard' == $this->mode && ( $this->order_contains_subscription( $order->id ) || ( function_exists( 'wcs_is_subscription' ) && wcs_is_subscription( $order_id ) ) ) ) {
-			return $this->process_subscription( $order, $cart_token );
+			return $this->process_subscription( $order, $customer_token_value );
 
 		// Processing pre-order
 		} elseif ( 'standard' == $this->mode && $this->order_contains_pre_order( $order->id ) ) {
-			return $this->process_pre_order( $order, $cart_token );
+			return $this->process_pre_order( $order, $customer_token_value );
 
 		// Processing regular product
 		} else {
-			return parent::process_payment( $order_id );
+			// Payment/CC form is hosted on Simplify
+			if ( 'hosted' === $this->mode ) {
+				return $this->process_hosted_payments( $order );
+			}
+
+			return $this->process_standard_payments( $order, '', $customer_token_value );
 		}
 	}
 
