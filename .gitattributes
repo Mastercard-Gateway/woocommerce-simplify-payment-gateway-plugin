@@ -4,5 +4,8 @@
 .gitignore export-ignore
 .dockerignore export-ignore
 docker-compose.yml export-ignore
+docker-compose.dev.yml export-ignore
 Dockerfile export-ignore
+Dockerfile.dev export-ignore
 make-dist.sh export-ignore
+woocommerce-simplify-extension.iml export-ignore

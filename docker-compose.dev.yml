@@ -24,5 +24,6 @@ services:
      environment:
        WORDPRESS_DB_HOST: db:3306
        WORDPRESS_DB_PASSWORD: wordpress
+     container_name: woocommerce
 volumes:
     db_data:
