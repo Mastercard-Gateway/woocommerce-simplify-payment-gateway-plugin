@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class 		WC_Gateway_Simplify_Commerce
  * @extends		WC_Payment_Gateway_CC
  * @since       2.2.0
- * @version		1.0.0
+ * @version		1.2.0
  * @package		WooCommerce/Classes/Payment
  * @author 		SimplifyCommerce
  */
@@ -177,10 +177,10 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			echo '<div class="error"><p>' . sprintf( __( 'Simplify Commerce Error: Simplify commerce requires PHP 5.3 and above. You are using version %s.', 'woocommerce' ), phpversion() ) . '</p></div>';
 		}
 
-		$simplify_countries = apply_filters( 'woocommerce_gateway_simplify_commerce_supported_countries', array( 'US', 'IE' ) );
+		$simplify_countries = apply_filters( 'woocommerce_gateway_simplify_commerce_supported_countries', array( 'US', 'IE', 'AU') );
 
 		if ( ! in_array( WC()->countries->get_base_country(), $simplify_countries ) ) {
-			echo '<div class="error"><p>' . sprintf( __( 'Simplify Commerce Error: Simplify currently only supports the US and Ireland. Your base country is set to %s.', 'woocommerce' ), WC()->countries->get_base_country() ) . '</p></div>';
+			echo '<div class="error"><p>' . sprintf( __( 'Simplify Commerce Error: Simplify currently only supported in the US, Australia and Ireland. Your base country is set to %s.', 'woocommerce' ), WC()->countries->get_base_country() ) . '</p></div>';
 		}
 
 		// Check required fields
