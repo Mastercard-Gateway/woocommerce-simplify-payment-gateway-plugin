@@ -657,6 +657,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$args = apply_filters( 'woocommerce_simplify_commerce_hosted_args', array(
 			'sc-key'          => $this->public_key,
 			'amount'          => $order->order_total * 100,
+			'currency'        => strtoupper(get_woocommerce_currency()),
 			'reference'       => $order->id,
 			'name'            => esc_html( get_bloginfo( 'name', 'display' ) ),
 			'description'     => sprintf( __( 'Order #%s', 'woocommerce' ), $order->get_order_number() ),
