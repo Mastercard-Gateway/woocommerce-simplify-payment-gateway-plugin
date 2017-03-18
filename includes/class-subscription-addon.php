@@ -185,7 +185,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	 * @uses  Simplify_BadRequestException
 	 * @return array
 	 */
-	protected function process_pre_order( $order, $cart_token = '' ) {
+	protected function process_pre_order( $order, $customer_token_value = '' ) {
 		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order->id ) ) {
 
 			try {
@@ -195,7 +195,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 					throw new Simplify_ApiException( $error_msg );
 				}
 
-				if ( empty( $cart_token ) ) {
+				if ( empty( $customer_token_value ) ) {
 					$error_msg = __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.', 'woocommerce' );
 
 					if ( 'yes' == $this->sandbox ) {
@@ -205,24 +205,8 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 					throw new Simplify_ApiException( $error_msg );
 				}
 
-				// Create customer
-				$customer = Simplify_Customer::createCustomer( array(
-					'token'     => $cart_token,
-					'email'     => $order->billing_email,
-					'name'      => trim( $order->get_formatted_billing_full_name() ),
-					'reference' => $order->id
-				) );
-
-				if ( is_object( $customer ) && '' != $customer->id ) {
-					$customer_id = wc_clean( $customer->id );
-
-					// Store the customer ID in the order
-					update_post_meta( $order->id, '_simplify_customer_id', $customer_id );
-				} else {
-					$error_msg = __( 'Error creating user in Simplify Commerce.', 'woocommerce' );
-
-					throw new Simplify_ApiException( $error_msg );
-				}
+				// Store the customer ID in the order
+				update_post_meta( $order->id, '_simplify_customer_id', $customer_token_value );
 
 				// Reduce stock levels
 				$order->reduce_order_stock();
@@ -255,7 +239,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			}
 
 		} else {
-			return parent::process_standard_payments( $order, $cart_token );
+			return parent::process_standard_payments( $order, '', $customer_token_value );
 		}
 	}
 
@@ -482,6 +466,37 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	}
 
 	/**
+	 * Process customer: updating or creating a new customer/saved CC
+	 */
+	protected function process_customer( $order, $customer_token = null, $cart_token = '' ) {
+		$customer_info = array(
+			'email' => $order->billing_email,
+			'name'  => trim( $order->get_formatted_billing_full_name() ),
+		);
+		$token = $this->save_token( $customer_token, $cart_token, $customer_info );
+
+		if ( ! is_null( $token ) ) {
+			$order->add_payment_token( $token );
+		}
+		return $token->get_token();
+	}
+
+	/**
+	 * Save token for subscription
+	 */
+	protected function get_customer_token($order) {
+		// New CC info was entered
+		if ( isset( $_REQUEST['cardToken'] ) ) {
+			$cart_token           = wc_clean( $_REQUEST['cardToken'] );
+			return $this->process_customer( $order, null, $cart_token );
+		}
+		else {
+			$customer_token = $this->get_users_token();
+			return !is_null($customer_token) ? $customer_token->get_token() : '';
+		}
+	}
+
+	/**
 	 * Return handler for Hosted Payments.
 	 */
 	public function return_handler() {
@@ -503,11 +518,13 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 			if ( $amount === $order_total ) {
 				if ( $this->order_contains_subscription( $order->id ) ) {
-					$response = $this->process_subscription( $order, $cart_token );
+					$customer_token_value = $this->get_customer_token($order);
+					$response = $this->process_subscription( $order, $customer_token_value );
 				} elseif ( $this->order_contains_pre_order( $order->id ) ) {
-					$response = $this->process_pre_order( $order, $cart_token );
+					$customer_token_value = $this->get_customer_token($order);
+					$response = $this->process_pre_order( $order, $customer_token_value );
 				} else {
-					$response = parent::process_standard_payments( $order, $cart_token );
+					return parent::return_handler();
 				}
 
 				if ( 'success' == $response['result'] ) {
