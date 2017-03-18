@@ -1,5 +1,8 @@
 # Change Log
 
+## v1.3.0
+- Save hosted payment for subscription
+
 ## v1.2.0
 - Adding "Australia" to the supported countries list
 - Pass currency code in Hosted Payments args
