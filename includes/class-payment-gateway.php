@@ -246,7 +246,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				'label'       => __( 'Enable Hosted Payments', 'woocommerce' ),
 				'type'        => 'select',
 				'description' => sprintf( __( 'Standard will display the credit card fields on your store (SSL required). %1$s Hosted Payments will display a Simplify Commerce modal dialog on your store (if SSL) or will redirect the customer to Simplify Commerce hosted page (if not SSL). %1$s Note: Hosted Payments need a new API Key pair with the hosted payments flag selected. %2$sFor more details check the Simplify Commerce docs%3$s.', 'woocommerce' ), '<br />', '<a href="https://simplify.desk.com/customer/portal/articles/1792405-how-do-i-enable-hosted-payments" target="_blank">', '</a>' ),
-				'default'     => 'standard',
+				'default'     => 'hosted',
 				'options'     => array(
 					'standard' => __( 'Standard', 'woocommerce' ),
 					'hosted'   => __( 'Hosted Payments', 'woocommerce' )
@@ -432,6 +432,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			if ( ! is_null( $token ) ) {
 				$order->add_payment_token( $token );
 			}
+
+			return $token;
 		}
 	}
 
@@ -597,44 +599,12 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	}
 
 	/**
-	 * Create Simplify customer for card on file
-	 *
-	 * @param $order
-	 * @return string|void
-	 */
-	protected function get_customer_token($order) {
-		// New CC info was entered
-		if ( isset( $_POST['simplify_token'] ) ) {
-			$cart_token           = wc_clean( $_POST['simplify_token'] );
-			$customer_token       = $this->get_users_token();
-			$customer_token_value = ( ! is_null( $customer_token ) ? $customer_token->get_token() : '' );
-			$this->process_customer( $order, $customer_token, $cart_token );
-			return $customer_token_value;
-		}
-
-		// Possibly Create (or update) customer/save payment token, use an existing token, and then process the payment
-		else if ( isset( $_POST['wc-simplify_commerce-payment-token'] ) && 'new' !== $_POST['wc-simplify_commerce-payment-token'] ) {
-			$token_id = wc_clean( $_POST['wc-simplify_commerce-payment-token'] );
-			$token    = WC_Payment_Tokens::get( $token_id );
-			if ( $token->get_user_id() !== get_current_user_id() ) {
-				wc_add_notice( __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.', 'woocommerce' ), 'error' );
-				return;
-			}
-			$this->process_customer( $order, $token );
-			return $token->get_token();
-		}
-		else {
-			$customer_token = $this->get_users_token();
-			return !is_null($customer_token) ? $customer_token->get_token() : '';
-		}
-	}
-
-	/**
 	 * Process the payment.
 	 *
 	 * @param int $order_id
 	 */
 	public function process_payment( $order_id ) {
+
 		$order = wc_get_order( $order_id );
 
 		// Payment/CC form is hosted on Simplify
@@ -642,8 +612,26 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			return $this->process_hosted_payments( $order );
 		}
 
-		$customer_token_value = $this->get_customer_token($order);
-		return $this->process_standard_payments( $order, '', $customer_token_value );
+		// New CC info was entered
+		if ( isset( $_POST['simplify_token'] ) ) {
+			$cart_token           = wc_clean( $_POST['simplify_token'] );
+			$customer_token       = $this->get_users_token();
+			$customer_token = $this->process_customer( $order, $customer_token, $cart_token );
+			$customer_token_value = ( ! is_null( $customer_token ) ? $customer_token->get_token() : '' );
+			return $this->process_standard_payments( $order, $cart_token, $customer_token_value );
+		}
+
+		// Possibly Create (or update) customer/save payment token, use an existing token, and then process the payment
+		if ( isset( $_POST['wc-simplify_commerce-payment-token'] ) && 'new' !== $_POST['wc-simplify_commerce-payment-token'] ) {
+			$token_id = wc_clean( $_POST['wc-simplify_commerce-payment-token'] );
+			$token    = WC_Payment_Tokens::get( $token_id );
+			if ( $token->get_user_id() !== get_current_user_id() ) {
+				wc_add_notice( __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.', 'woocommerce' ), 'error' );
+				return;
+			}
+			$this->process_customer( $order, $token );
+			return $this->process_standard_payments( $order, '', $token->get_token() );
+		}
 	}
 
 	/**
