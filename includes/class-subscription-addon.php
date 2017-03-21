@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @class 		WC_Addons_Gateway_Simplify_Commerce
  * @extends		WC_Gateway_Simplify_Commerce
- * @version		1.2.0
+ * @version		1.3.0
  * @author 		SimplifyCommerce
  */
 class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
@@ -113,21 +113,68 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	 * @return array
 	 * @throws Exception
 	 */
-	protected function process_subscription( $order, $customer_token_value = '' ) {
+	protected function process_subscription( $order, $cart_token = '', $customer_token = '' ) {
 		try {
-			if ( empty( $customer_token_value ) ) {
-				$error_msg = __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.', 'woocommerce' );
+			if (empty($cart_token) && empty ($customer_token)) {
+				$error_msg = __('Please make sure your card details have been entered correctly and that your browser supports JavaScript.', 'woocommerce');
 
-				if ( 'yes' == $this->sandbox ) {
-					$error_msg .= ' ' . __( 'Developers: Please make sure that you\'re including jQuery and there are no JavaScript errors on the page.', 'woocommerce' );
+				if ('yes' == $this->sandbox) {
+					$error_msg .= ' ' . __('Developers: Please make sure that you\'re including jQuery and there are no JavaScript errors on the page.', 'woocommerce');
 				}
 
-				throw new Simplify_ApiException( $error_msg );
+				throw new Simplify_ApiException($error_msg);
 			}
 
-			$this->save_subscription_meta( $order->id, $customer_token_value );
+			// We need to figure out if we want to charge the card token (new unsaved token, no customer, etc)
+			// or the customer token (just saved method, previously saved method)
+			$pass_tokens = array();
 
-			$payment_response = $this->process_subscription_payment( $order, $order->get_total() );
+			if (!empty ($cart_token)) {
+				$pass_tokens['token'] = $cart_token;
+			}
+
+			if (!empty ($customer_token)) {
+				$pass_tokens['customer'] = $customer_token;
+				// Use the customer token only, since we already saved the (one time use) card token to the customer
+				if (isset($_POST['wc-simplify_commerce-new-payment-method']) && true === (bool)$_POST['wc-simplify_commerce-new-payment-method']) {
+					unset($pass_tokens['token']);
+				}
+			}
+
+			// Did we create an account and save a payment method? We might need to use the customer token instead of the card token
+			if (isset($_POST['createaccount']) && true === (bool)$_POST['createaccount'] && empty ($customer_token)) {
+				$user_token = $this->get_users_token();
+				if (!is_null($user_token)) {
+					$pass_tokens['customer'] = $user_token->get_token();
+					unset($pass_tokens['token']);
+				}
+			}
+
+			if (isset($pass_tokens['customer']) && '' != $pass_tokens['customer']) {
+				$this->save_subscription_meta($order->id, $pass_tokens['customer']);
+
+				// Card is not save in woocommerce because checkbox is not selected
+			} else if (isset($pass_tokens['token'])) {
+				// Create customer
+				$customer = Simplify_Customer::createCustomer(array(
+					'token' => $cart_token,
+					'email' => $order->billing_email,
+					'name' => trim($order->get_formatted_billing_full_name()),
+					'reference' => $order->id
+				));
+
+				if ( is_object( $customer ) && '' != $customer->id ) {
+					$this->save_subscription_meta( $order->id, $customer->id );
+					$pass_tokens['customer'] = $customer->id;
+					unset($pass_tokens['token']);
+				} else {
+					$error_msg = __( 'Error creating user in Simplify Commerce.', 'woocommerce' );
+
+					throw new Simplify_ApiException( $error_msg );
+				}
+     		}
+
+			$payment_response = $this->process_subscription_payment( $order, $order->get_total(), $pass_tokens );
 
 			if ( is_wp_error( $payment_response ) ) {
 				throw new Exception( $payment_response->get_error_message() );
@@ -268,24 +315,38 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	public function process_payment( $order_id ) {
 		$order      = wc_get_order( $order_id );
 
-		$customer_token_value = $this->get_customer_token($order);
-
 		// Processing subscription
 		if ( 'standard' == $this->mode && ( $this->order_contains_subscription( $order->id ) || ( function_exists( 'wcs_is_subscription' ) && wcs_is_subscription( $order_id ) ) ) ) {
-			return $this->process_subscription( $order, $customer_token_value );
+
+			// New CC info was entered
+			if ( isset( $_POST['simplify_token'] ) ) {
+				$cart_token           = wc_clean( $_POST['simplify_token'] );
+				$customer_token       = $this->get_users_token();
+				$customer_token_value = ( ! is_null( $customer_token ) ? $customer_token->get_token() : '' );
+				$this->process_customer( $order, $customer_token, $cart_token );
+				return $this->process_subscription( $order, $cart_token, $customer_token_value );
+			}
+
+			// Possibly Create (or update) customer/save payment token, use an existing token, and then process the payment
+			if ( isset( $_POST['wc-simplify_commerce-payment-token'] ) && 'new' !== $_POST['wc-simplify_commerce-payment-token'] ) {
+				$token_id = wc_clean( $_POST['wc-simplify_commerce-payment-token'] );
+				$token    = WC_Payment_Tokens::get( $token_id );
+				if ( $token->get_user_id() !== get_current_user_id() ) {
+					wc_add_notice( __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.', 'woocommerce' ), 'error' );
+					return;
+				}
+				$this->process_customer( $order, $token );
+				return $this->process_subscription( $order, '', $token->get_token() );
+			}
 
 		// Processing pre-order
 		} elseif ( 'standard' == $this->mode && $this->order_contains_pre_order( $order->id ) ) {
-			return $this->process_pre_order( $order, $customer_token_value );
+			$cart_token = isset( $_POST['simplify_token'] ) ? wc_clean( $_POST['simplify_token'] ) : '';
+			return $this->process_pre_order( $order, $cart_token );
 
 		// Processing regular product
 		} else {
-			// Payment/CC form is hosted on Simplify
-			if ( 'hosted' === $this->mode ) {
-				return $this->process_hosted_payments( $order );
-			}
-
-			return $this->process_standard_payments( $order, '', $customer_token_value );
+			return parent::process_payment( $order_id );
 		}
 	}
 
@@ -297,7 +358,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	 * @uses  Simplify_BadRequestException
 	 * @return bool|WP_Error
 	 */
-	public function process_subscription_payment( $order, $amount = 0 ) {
+	public function process_subscription_payment( $order, $amount = 0, $token = array() ) {
 		if ( 0 == $amount ) {
 			// Payment complete
 			$order->payment_complete();
@@ -317,13 +378,21 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 		try {
 			// Charge the customer
-			$payment = Simplify_Payment::createPayment( array(
+			$data = array(
 				'amount'              => $amount * 100, // In cents.
-				'customer'            => $customer_id,
 				'description'         => sprintf( __( '%s - Order #%s', 'woocommerce' ), esc_html( get_bloginfo( 'name', 'display' ) ), $order->get_order_number() ),
 				'currency'            => strtoupper( get_woocommerce_currency() ),
 				'reference'           => $order->id
-			) );
+			);
+
+			if ( !empty($token)) {
+				$data = array_merge($data, $token);
+			} else {
+				$data = array_merge($data, array('customer' => $customer_id));
+			}
+
+			// Charge the customer
+			$payment = Simplify_Payment::createPayment( $data );
 
 		} catch ( Exception $e ) {
 
