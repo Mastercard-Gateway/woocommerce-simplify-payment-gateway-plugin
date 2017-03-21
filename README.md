@@ -23,19 +23,19 @@ Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simpli
 1. Download the plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/raw/master/dist/simplifycommerce.zip)
 
 2. Add New Plugin
-  ![Add New Plugin](http://ldntools.labs.mastercard.com/simplify/woocommerce-simplify-extension/raw/master/docs/Wordpress_AddNew_Plugin.png) 
+  ![Add New Plugin](./docs/Wordpress_AddNew_Plugin.png "Add New Plugin") 
    
 3. Upload zip file
-  ![Upload zip file](http://ldntools.labs.mastercard.com/simplify/woocommerce-simplify-extension/raw/master/docs/Wordpress_Upload_Plugin.png) 
+  ![Upload zip file](./docs/Wordpress_Upload_Plugin.png "Upload zip file")
    
 4. Activate Plugin
-  ![Activate Plugin](http://ldntools.labs.mastercard.com/simplify/woocommerce-simplify-extension/raw/master/docs/Wordpress_Activate_Plugin.png) 
+  ![Activate Plugin](./docs/Wordpress_Activate_Plugin.png "Activate Plugin") 
    
 5. Plugin Settings 
-  ![Plugin Settings](http://ldntools.labs.mastercard.com/simplify/woocommerce-simplify-extension/raw/master/docs/SimplifyCommerce_Plugin_Settings.png) 
+  ![Plugin Settings](./docs/SimplifyCommerce_Plugin_Settings.png "Plugin Settings") 
    
 6. Enter API Keys and other settings
-  ![API Keys and other settings](http://ldntools.labs.mastercard.com/simplify/woocommerce-simplify-extension/raw/master/docs/SimplifyCommerce_Plugin_APIKeys.png) 
+  ![API Keys and other settings](./docs/SimplifyCommerce_Plugin_APIKeys.png "API Keys & Other Settings") 
    
 
 ## Why choose Simplify Commerce?
