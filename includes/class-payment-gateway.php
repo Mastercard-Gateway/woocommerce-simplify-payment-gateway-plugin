@@ -42,10 +42,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
+    protected $logger;
+
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
+		$this->logger = new WC_Logger();
+
 		$this->id                 = 'simplify_commerce';
 		$this->method_title       = __( 'Simplify Commerce', 'woocommerce' );
 		$this->method_description = __( 'Take payments via Simplify Commerce - uses simplify.js to create card tokens and the Simplify Commerce SDK. Requires SSL when sandbox is disabled.', 'woocommerce' );
@@ -69,6 +73,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		);
 		$this->view_transaction_url = 'https://www.simplify.com/commerce/app#/payment/%s';
 
+		$this->availableCardTypes = array('Mastercard', 'Visa', 'Discover', 'Amex', 'JCB');
+
 		// Load the form fields
 		$this->init_form_fields();
 
@@ -84,6 +90,9 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$this->sandbox         = $this->get_option( 'sandbox' );
 		$this->public_key      = $this->sandbox == 'no' ? $this->get_option( 'public_key' ) : $this->get_option( 'sandbox_public_key' );
 		$this->private_key     = $this->sandbox == 'no' ? $this->get_option( 'private_key' ) : $this->get_option( 'sandbox_private_key' );
+		$this->supported_card_types = $this->get_option( 'supported_card_types' );
+
+		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::__construct supported_card_types=".join($this->supported_card_types));
 
 		$this->init_simplify_sdk();
 
@@ -192,6 +201,9 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		elseif ( 'standard' == $this->mode && ! wc_checkout_is_https() ) {
 			echo '<div class="error"><p>' . sprintf( __( 'Simplify Commerce is enabled, but the <a href="%s">force SSL option</a> is disabled; your checkout may not be secure! Please enable SSL and ensure your server has a valid SSL certificate - Simplify Commerce will only work in sandbox mode.', 'woocommerce'), admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ) . '</p></div>';
 		}
+		elseif ( 'standard' == $this->mode && empty($this->supported_card_types) ) {
+			echo '<div class="error"><p>' . __( 'You must select a card type that you support for checkout.', 'woocommerce') . '</p></div>';
+		}
 	}
 
 	/**
@@ -252,6 +264,13 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 					'hosted'   => __( 'Hosted Payments', 'woocommerce' )
 				)
 			),
+			'supported_card_types' => array(
+				'title'       => __( 'Supported Card Types', 'woocommerce' ),
+				'type'        => 'select_card_types',
+				'default'     => array('Mastercard', 'Visa'),
+				'description' =>  sprintf(__( 'Select the card types that you support. Contact %1$sSimplify%2$s if unsure.', 'woocommerce' ), '<a href="https://simplify.desk.com/customer/portal/articles/1792405-how-do-i-enable-hosted-payments" target="_blank">', '</a>'),
+				'desc_tip'    => false
+			),
 			'modal_color' => array(
 				'title'       => __( 'Modal Color', 'woocommerce' ),
 				'type'        => 'color',
@@ -295,6 +314,104 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				'desc_tip'    => true
 			),
 		);
+	}
+
+	/**
+	 * Returns the POSTed data, to be used to save the settings.
+	 * @return array
+	 */
+	public function get_post_data() {
+		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data data=$this->data _POST=$_POST");
+		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data --------------");
+		foreach($this->data as $key => $value)
+		{
+			$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data --data key=$key, value=$value");
+		}
+		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data --------------");
+		foreach($_POST as $key => $value)
+		{
+			$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data --_POST key=$key, value=$value");
+		}
+		foreach($this->form_fields as $form_field_key => $form_field_value) {
+			if ($form_field_value['type'] == "select_card_types") {
+				$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- form_field_key=" . $form_field_key);
+				$form_field_key_select_card_types = $this->plugin_id . $this->id . "_" . $form_field_key;
+				$select_card_types_values = array();
+				foreach($this->availableCardTypes as $card_type_value) {
+					$card_type = strtolower($card_type_value);
+					$form_field_key_card_type = $form_field_key_select_card_types . "_" . $card_type;
+					$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- form_field_key_card_type=" . $form_field_key_card_type);
+					$card_type_post_value = $_POST[$form_field_key_card_type];
+					$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- card_type_post_value=" . $card_type_post_value);
+					if (!empty($card_type_post_value)) {
+						$select_card_types_values[] = $card_type_post_value;
+						$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- setting select_card_types_values");
+					}
+				}
+				$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- select_card_types_values=".join($select_card_types_values));
+				$_POST[$form_field_key_select_card_types] = $select_card_types_values;
+			}
+		}
+
+		if ( ! empty( $this->data ) && is_array( $this->data ) ) {
+			return $this->data;
+		}
+		return $_POST;
+	}
+
+	/**
+	 * Validate Select Card Types Field.
+	 *
+	 * @param  string $key
+	 * @param  string $value Posted Value
+	 * @return string
+	 */
+	public function validate_select_card_types_field( $key, $value ) {
+		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::validate_select_card_types_field key=$key value=" . join($value));
+		return $value;
+	}
+
+	public function generate_select_card_types_html($key, $data) {
+		$field_key = $this->get_field_key( $key );
+		$defaults  = array(
+			'title'             => '',
+			'label'             => '',
+			'disabled'          => false,
+			'class'             => '',
+			'css'               => '',
+			'type'              => 'select_card_types',
+			'desc_tip'          => false,
+			'description'       => ''
+		);
+
+		$data = wp_parse_args( $data, $defaults );
+
+		if ( ! $data['label'] ) {
+			$data['label'] = $data['title'];
+		}
+
+		$supported_card_types = $this->get_option( $key );
+
+		ob_start();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
+				<?php echo $this->get_tooltip_html( $data ); ?>
+			</th>
+			<td class="forminp">
+				<fieldset id="<?php echo esc_attr( $field_key ); ?>">
+					<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+		            <?php foreach ( $this->availableCardTypes as $cardType ) : ?>
+						<input <?php disabled( $data['disabled'], true ); ?> class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox" name="<?php echo esc_attr( $field_key . '_' . strtolower($cardType)); ?>" title="<?php echo esc_attr($cardType); ?>" alt="<?php echo esc_attr($cardType); ?>" id="<?php echo esc_attr( $field_key . '_' . strtolower($cardType) ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $cardType; ?>" <?php echo in_array($cardType, $supported_card_types) ? 'checked' : ''; ?> <?php echo $this->get_custom_attribute_html( $data ); ?> /> <img src="<?php echo WC_HTTPS::force_https_url(WC()->plugin_url() . '/assets/images/icons/credit-cards/' . strtolower($cardType) . '.svg'); ?>" title="<?php echo esc_attr($cardType); ?>" alt="<?php echo esc_attr($cardType); ?>" width="32" style="margin-right: 15px; vertical-align: bottom"/>
+					<?php endforeach; ?>
+					<div style="margin-top: 10px;"><?php echo $this->get_description_html( $data ); ?></div>
+				</fieldset>
+			</td>
+		</tr>
+		<?php
+
+		return ob_get_clean();
 	}
 
 	/**
@@ -787,12 +904,16 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @return string
 	 */
 	public function get_icon() {
-		$icon  = '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/visa.svg' ) . '" alt="Visa" width="32" />';
-		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/mastercard.svg' ) . '" alt="Mastercard" width="32" />';
-		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/discover.svg' ) . '" alt="Discover" width="32" />';
-		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/amex.svg' ) . '" alt="Amex" width="32" />';
-		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/jcb.svg' ) . '" alt="JCB" width="32" />';
+		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_icon this->supported_card_types=$this->supported_card_types");
 
+		$icon = '';
+		if (!empty($this->supported_card_types)) {
+			foreach ( array_reverse($this->supported_card_types) as $cardType ) {
+				$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_icon cardType=$cardType");
+
+				$icon .= '<img src="' . WC_HTTPS::force_https_url(WC()->plugin_url() . '/assets/images/icons/credit-cards/' . strtolower($cardType) . '.svg') . '" alt="' . $cardType . '" width="32" style="margin-left: 2px;"/>';
+			}
+		}
 		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
 	}
 }
