@@ -42,13 +42,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
-    protected $logger;
-
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->logger = new WC_Logger();
 
 		$this->id                 = 'simplify_commerce';
 		$this->method_title       = __( 'Simplify Commerce', 'woocommerce' );
@@ -91,8 +88,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$this->public_key      = $this->sandbox == 'no' ? $this->get_option( 'public_key' ) : $this->get_option( 'sandbox_public_key' );
 		$this->private_key     = $this->sandbox == 'no' ? $this->get_option( 'private_key' ) : $this->get_option( 'sandbox_private_key' );
 		$this->supported_card_types = $this->get_option( 'supported_card_types' );
-
-		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::__construct supported_card_types=".join($this->supported_card_types));
 
 		$this->init_simplify_sdk();
 
@@ -321,34 +316,18 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @return array
 	 */
 	public function get_post_data() {
-		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data data=$this->data _POST=$_POST");
-		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data --------------");
-		foreach($this->data as $key => $value)
-		{
-			$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data --data key=$key, value=$value");
-		}
-		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data --------------");
-		foreach($_POST as $key => $value)
-		{
-			$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data --_POST key=$key, value=$value");
-		}
 		foreach($this->form_fields as $form_field_key => $form_field_value) {
 			if ($form_field_value['type'] == "select_card_types") {
-				$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- form_field_key=" . $form_field_key);
 				$form_field_key_select_card_types = $this->plugin_id . $this->id . "_" . $form_field_key;
 				$select_card_types_values = array();
 				foreach($this->availableCardTypes as $card_type_value) {
 					$card_type = strtolower($card_type_value);
 					$form_field_key_card_type = $form_field_key_select_card_types . "_" . $card_type;
-					$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- form_field_key_card_type=" . $form_field_key_card_type);
 					$card_type_post_value = $_POST[$form_field_key_card_type];
-					$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- card_type_post_value=" . $card_type_post_value);
 					if (!empty($card_type_post_value)) {
 						$select_card_types_values[] = $card_type_post_value;
-						$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- setting select_card_types_values");
 					}
 				}
-				$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_post_data -- select_card_types_values=".join($select_card_types_values));
 				$_POST[$form_field_key_select_card_types] = $select_card_types_values;
 			}
 		}
@@ -367,7 +346,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @return string
 	 */
 	public function validate_select_card_types_field( $key, $value ) {
-		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::validate_select_card_types_field key=$key value=" . join($value));
 		return $value;
 	}
 
@@ -904,12 +882,9 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @return string
 	 */
 	public function get_icon() {
-		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_icon this->supported_card_types=$this->supported_card_types");
-
 		$icon = '';
 		if (!empty($this->supported_card_types)) {
 			foreach ( array_reverse($this->supported_card_types) as $cardType ) {
-				$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::get_icon cardType=$cardType");
 
 				$icon .= '<img src="' . WC_HTTPS::force_https_url(WC()->plugin_url() . '/assets/images/icons/credit-cards/' . strtolower($cardType) . '.svg') . '" alt="' . $cardType . '" width="32" style="margin-left: 2px;"/>';
 			}
