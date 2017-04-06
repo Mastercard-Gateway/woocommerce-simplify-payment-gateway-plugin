@@ -263,7 +263,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				'title'       => __( 'Supported Card Types', 'woocommerce' ),
 				'type'        => 'select_card_types',
 				'default'     => array('Mastercard', 'Visa'),
-				'description' =>  sprintf(__( 'Select the card types that you support. Contact %1$sSimplify%2$s if unsure.', 'woocommerce' ), '<a href="https://simplify.desk.com/customer/portal/articles/1792405-how-do-i-enable-hosted-payments" target="_blank">', '</a>'),
+				'description' =>  sprintf(__( 'Select the card types that you support. Contact %1$sSimplify Commerce%2$s if you are unsure.', 'woocommerce' ), '<a href="https://simplify.desk.com/customer/portal/articles/1172902-what-types-of-payments-can-i-accept-with-simplify-commerce-" target="_blank">', '</a>'),
 				'desc_tip'    => false
 			),
 			'modal_color' => array(
@@ -381,7 +381,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				<fieldset id="<?php echo esc_attr( $field_key ); ?>">
 					<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
 		            <?php foreach ( $this->availableCardTypes as $cardType ) : ?>
-						<input <?php disabled( $data['disabled'], true ); ?> class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox" name="<?php echo esc_attr( $field_key . '_' . strtolower($cardType)); ?>" title="<?php echo esc_attr($cardType); ?>" alt="<?php echo esc_attr($cardType); ?>" id="<?php echo esc_attr( $field_key . '_' . strtolower($cardType) ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $cardType; ?>" <?php echo in_array($cardType, $supported_card_types) ? 'checked' : ''; ?> <?php echo $this->get_custom_attribute_html( $data ); ?> /> <img src="<?php echo WC_HTTPS::force_https_url(WC()->plugin_url() . '/assets/images/icons/credit-cards/' . strtolower($cardType) . '.svg'); ?>" title="<?php echo esc_attr($cardType); ?>" alt="<?php echo esc_attr($cardType); ?>" width="32" style="margin-right: 15px; vertical-align: bottom"/>
+						<input <?php disabled( $data['disabled'], true ); ?> class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox" name="<?php echo esc_attr( $field_key . '_' . strtolower($cardType)); ?>" title="<?php echo esc_attr($cardType); ?>" alt="<?php echo esc_attr($cardType); ?>" id="<?php echo esc_attr( $field_key . '_' . strtolower($cardType) ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" value="<?php echo $cardType; ?>" <?php echo in_array($cardType, $supported_card_types) ? 'checked' : ''; ?> <?php echo $this->get_custom_attribute_html( $data ); ?> /> <img src="<?php echo plugins_url( '/assets/images/icons/credit-cards/', WC_SIMPLIFY_COMMERCE_FILE ) . strtolower($cardType) . '.png'; ?>" title="<?php echo esc_attr($cardType); ?>" alt="<?php echo esc_attr($cardType); ?>" width="32" style="margin-right: 15px; vertical-align: bottom"/>
 					<?php endforeach; ?>
 					<div style="margin-top: 10px;"><?php echo $this->get_description_html( $data ); ?></div>
 				</fieldset>
@@ -886,7 +886,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		if (!empty($this->supported_card_types)) {
 			foreach ( array_reverse($this->supported_card_types) as $cardType ) {
 
-				$icon .= '<img src="' . WC_HTTPS::force_https_url(WC()->plugin_url() . '/assets/images/icons/credit-cards/' . strtolower($cardType) . '.svg') . '" alt="' . $cardType . '" width="32" style="margin-left: 2px;"/>';
+				$icon .= '<img src="' . plugins_url( '/assets/images/icons/credit-cards/', WC_SIMPLIFY_COMMERCE_FILE ) . strtolower($cardType) . '.png' . '" alt="' . $cardType . '" width="32" style="margin-left: 2px;"/>';
 			}
 		}
 		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
