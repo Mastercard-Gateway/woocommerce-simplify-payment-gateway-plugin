@@ -156,11 +156,14 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 				jQuery( '#woocommerce_simplify_commerce_mode' ).on( 'change', function() {
 					var color = jQuery( '#woocommerce_simplify_commerce_modal_color' ).closest( 'tr' );
+					var supportedCardTypes = jQuery( '#woocommerce_simplify_commerce_supported_card_types' ).closest( 'tr' );
 
 					if ( 'standard' === jQuery( this ).val() ) {
 						color.hide();
+						supportedCardTypes.show();
 					} else {
 						color.show();
+						supportedCardTypes.hide();
 					}
 				}).change();
 			</script>
@@ -883,10 +886,12 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	public function get_icon() {
 		$icon = '';
-		if (!empty($this->supported_card_types)) {
-			foreach ( array_reverse($this->supported_card_types) as $cardType ) {
+		if ( 'hosted' !== $this->mode ) {
+			if (!empty($this->supported_card_types)) {
+				foreach (array_reverse($this->supported_card_types) as $cardType) {
 
-				$icon .= '<img src="' . plugins_url( '/assets/images/icons/credit-cards/', WC_SIMPLIFY_COMMERCE_FILE ) . strtolower($cardType) . '.png' . '" alt="' . $cardType . '" width="32" style="margin-left: 2px;"/>';
+					$icon .= '<img src="' . plugins_url('/assets/images/icons/credit-cards/', WC_SIMPLIFY_COMMERCE_FILE) . strtolower($cardType) . '.png' . '" alt="' . $cardType . '" width="32" style="margin-left: 2px;"/>';
+				}
 			}
 		}
 		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
