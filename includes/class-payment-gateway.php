@@ -42,10 +42,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
+    protected $logger;
+
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
+		$this->logger = new WC_Logger();
 
 		$this->id                 = 'simplify_commerce';
 		$this->method_title       = __( 'Simplify Commerce', 'woocommerce' );
@@ -385,7 +388,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 					<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
 		            <?php foreach ( $this->availableCardTypes as $cardType ) : ?>
 						<input <?php disabled( $data['disabled'], true ); ?> class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox" name="<?php echo esc_attr( $field_key . '_' . strtolower($cardType)); ?>" title="<?php echo esc_attr($cardType); ?>" alt="<?php echo esc_attr($cardType); ?>" id="<?php echo esc_attr( $field_key . '_' . strtolower($cardType) ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>; margin-bottom: 10px;" value="<?php echo $cardType; ?>" <?php echo in_array($cardType, $supported_card_types) ? 'checked' : ''; ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
-						<img src="<?php echo plugins_url( '/assets/images/icons/credit-cards/', WC_SIMPLIFY_COMMERCE_FILE ) . strtolower($cardType) . '.png'; ?>" title="<?php echo esc_attr($cardType); ?>" alt="<?php echo esc_attr($cardType); ?>" style="margin-right: 15px; vertical-align: text-bottom; height: 36px; width: 54px;"/>
+						<img src="<?php echo plugins_url( '/assets/images/icons/credit-cards/', WC_SIMPLIFY_COMMERCE_FILE ) . strtolower($cardType) . '.png'; ?>" title="<?php echo esc_attr($cardType); ?>" alt="<?php echo esc_attr($cardType); ?>" style="margin-right: 15px; vertical-align: text-bottom; height: 28px; width: 42px;"/>
 					<?php endforeach; ?>
 					<div style="margin-top: 10px;"><?php echo $this->get_description_html( $data ); ?></div>
 				</fieldset>
@@ -394,6 +397,18 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		<?php
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Validate frontend fields.
+	 *
+	 * Validate payment fields on the frontend.
+	 *
+	 * @return bool
+	 */
+	public function validate_fields() {
+		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::validate_fields");
+		return parent::validate_fields();;
 	}
 
 	/**
@@ -432,7 +447,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			'card.expYear'  => __( 'Expiry Year', 'woocommerce' ),
 			'is_invalid'    => __( 'is invalid', 'woocommerce' ),
 			'mode'          => $this->mode,
-			'is_ssl'        => is_ssl()
+			'is_ssl'        => is_ssl(),
+			'supported_card_types' => array_map('strtolower', $this->supported_card_types)
 		) );
 	}
 
@@ -891,7 +907,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			if (!empty($this->supported_card_types)) {
 				foreach (array_reverse($this->supported_card_types) as $cardType) {
 
-					$icon .= '<img src="' . plugins_url('/assets/images/icons/credit-cards/', WC_SIMPLIFY_COMMERCE_FILE) . strtolower($cardType) . '.png' . '" alt="' . $cardType . '" style="max-height: 36px; height: 36px; width: 54px; border-top-color: #f4f4f4; border-top-width: 1px; border-top-left-radius: 8px; border-top-style: solid; border-top-right-radius: 8px;"/>';
+					$icon .= '<img src="' . plugins_url('/assets/images/icons/credit-cards/', WC_SIMPLIFY_COMMERCE_FILE) . strtolower($cardType) . '.png' . '" alt="' . $cardType . '" style="max-height: 28px; height: 28px; width: 42px;"/>';
 				}
 			}
 		}
