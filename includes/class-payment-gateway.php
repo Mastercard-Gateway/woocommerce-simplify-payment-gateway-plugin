@@ -42,13 +42,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
-    protected $logger;
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->logger = new WC_Logger();
 
 		$this->id                 = 'simplify_commerce';
 		$this->method_title       = __( 'Simplify Commerce', 'woocommerce' );
@@ -397,18 +395,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		<?php
 
 		return ob_get_clean();
-	}
-
-	/**
-	 * Validate frontend fields.
-	 *
-	 * Validate payment fields on the frontend.
-	 *
-	 * @return bool
-	 */
-	public function validate_fields() {
-		$this->logger->add("simplifycommerce", "WC_Gateway_Simplify_Commerce::validate_fields");
-		return parent::validate_fields();;
 	}
 
 	/**

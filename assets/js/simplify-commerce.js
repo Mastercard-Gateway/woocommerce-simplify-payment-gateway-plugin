@@ -39,7 +39,6 @@
 		if ( simplify_checked && ( ( 0 === token_field_count || 'new' === token_value ) || '1' === add_payment_method ) ) {
 
 
-			console.log("simplify-token", $( 'input.simplify-token' ));
 			if ( 0 === $( 'input.simplify-token' ).length ) {
 
 				$form.block({
@@ -261,7 +260,6 @@
 		}, $.fn.isCardSupported = function() {
 			if (this.isValid()) {
 				var type = this.cardType();
-				console.log("card type", type);
 				return Simplify_commerce_params.supported_card_types.indexOf(type) != -1;
 			}
 			return false;
