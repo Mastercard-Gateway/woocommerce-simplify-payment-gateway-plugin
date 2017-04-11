@@ -38,6 +38,7 @@
 
 		if ( simplify_checked && ( ( 0 === token_field_count || 'new' === token_value ) || '1' === add_payment_method ) ) {
 
+
 			if ( 0 === $( 'input.simplify-token' ).length ) {
 
 				$form.block({
@@ -47,6 +48,24 @@
 						opacity: 0.6
 					}
 				});
+
+				var data = {"error": {"code": "validation", "fieldErrors": []}};
+				if (!$( '#simplify_commerce-card-number' ).val()) {
+					data.error.fieldErrors.push({"field": "card.number", "message": "Field cannot be empty."});
+				} else if (!$('#simplify_commerce-card-number').isCardSupported()) {
+					data.error.fieldErrors.push({"field": "card.number", "message": "Card is not supported."});
+				}
+				var expiryDate = $( '#simplify_commerce-card-expiry' ).expiryDate();
+				if (!expiryDate.month || !expiryDate.month.trim()) {
+					data.error.fieldErrors.push({"field": "card.expMonth", "message": "Field is required."});
+				}
+				if (!expiryDate.year || !expiryDate.year.trim()) {
+					data.error.fieldErrors.push({"field": "card.expYear", "message": "Field is required."});
+				}
+				if (data.error.fieldErrors.length != 0) {
+					simplifyResponseHandler(data);
+					return false;
+				}
 
 				var card           = $( '#simplify_commerce-card-number' ).val(),
 					cvc            = $( '#simplify_commerce-card-cvc' ).val(),
@@ -104,7 +123,11 @@
 					errorList = '';
 
 				for ( var i = 0; i < fieldErrorsLength; i++ ) {
-					errorList += '<li>' + Simplify_commerce_params[ fieldErrors[i].field ] + ' ' + Simplify_commerce_params.is_invalid  + ' - ' + fieldErrors[i].message + '.</li>';
+					var fieldName = Simplify_commerce_params[ fieldErrors[i].field ];
+					if (fieldName === undefined || !fieldName) {
+						fieldName = fieldErrors[i].field;
+					}
+					errorList += '<li>' + fieldName + ' ' + Simplify_commerce_params.is_invalid  + ' - ' + fieldErrors[i].message + '.</li>';
 				}
 
 				ccForm.prepend( '<ul class="woocommerce-error">' + errorList + '</ul>' );
@@ -145,5 +168,102 @@
 		});
 
 	});
+
+	(function() {
+		isNumeric = function(num) {
+			return /[\d\s]/.test(num);
+		}, isTextSelected = function(input) {
+			return "number" == typeof input.prop("selectionStart") ? input.prop("selectionStart") != input.prop("selectionEnd") : "undefined" != typeof document.selection ? (input.focus(),
+			document.selection.createRange().text == input.val()) : void 0;
+		}, cardType = function(num) {
+			var MASTERCARD = "51,52,53,54,55,22,", VISA = "4", AMEX = "34,37,", DISCOVER = "60,64,65,", CUP = "62,", JCB = "35,", DINERS = "30,36,38,39,";
+			if (!num) return null;
+			if (num.substring(0, 1) === VISA) return "visa";
+			var prefix = num.substring(0, 2) + ",";
+			return 3 != prefix.length ? null : -1 != MASTERCARD.indexOf(prefix) ? "mastercard" : -1 != AMEX.indexOf(prefix) ? "amex" : -1 != DISCOVER.indexOf(prefix) ? "discover" : -1 != CUP.indexOf(prefix) ? "cup" : -1 != JCB.indexOf(prefix) ? "jcb" : -1 != DINERS.indexOf(prefix) ? "diners" : null;
+		}, restrictNumeric = function(e) {
+			var keyCode = e.which;
+			if (32 === keyCode) return !1;
+			if (33 > keyCode) return !0;
+			var keyChar = String.fromCharCode(keyCode);
+			return isNumeric(keyChar);
+		}, maxlength = function(e) {
+			var input = $(this);
+			if (!isTextSelected(input)) {
+				var type = input.cardType(), keyChar = String.fromCharCode(e.which);
+				if (isNumeric(keyChar)) {
+					var value = input.val() + keyChar;
+					return value = value.replace(/\D/g, ""), "amex" == type ? value.length <= 15 : value.length <= 16;
+				}
+			}
+		}, needsLuhnCheck = function(value) {
+			return -1 == [ "cup" ].indexOf(cardType(value));
+		}, luhnCheck = function(value) {
+			var luhn = function(v) {
+				var t, n, p, i, s;
+				for (p = !0, s = 0, n = v.split("").reverse(), i = 0; i < n.length; i++) t = parseInt(n[i], 10),
+				(p = !p) && (t *= 2), t > 9 && (t -= 9), s += t;
+				return s % 10 === 0;
+			};
+			return /^\d+$/.test(value) && luhn(value);
+		}, formatCardInput = function(e) {
+			var input = $(this);
+			if (!isTextSelected(input)) {
+				var type = input.cardType(), value = input.val(), keyChar = String.fromCharCode(e.which);
+				if (isNumeric(keyChar)) {
+					var maxlength = 16, pattern = /(?:^|\s)(\d{4})$/;
+					"amex" === type && (maxlength = 15, pattern = /^(\d{4}|\d{4}\s\d{6})$/);
+					var length = (value.replace(/\D/g, "") + keyChar).length;
+					if (!(length >= maxlength)) return pattern.test(value) ? (e.preventDefault(), input.val(value + " " + keyChar)) : pattern.test(value + keyChar) ? (e.preventDefault(),
+						input.val(value + keyChar + " ")) : void 0;
+				}
+			}
+		}, formatCardBackspace = function(e) {
+			var BACK_SPACE = 8, input = $(this), value = input.val();
+			return isTextSelected(input) ? void 0 : e.which === BACK_SPACE && /\s\d?$/.test(value) ? (e.preventDefault(),
+				input.val(value.replace(/\s\d?$/, ""))) : void 0;
+		}, formatExpiryInput = function(e) {
+			var input = $(this), value = $(this).val();
+			if (!isTextSelected(input)) {
+				var keyChar = String.fromCharCode(e.which), slash = "/" == keyChar;
+				return value.replace(/\D/g, "").length >= 4 && 8 != e.which && 0 != e.which ? !1 : void ((isNumeric(keyChar) || slash) && (1 != value.length && slash || (input.val(1 == value.length && slash ? "0" + value + "/" : 1 != value.length || slash ? value + keyChar : value + keyChar + "/"),
+					e.preventDefault())));
+			}
+		}, expiryDate = function(expiry) {
+			if (expiry) {
+				var dates = expiry.split("/");
+				return {
+					month: dates[0],
+					year: dates[1]
+				};
+			}
+			return {
+				month: null,
+				year: null
+			};
+		}, $.fn.restrictNumeric = function() {
+			return this.keypress(restrictNumeric);
+		}, $.fn.cardType = function() {
+			return cardType(this.val());
+		}, $.fn.formatCardNumber = function() {
+			this.restrictNumeric(), this.keypress(maxlength), this.keypress(formatCardInput),
+				this.keydown(formatCardBackspace);
+		}, $.fn.formatExpiryNumber = function() {
+			this.restrictNumeric(), this.keypress(formatExpiryInput);
+		}, $.fn.expiryDate = function() {
+			return expiryDate(this.val());
+		}, $.fn.unformatValue = function() {
+			return this.val() ? this.val().replace(/\s/g, "") : "";
+		}, $.fn.isValid = function() {
+			var v = this.unformatValue();
+			return needsLuhnCheck(v) ? luhnCheck(v) : !0;
+		}, $.fn.isCardSupported = function() {
+			if (this.isValid()) {
+				var type = this.cardType();
+				return Simplify_commerce_params.supported_card_types.indexOf(type) != -1;
+			}
+			return false;
+		};
+	}).call(this);
 
 }( jQuery ) );
