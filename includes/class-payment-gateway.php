@@ -267,7 +267,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				'title'       => __( 'Supported Card Types', 'woocommerce' ),
 				'type'        => 'select_card_types',
 				'default'     => array('Mastercard', 'Visa'),
-				'description' =>  sprintf(__( 'Select the card types that you support. Contact %1$sSimplify Commerce%2$s if you are unsure.', 'woocommerce' ), '<a href="https://simplify.desk.com/customer/portal/articles/1172902-what-types-of-payments-can-i-accept-with-simplify-commerce-" target="_blank">', '</a>'),
+				'description' =>  __( 'Please make sure your merchant account supports the brand(s) selected.', 'woocommerce' ),
 				'desc_tip'    => false
 			),
 			'modal_color' => array(
