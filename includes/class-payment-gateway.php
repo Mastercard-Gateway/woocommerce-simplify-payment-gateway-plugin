@@ -536,6 +536,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 			return $token;
 		}
+
+		return $customer_token;
 	}
 
 	/**
