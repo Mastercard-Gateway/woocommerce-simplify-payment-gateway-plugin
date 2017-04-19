@@ -39,7 +39,7 @@
 		if ( simplify_checked && ( ( 0 === token_field_count || 'new' === token_value ) || '1' === add_payment_method ) ) {
 
 
-			if ( 0 === $( 'input.simplify-token' ).length ) {
+			if ( 0 === $( 'input.simplify-token' ).length && 'hosted' != Simplify_commerce_params.mode) {
 
 				$form.block({
 					message: null,

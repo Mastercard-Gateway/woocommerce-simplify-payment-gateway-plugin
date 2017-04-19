@@ -322,8 +322,8 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			if ( isset( $_POST['simplify_token'] ) ) {
 				$cart_token           = wc_clean( $_POST['simplify_token'] );
 				$customer_token       = $this->get_users_token();
+				$customer_token = $this->process_customer( $order, $customer_token, $cart_token );
 				$customer_token_value = ( ! is_null( $customer_token ) ? $customer_token->get_token() : '' );
-				$this->process_customer( $order, $customer_token, $cart_token );
 				return $this->process_subscription( $order, $cart_token, $customer_token_value );
 			}
 
