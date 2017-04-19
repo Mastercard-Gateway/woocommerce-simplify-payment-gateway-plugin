@@ -1,5 +1,8 @@
 # Change Log
 
+## v1.4.0
+- Display supported card types set by merchant
+
 ## v1.3.0
 - Save hosted payment for subscription
 
