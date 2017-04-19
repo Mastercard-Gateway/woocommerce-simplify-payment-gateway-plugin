@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class 		WC_Gateway_Simplify_Commerce
  * @extends		WC_Payment_Gateway_CC
  * @since       2.2.0
- * @version		1.3.0
+ * @version		1.4.0
  * @package		WooCommerce/Classes/Payment
  * @author 		SimplifyCommerce
  */
