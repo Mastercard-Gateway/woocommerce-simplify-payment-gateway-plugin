@@ -41,14 +41,9 @@ Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simpli
 ## Why choose Simplify Commerce?
 
 With Simplify Commerce, you can easily integrate online payments from most major card brands and start selling right away. Our powerful dashboard and features, including e-invoices and recurring payments, make it easy to immediately meet your needs.
+
 Choose Simplify Commerce as your WooCommerce payment gateway to get access to your money quickly with a powerful, secured payment engine supplied by Mastercard.
 
-* 2.75% + 30¢ simple pricing
-* No setup fees.
-* No refund costs.
-* No monthly service fees (Subject to $10 minimum monthly processing fee).
-* Accept Mastercard, Visa, American Express, Discover, JCB and Diners Club transactions
-* Enjoy peace of mind from knowing your transactions are secure – all sensitive data is managed by Simplify Commerce
 
 ## Frequently Asked Questions
 
