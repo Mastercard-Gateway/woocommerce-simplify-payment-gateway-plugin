@@ -1,5 +1,8 @@
 # Change Log
 
+## v1.4.1
+- Using hash_equals in return_handler helps prevent timing attacks.
+
 ## v1.4.0
 - Display supported card types set by merchant
 
