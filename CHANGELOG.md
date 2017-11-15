@@ -1,5 +1,8 @@
 # Change Log
 
+## v1.4.2
+- Adding Qatar to the supported countries list
+
 ## v1.4.1
 - Using hash_equals in return_handler helps prevent timing attacks.
 
