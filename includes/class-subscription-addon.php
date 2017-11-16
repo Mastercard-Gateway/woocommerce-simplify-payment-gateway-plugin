@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @class 		WC_Addons_Gateway_Simplify_Commerce
  * @extends		WC_Gateway_Simplify_Commerce
- * @version		1.4.0
+ * @version		1.4.2
  * @author 		SimplifyCommerce
  */
 class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
