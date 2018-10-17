@@ -151,20 +151,20 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			}
 
 			if (isset($pass_tokens['customer']) && '' != $pass_tokens['customer']) {
-				$this->save_subscription_meta($order->id, $pass_tokens['customer']);
+				$this->save_subscription_meta($order->get_id(), $pass_tokens['customer']);
 
 				// Card is not save in woocommerce because checkbox is not selected
 			} else if (isset($pass_tokens['token'])) {
 				// Create customer
 				$customer = Simplify_Customer::createCustomer(array(
 					'token' => $cart_token,
-					'email' => $order->billing_email,
+					'email' => $order->get_billing_email(),
 					'name' => trim($order->get_formatted_billing_full_name()),
-					'reference' => $order->id
+					'reference' => $order->get_id()
 				));
 
 				if ( is_object( $customer ) && '' != $customer->id ) {
-					$this->save_subscription_meta( $order->id, $customer->id );
+					$this->save_subscription_meta( $order->get_id(), $customer->id );
 					$pass_tokens['customer'] = $customer->id;
 					unset($pass_tokens['token']);
 				} else {
@@ -233,10 +233,10 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	 * @return array
 	 */
 	protected function process_pre_order( $order, $cart_token = '' ) {
-		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order->id ) ) {
+		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order->get_id() ) {
 
 			try {
-				if ( $order->order_total * 100 < 50 ) {
+				if ( $order->get_order_total() * 100 < 50 ) {
 					$error_msg = __( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.', 'woocommerce' );
 
 					throw new Simplify_ApiException( $error_msg );
@@ -255,16 +255,16 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				// Create customer
 				$customer = Simplify_Customer::createCustomer( array(
 					'token'     => $cart_token,
-					'email'     => $order->billing_email,
+					'email'     => $order->get_billing_email(),
 					'name'      => trim( $order->get_formatted_billing_full_name() ),
-					'reference' => $order->id
+					'reference' => $order->get_id()
 				) );
 
 				if ( is_object( $customer ) && '' != $customer->id ) {
 					$customer_id = wc_clean( $customer->id );
 
 					// Store the customer ID in the order
-					update_post_meta( $order->id, '_simplify_customer_id', $customer_id );
+					update_post_meta( $order->get_id(), '_simplify_customer_id', $customer_id );
 				} else {
 					$error_msg = __( 'Error creating user in Simplify Commerce.', 'woocommerce' );
 
@@ -316,7 +316,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 		$order      = wc_get_order( $order_id );
 
 		// Processing subscription
-		if ( 'standard' == $this->mode && ( $this->order_contains_subscription( $order->id ) || ( function_exists( 'wcs_is_subscription' ) && wcs_is_subscription( $order_id ) ) ) ) {
+		if ( 'standard' == $this->mode && ( $this->order_contains_subscription( $order->get_id() ) || ( function_exists( 'wcs_is_subscription' ) && wcs_is_subscription( $order_id ) ) ) ) {
 
 			// New CC info was entered
 			if ( isset( $_POST['simplify_token'] ) ) {
@@ -340,7 +340,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			}
 
 		// Processing pre-order
-		} elseif ( 'standard' == $this->mode && $this->order_contains_pre_order( $order->id ) ) {
+		} elseif ( 'standard' == $this->mode && $this->order_contains_pre_order( $order->get_id() ) ) {
 			$cart_token = isset( $_POST['simplify_token'] ) ? wc_clean( $_POST['simplify_token'] ) : '';
 			return $this->process_pre_order( $order, $cart_token );
 
@@ -370,7 +370,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			return new WP_Error( 'simplify_error', __( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.', 'woocommerce' ) );
 		}
 
-		$customer_id = get_post_meta( $order->id, '_simplify_customer_id', true );
+		$customer_id = get_post_meta( $order->get_id(), '_simplify_customer_id', true );
 
 		if ( ! $customer_id ) {
 			return new WP_Error( 'simplify_error', __( 'Customer not found', 'woocommerce' ) );
@@ -382,7 +382,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				'amount'              => $amount * 100, // In cents.
 				'description'         => sprintf( __( '%s - Order #%s', 'woocommerce' ), esc_html( get_bloginfo( 'name', 'display' ) ), $order->get_order_number() ),
 				'currency'            => strtoupper( get_woocommerce_currency() ),
-				'reference'           => $order->id
+				'reference'           => $order->get_id()
 			);
 
 			if ( !empty($token)) {
@@ -447,7 +447,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	 * @param WC_Order $renewal_order The order which recorded the successful payment (to make up for the failed automatic payment).
 	 */
 	public function update_failing_payment_method( $subscription, $renewal_order ) {
-		update_post_meta( $subscription->id, '_simplify_customer_id', get_post_meta( $renewal_order->id, '_simplify_customer_id', true ) );
+		update_post_meta( $subscription->id, '_simplify_customer_id', get_post_meta( $renewal_order->get_id(), '_simplify_customer_id', true ) );
 	}
 
 	/**
@@ -497,7 +497,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	 * @return void
 	 */
 	public function delete_resubscribe_meta( $resubscribe_order ) {
-		delete_post_meta( $resubscribe_order->id, '_simplify_customer_id' );
+		delete_post_meta( $resubscribe_order->get_id(), '_simplify_customer_id' );
 	}
 
 	/**
@@ -513,7 +513,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			$order_item     = array_shift( $order_items );
 			$pre_order_name = sprintf( __( '%s - Pre-order for "%s"', 'woocommerce' ), esc_html( get_bloginfo( 'name', 'display' ) ), $order_item['name'] ) . ' ' . sprintf( __( '(Order #%s)', 'woocommerce' ), $order->get_order_number() );
 
-			$customer_id = get_post_meta( $order->id, '_simplify_customer_id', true );
+			$customer_id = get_post_meta( $order->get_id(), '_simplify_customer_id', true );
 
 			if ( ! $customer_id ) {
 				return new WP_Error( 'simplify_error', __( 'Customer not found', 'woocommerce' ) );
@@ -525,7 +525,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				'customer'            => $customer_id,
 				'description'         => trim( substr( $pre_order_name, 0, 1024 ) ),
 				'currency'            => strtoupper( get_woocommerce_currency() ),
-				'reference'           => $order->id
+				'reference'           => $order->get_id()
 			) );
 
 			if ( 'APPROVED' == $payment->paymentStatus ) {
@@ -571,9 +571,9 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			$order_total = absint( $order->get_total() * 100 );
 
 			if ( $amount === $order_total ) {
-				if ( $this->order_contains_subscription( $order->id ) ) {
+				if ( $this->order_contains_subscription( $order->get_id() ) ) {
 					$response = $this->process_subscription( $order, $cart_token );
-				} elseif ( $this->order_contains_pre_order( $order->id ) ) {
+				} elseif ( $this->order_contains_pre_order( $order->get_id() ) ) {
 					$response = $this->process_pre_order( $order, $cart_token );
 				} else {
 					$response = parent::process_standard_payments( $order, $cart_token );

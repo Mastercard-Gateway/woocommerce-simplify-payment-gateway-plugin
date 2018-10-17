@@ -637,7 +637,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				'amount'              => $amount * 100, // In cents.
 				'description'         => sprintf( __( '%s - Order #%s', 'woocommerce' ), esc_html( get_bloginfo( 'name', 'display' ) ), $order->get_order_number() ),
 				'currency'            => strtoupper( get_woocommerce_currency() ),
-				'reference'           => $order->id
+				'reference'           => $order->get_id()
 			);
 
 			$data = array_merge( $data, $token );
@@ -749,7 +749,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			'sc-key'          => $this->public_key,
 			'amount'          => $order->order_total * 100,
 			'currency'        => strtoupper(get_woocommerce_currency()),
-			'reference'       => $order->id,
+			'reference'       => $order->get_id(),
 			'name'            => esc_html( get_bloginfo( 'name', 'display' ) ),
 			'description'     => sprintf( __( 'Order #%s', 'woocommerce' ), $order->get_order_number() ),
 			'receipt'         => 'false',
@@ -761,7 +761,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			'address-zip'     => $order->billing_postcode,
 			'address-country' => $order->billing_country,
 			'operation'       => 'create.payment',
-		), $order->id );
+		), $order->get_id() );
 
 		return $args;
 	}
