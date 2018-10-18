@@ -236,7 +236,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order->get_id() ) {
 
 			try {
-				if ( $order->get_order_total() * 100 < 50 ) {
+				if ( $order->get_total() * 100 < 50 ) {
 					$error_msg = __( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.', 'woocommerce' );
 
 					throw new Simplify_ApiException( $error_msg );
@@ -521,7 +521,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 			// Charge the customer
 			$payment = Simplify_Payment::createPayment( array(
-				'amount'              => $order->order_total * 100, // In cents.
+				'amount'              => $order->get_total() * 100, // In cents.
 				'customer'            => $customer_id,
 				'description'         => trim( substr( $pre_order_name, 0, 1024 ) ),
 				'currency'            => strtoupper( get_woocommerce_currency() ),
