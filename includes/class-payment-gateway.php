@@ -634,7 +634,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		try {
 			// Charge the customer
 			$data = array(
-				'amount'              => $amount * 100, // In cents.
+				'amount'              => round($amount * 100), // In cents. Rounding to avoid floating point errors.
 				'description'         => sprintf( __( '%s - Order #%s', 'woocommerce' ), esc_html( get_bloginfo( 'name', 'display' ) ), $order->get_order_number() ),
 				'currency'            => strtoupper( get_woocommerce_currency() ),
 				'reference'           => $order->get_id()
