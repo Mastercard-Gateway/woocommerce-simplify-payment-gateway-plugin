@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2017 Mastercard International Incorporated
+ * Copyright (c) 2013 - 2018 Mastercard International Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class 		WC_Gateway_Simplify_Commerce
  * @extends		WC_Payment_Gateway_CC
  * @since       2.2.0
- * @version		1.4.2
+ * @version		1.4.3
  * @package		WooCommerce/Classes/Payment
  * @author 		SimplifyCommerce
  */
