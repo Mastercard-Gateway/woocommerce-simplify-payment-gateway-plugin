@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2017 Mastercard International Incorporated
+ * Copyright (c) 2013 - 2019 Mastercard International Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @class 		WC_Addons_Gateway_Simplify_Commerce
  * @extends		WC_Gateway_Simplify_Commerce
- * @version		1.4.2
+ * @version		1.4.3
  * @author 		SimplifyCommerce
  */
 class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
@@ -233,7 +233,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	 * @return array
 	 */
 	protected function process_pre_order( $order, $cart_token = '' ) {
-		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order->get_id() ) {
+		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order->get_id() )) {
 
 			try {
 				if ( $order->get_total() * 100 < 50 ) {
