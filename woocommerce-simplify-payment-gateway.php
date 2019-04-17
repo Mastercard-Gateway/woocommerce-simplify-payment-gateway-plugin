@@ -7,7 +7,7 @@
  * Author URI: http://www.simplify.com/
  * Version: 1.4.3
  *
- * Copyright (c) 2017-2018 Mastercard
+ * Copyright (c) 2017-2019 Mastercard
  *
  */
 
