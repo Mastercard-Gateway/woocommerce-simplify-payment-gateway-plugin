@@ -1,5 +1,8 @@
 # Change Log
 
+## v1.4.3
+- Fix issue with amounts off by 1c.
+
 ## v1.4.2
 - Adding Qatar to the supported countries list
 
@@ -15,7 +18,6 @@
 ## v1.2.0
 - Adding "Australia" to the supported countries list
 - Pass currency code in Hosted Payments args
-
 
 ## v1.1.0
 - Fix the card on file not working for subscription payment
