@@ -233,7 +233,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 	 * @return array
 	 */
 	protected function process_pre_order( $order, $cart_token = '' ) {
-		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order->get_id() ) {
+		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order->get_id() )) {
 
 			try {
 				if ( $order->get_total() * 100 < 50 ) {
