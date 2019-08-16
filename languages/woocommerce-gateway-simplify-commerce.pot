@@ -176,7 +176,7 @@ msgid "This controls the title which the user sees during checkout."
 msgstr ""
 
 #: includes/class-wc-gateway-simplify-commerce.php:208
-msgid "Credit card"
+msgid "Pay with Card"
 msgstr ""
 
 #: includes/class-wc-gateway-simplify-commerce.php:212

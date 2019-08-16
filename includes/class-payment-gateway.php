@@ -238,7 +238,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				'title'       => __( 'Title', 'woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-				'default'     => __( 'Credit card', 'woocommerce' ),
+				'default'     => __( 'Pay with Card', 'woocommerce' ),
 				'desc_tip'    => true
 			),
 			'description' => array(
