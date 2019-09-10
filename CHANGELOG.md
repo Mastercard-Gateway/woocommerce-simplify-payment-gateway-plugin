@@ -1,6 +1,6 @@
 # Change Log
 
-## v1.5.0
+## v2.0.0
 - Standard integration has been removed
 - Compatibility with Wordpress 5.2 and WooCommerce 3.6  
 

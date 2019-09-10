@@ -2,13 +2,12 @@
 /**
  * Plugin Name: Simplify Commerce Payment Gateway for WooCommerce
  * Plugin URI: https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/
- * Description: Simplify Commerce payment gateway plugin from Mastercard lets you to take credit card payments directly on your WooCommerce store. Requires PHP 5.3+ & WooCommerce 2.6+
+ * Description: Simplify Commerce payment gateway plugin from Mastercard lets you to take card payments directly on your WooCommerce store. Requires PHP 5.3+ & WooCommerce 2.6+
  * Author: Simplify Commerce
  * Author URI: http://www.simplify.com/
- * Version: 1.5.0
- *
- * Copyright (c) 2017-2019 Mastercard
- *
+ * Version: 2.0.0
+ * Copyright (c) 2019 Mastercard. Licensed under Open Software License ("OSL") v. 3.0.
+ * See file LICENSE.txt or go to https://opensource.org/licenses/OSL-3.0 for full license details.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
