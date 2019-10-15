@@ -1,6 +1,6 @@
 # Simplify Commerce Payment Gateway for WooCommerce
 
-The Simplify Commerce payment gateway plugin for WooCommerce 2.6+ lets you to take card payments directly on your WooCommerce store.
+The Simplify Commerce payment gateway plugin for WooCommerce 3.6+ lets you to take card payments directly on your WooCommerce store.
 
 ## Getting Started 
 
