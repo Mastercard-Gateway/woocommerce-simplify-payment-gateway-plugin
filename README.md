@@ -2,6 +2,8 @@
 
 The Simplify Commerce payment gateway plugin for WooCommerce 3.6+ lets you to take card payments directly on your WooCommerce store.
 
+The Standard payment form in some of the previous releases is now deprecated and out of support.
+
 ## Getting Started 
 
 * Get your API keys from Simplify at [Settings/API Keys](https://www.simplify.com/commerce/login/auth#/account/apiKeys).
