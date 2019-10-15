@@ -1,6 +1,6 @@
 # Simplify Commerce Payment Gateway for WooCommerce
 
-The Simplify Commerce payment gateway plugin for WooCommerce 2.6+ lets you to take credit card payments directly on your WooCommerce store.
+The Simplify Commerce payment gateway plugin for WooCommerce 2.6+ lets you to take card payments directly on your WooCommerce store.
 
 ## Getting Started 
 
@@ -10,16 +10,19 @@ The Simplify Commerce payment gateway plugin for WooCommerce 2.6+ lets you to ta
 
 ## Installation
 
-Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simplify Commerce was bundled with WooCommerce core.
+Please note this plugin requires WooCommerce 3.6 and above. 
 
 **Minimum Requirements**
 
-* WordPress 4.4 or greater
+* WooCommerce 3.6 or greater
 * PHP version 5.3 or greater
 * cURL
 
+The module has been tested with the following versions of WooCommerce:
+- 3.6.5
+
 ### Steps 
-1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/raw/master/dist/simplifycommerce-1.4.3.zip). You can also download previous versions [here](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases)
+1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/raw/master/dist/simplifycommerce-2.0.0.zip). You can also download previous versions [here](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases)
 
 2. Add New Plugin
   ![Add New Plugin](./docs/Wordpress_AddNew_Plugin.png "Add New Plugin") 

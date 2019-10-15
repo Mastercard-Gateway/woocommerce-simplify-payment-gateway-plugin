@@ -1,8 +1,19 @@
-# Copyright (C) 2017 WooCommerce Simplify Commerce Gateway
-# This file is distributed under the same license as the WooCommerce Simplify Commerce Gateway package.
+# Copyright (c) 2017-2019 Mastercard
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 msgid ""
 msgstr ""
-"Project-Id-Version: Simplify Commerce WooCommerce Payment Gateway 1.4.3\n"
+"Project-Id-Version: Simplify Commerce WooCommerce Payment Gateway 2.0.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/woocommerce-gateway-simplify-"
 "commerce\n"
 "POT-Creation-Date: 2017-06-07 10:39:49+00:00\n"
@@ -176,7 +187,7 @@ msgid "This controls the title which the user sees during checkout."
 msgstr ""
 
 #: includes/class-wc-gateway-simplify-commerce.php:208
-msgid "Credit card"
+msgid "Pay with Card"
 msgstr ""
 
 #: includes/class-wc-gateway-simplify-commerce.php:212
@@ -197,7 +208,7 @@ msgstr ""
 
 #: includes/class-wc-gateway-simplify-commerce.php:222
 msgid ""
-"Standard will display the credit card fields on your store (SSL required). "
+"Standard will display the card fields on your store (SSL required). "
 "%1$s Hosted Payments will display a Simplify Commerce modal dialog on your "
 "store (if SSL) or will redirect the customer to Simplify Commerce hosted "
 "page (if not SSL). %1$s Note: Hosted Payments need a new API Key pair with "
@@ -361,7 +372,7 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"The Simplify Commerce gateway lets you to take credit card payments directly "
+"The Simplify Commerce gateway lets you to take card payments directly "
 "on your store. Requires PHP 5.3+"
 msgstr ""
 
