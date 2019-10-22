@@ -61,4 +61,4 @@ Yes!
 Yes it does - production and sandbox mode is driven by the API keys you use.
 
 ### License
-This software is Open Source, released under the BSD 3-Clause license. See [LICENSE.txt](LICENSE.txt) for more info.
+This software is Open Source, released under the Apache License 2.0. See [LICENSE.txt](LICENSE.txt) for more info.
