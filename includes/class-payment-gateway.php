@@ -182,12 +182,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			echo '<div class="error"><p>' . sprintf( __( 'Simplify Commerce Error: Simplify commerce requires PHP 5.3 and above. You are using version %s.', 'woocommerce' ), phpversion() ) . '</p></div>';
 		}
 
-		$simplify_countries = apply_filters( 'woocommerce_gateway_simplify_commerce_supported_countries', array( 'US', 'IE', 'AU', 'QA') );
-
-		if ( ! in_array( WC()->countries->get_base_country(), $simplify_countries ) ) {
-			echo '<div class="error"><p>' . sprintf( __( 'Simplify Commerce Error: Simplify currently only supported in the US, Ireland, Australia and Qatar. Your base country is set to %s.', 'woocommerce' ), WC()->countries->get_base_country() ) . '</p></div>';
-		}
-
 		// Check required fields
 		elseif ( ! $this->public_key || ! $this->private_key ) {
 			echo '<div class="error"><p>' . __( 'Simplify Commerce Error: Please enter your public and private keys', 'woocommerce' ) . '</p></div>';
