@@ -24,7 +24,7 @@ The module has been tested with the following versions of WooCommerce:
 - 3.6.5
 
 ### Steps 
-1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/raw/master/dist/simplifycommerce-2.0.0.zip). You can also download previous versions [here](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases)
+1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases/latest). You can also download previous versions [here](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases)
 
 2. Add New Plugin
   ![Add New Plugin](./docs/Wordpress_AddNew_Plugin.png "Add New Plugin") 
@@ -60,8 +60,5 @@ Yes!
 ### Does this support both production mode and sandbox mode for testing?
 Yes it does - production and sandbox mode is driven by the API keys you use.
 
-### Where can I find documentation, help and support?
-For help setting up and configuring, please refer to our [support page](https://simplify.desk.com/customer/en/portal/articles/2759641-woocommerce-installation-guide)
-
 ### License
-This software is Open Source, released under the BSD 3-Clause license. See [LICENSE.txt](LICENSE.txt) for more info.
+This software is Open Source, released under the Apache License 2.0. See [LICENSE.txt](LICENSE.txt) for more info.
