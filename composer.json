@@ -1,0 +1,16 @@
+{
+    "name": "simplifycom/woocommerce-simplify-payment-gateway-plugin",
+    "description": "WooCommerce Payment Gateway plugin from Simplify Commerce",  
+    "type": "wordpress-plugin",
+    "license": "Apache License 2.0",
+    "require": {
+        "composer/installers": "~1.0",
+	      "php": ">=5.6"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url" : "git@github.com:simplifycom/woocommerce-simplify-payment-gateway-plugin.git"
+        }
+    ]
+}
