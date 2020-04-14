@@ -55,17 +55,11 @@ Choose Simplify Commerce as your WooCommerce payment gateway to get access to yo
 
 ## Frequently Asked Questions
 
-### What countries does this plugin support?
-Simplify Commerce is currently supported in the US, Ireland, Australia and Qatar. We are constantly adding more countries. So, please check back in our website to see if we have the country you are looking for.
-
 ### Does this support recurring payments, like for subscriptions?
 Yes!
 
 ### Does this support both production mode and sandbox mode for testing?
 Yes it does - production and sandbox mode is driven by the API keys you use.
 
-### Where can I find documentation, help and support?
-For help setting up and configuring, please refer to our [support page](https://simplify.desk.com/customer/en/portal/articles/2759641-woocommerce-installation-guide)
-
 ### License
-This software is Open Source, released under the BSD 3-Clause license. See [LICENSE.txt](LICENSE.txt) for more info.
+This software is Open Source, released under the Apache License 2.0. See [LICENSE.txt](LICENSE.txt) for more info.
