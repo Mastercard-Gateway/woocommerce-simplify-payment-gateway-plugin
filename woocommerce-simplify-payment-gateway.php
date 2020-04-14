@@ -49,6 +49,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
+
 		return self::$instance;
 	}
 
@@ -58,7 +59,8 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 *
 	 * @return void
 	 */
-	private function __clone() {}
+	private function __clone() {
+	}
 
 	/**
 	 * Private unserialize method to prevent unserializing of the *Singleton*
@@ -66,7 +68,8 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 *
 	 * @return void
 	 */
-	private function __wakeup() {}
+	private function __wakeup() {
+	}
 
 	/** @var whether or not we need to load code for / support subscriptions */
 	private $subscription_support_enabled = false;
@@ -107,7 +110,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 				if ( $order->get_meta( '_simplify_order_captured' ) === '0' ) {
 					if ( $order->get_status() == 'processing' ) {
 						$actions['simplify_capture_payment'] = __( 'Capture authorized amount', 'mastercard' );
-						$actions['simplify_void_payment'] = __( 'Void authorization', 'mastercard' );
+						$actions['simplify_void_payment']    = __( 'Void authorization', 'mastercard' );
 					}
 				}
 			}
@@ -163,27 +166,36 @@ class WC_Gateway_Simplify_Commerce_Loader {
 
 		if ( version_compare( phpversion(), WC_SIMPLIFY_COMMERCE_MIN_PHP_VER, '<' ) ) {
 			if ( $during_activation ) {
-				$message = __( 'The plugin could not be activated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.', 'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce' );
+				$message = __( 'The plugin could not be activated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.',
+					'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce' );
 			} else {
-				$message = __( 'The WooCommerce Simplify Commerce plugin has been deactivated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.', 'woocommerce-gateway-simplify-commerce' );
+				$message = __( 'The WooCommerce Simplify Commerce plugin has been deactivated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.',
+					'woocommerce-gateway-simplify-commerce' );
 			}
+
 			return sprintf( $message, WC_SIMPLIFY_COMMERCE_MIN_PHP_VER, phpversion() );
 		}
 
 		if ( version_compare( WC_VERSION, WC_SIMPLIFY_COMMERCE_MIN_WC_VER, '<' ) ) {
 			if ( $during_activation ) {
-				$message = __( 'The plugin could not be activated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.', 'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce' );
+				$message = __( 'The plugin could not be activated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.',
+					'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce' );
 			} else {
-				$message = __( 'The WooCommerce Simplify Commerce plugin has been deactivated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.', 'woocommerce-gateway-simplify-commerce' );
+				$message = __( 'The WooCommerce Simplify Commerce plugin has been deactivated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.',
+					'woocommerce-gateway-simplify-commerce' );
 			}
+
 			return sprintf( $message, WC_SIMPLIFY_COMMERCE_MIN_WC_VER, WC_VERSION );
 		}
 
 		if ( ! function_exists( 'curl_init' ) ) {
 			if ( $during_activation ) {
-				return __( 'The plugin could not be activated. cURL is not installed.', 'woocommerce-gateway-simplify-commerce' );
+				return __( 'The plugin could not be activated. cURL is not installed.',
+					'woocommerce-gateway-simplify-commerce' );
 			}
-			return __( 'The WooCommerce Simplify Commerce plugin has been deactivated. cURL is not installed.', 'woocommerce-gateway-simplify-commerce' );
+
+			return __( 'The WooCommerce Simplify Commerce plugin has been deactivated. cURL is not installed.',
+				'woocommerce-gateway-simplify-commerce' );
 		}
 
 		return false;
@@ -196,9 +208,12 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 */
 	public function plugin_action_links( $links ) {
 		$plugin_links = array(
-			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' . __( 'Settings', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
-			'<a href="https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin">' . __( 'Docs', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
+			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' . __( 'Settings',
+				'woocommerce-gateway-simplify-commerce' ) . '</a>',
+			'<a href="https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin">' . __( 'Docs',
+				'woocommerce-gateway-simplify-commerce' ) . '</a>',
 		);
+
 		return array_merge( $plugin_links, $links );
 	}
 
@@ -229,7 +244,8 @@ class WC_Gateway_Simplify_Commerce_Loader {
 
 		require_once( plugin_basename( 'includes/class-payment-gateway.php' ) );
 
-		load_plugin_textdomain( 'woocommerce-gateway-simplify-commerce', false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) );
+		load_plugin_textdomain( 'woocommerce-gateway-simplify-commerce', false,
+			trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) );
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateways' ) );
 
 		if ( $this->subscription_support_enabled ) {
@@ -248,6 +264,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 		} else {
 			$methods[] = 'WC_Gateway_Simplify_Commerce';
 		}
+
 		return $methods;
 	}
 
