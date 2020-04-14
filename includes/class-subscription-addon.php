@@ -19,14 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-/**
- * Simplify Commerce Gateway for subscriptions.
- *
- * @class 		WC_Addons_Gateway_Simplify_Commerce
- * @extends		WC_Gateway_Simplify_Commerce
- * @version		2.0.0
- * @author 		SimplifyCommerce
- */
 class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 	/**

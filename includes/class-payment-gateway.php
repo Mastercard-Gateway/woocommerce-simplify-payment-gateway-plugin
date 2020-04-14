@@ -19,16 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-/**
- * Simplify Commerce Payment Gateway for card payments
- *
- * @class 		WC_Gateway_Simplify_Commerce
- * @extends		WC_Payment_Gateway_CC
- * @since       2.2.0
- * @version		2.0.0
- * @package		WooCommerce/Classes/Payment
- * @author 		SimplifyCommerce
- */
 class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
     const ID = 'simplify_commerce';
@@ -109,8 +99,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );
 		add_action( 'woocommerce_api_wc_gateway_simplify_commerce', array( $this, 'return_handler' ) );
-		add_action( 'woocommerce_order_item_add_action_buttons', array( $this, 'order_action_capture' ) );
-		add_action( 'woocommerce_order_item_add_action_buttons', array( $this, 'order_action_void' ) );
 		add_action( 'woocommerce_order_action_simplify_capture_payment', array( $this, 'capture_authorized_order' ) );
 		add_action( 'woocommerce_order_action_simplify_void_payment', array( $this, 'void_authorized_order' ) );
 	}
@@ -139,14 +127,14 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	        $payment = Simplify_Payment::createPayment( array(
 		        'authorization' => $authCode,
 		        'reference'     => $order->get_id(),
+		        'currency'      => strtoupper( $order->get_currency() ),
 		        'amount'        => $this->get_total( $order )
 	        ) );
 
 	        if ( $payment->paymentStatus === 'APPROVED' ) {
-		        $order->add_order_note( sprintf( __( 'Simplify captured payment (ID: %s)', 'woocommerce' ),
-			        $payment->id ) );
+		        $order->add_order_note( sprintf( __( 'Simplify captured amount %s (ID: %s)', 'woocommerce' ), $order->get_total(), $payment->id ) );
 	        } else {
-		        throw Exception( 'Declined' );
+		        throw new Exception( 'Capture declined' );
 	        }
 
 	        $order->update_meta_data( '_simplify_order_captured', '1' );
@@ -483,13 +471,15 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		}
 	}
 
- 	/**
+	/**
 	 * do payment function.
 	 *
 	 * @param WC_order $order
 	 * @param int $amount (default: 0)
-	 * @uses  Simplify_BadRequestException
+	 * @param array $token
+	 *
 	 * @return bool|WP_Error
+	 * @uses  Simplify_BadRequestException
 	 */
 	public function do_payment( $order, $amount = 0, $token = array() ) {
 		if ( $this->get_total($order) < 50 ) {
@@ -556,6 +546,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * Process the payment.
 	 *
 	 * @param int $order_id
+	 *
+	 * @return array
 	 */
 	public function process_payment( $order_id ) {
 
@@ -645,7 +637,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			$order     = wc_get_order( $order_id );
 
 			if ( hash_equals( $signature, $_REQUEST['signature'] ) ) {
-				$order_complete = $this->process_order_status( $order, $_REQUEST['paymentId'], $_REQUEST['paymentStatus'], $_REQUEST['paymentDate'] );
+				$order_complete = $this->process_order_status( $order, $_REQUEST['paymentId'], $_REQUEST['paymentStatus'], $_REQUEST['authCode'], true );
 
 				if ( ! $order_complete ) {
 					$order->update_status( 'failed', __( 'Payment was declined by Simplify Commerce.', 'woocommerce' ) );
@@ -693,7 +685,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$authorization = Simplify_Authorization::createAuthorization(array(
 			'amount' => $amount,
 			'token' => $card_token,
-			'reference' => $order->get_id()
+			'reference' => $order->get_id(),
+            'currency' => strtoupper( $order->get_currency() ),
 		));
 
 		return $this->process_order_status(
@@ -743,46 +736,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		return false;
 	}
 
-	/**
-	 * @param WC_Order $order
-	 */
-	public function order_action_capture( $order ) {
-	    if ( $order->payment_method != $this->id ) {
-	        return;
-        }
-
-	    if ( $order->status != 'processing' ) {
-		    return;
-        }
-
-		if ( in_array($order->get_meta( '_simplify_order_captured' ), array('1', ''), true) ) {
-		    return;
-        }
-
-
-        echo '<button type="button" class="button capture-payment">' . __( 'Capture', 'woocommerce' ) . '</button>';
-    }
-
-	/**
-	 * @param WC_Order $order
-	 */
-	public function order_action_void( $order ) {
-		if ( $order->payment_method != $this->id ) {
-			return;
-		}
-
-		if ( $order->status != 'processing' ) {
-			return;
-		}
-
-		if ( in_array($order->get_meta( '_simplify_order_captured' ), array('1', ''), true) ) {
-			return;
-		}
-
-
-		echo '<button type="button" class="button void-payment">' . __( 'Void', 'woocommerce' ) . '</button>';
-	}
-
     /**
 	 * Process refunds.
 	 * WooCommerce 2.2 or later.
@@ -801,13 +754,14 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			$payment_id = get_post_meta( $order_id, '_transaction_id', true );
 
 			$refund = Simplify_Refund::createRefund( array(
-				'amount'    => $this->get_total($order),
+				'amount'    => (int) round((float) $amount * 100),
 				'payment'   => $payment_id,
 				'reason'    => $reason,
 				'reference' => $order_id
 			) );
 
 			if ( 'APPROVED' == $refund->paymentStatus ) {
+				$order->add_order_note( sprintf( __( 'Simplify refund approved (ID: %s, Amount: %s)', 'woocommerce' ), $refund->id, $amount ) );
 				return true;
 			} else {
 				throw new Simplify_ApiException( __( 'Refund was declined.', 'woocommerce' ) );
