@@ -28,7 +28,7 @@ The module has been tested with the following versions of WooCommerce:
 - 4.0
 
 ### Steps 
-1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases)
+1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases/latest). You can also download previous versions [here](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases)
 
 2. Add New Plugin
   ![Add New Plugin](./docs/Wordpress_AddNew_Plugin.png "Add New Plugin") 
