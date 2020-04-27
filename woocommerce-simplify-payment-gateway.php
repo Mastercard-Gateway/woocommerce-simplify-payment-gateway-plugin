@@ -109,8 +109,8 @@ class WC_Gateway_Simplify_Commerce_Loader {
 			if ( $order->get_payment_method() == WC_Gateway_Simplify_Commerce::ID ) {
 				if ( $order->get_meta( '_simplify_order_captured' ) === '0' ) {
 					if ( $order->get_status() == 'processing' ) {
-						$actions['simplify_capture_payment'] = __( 'Capture authorized amount', 'mastercard' );
-						$actions['simplify_void_payment']    = __( 'Void authorization', 'mastercard' );
+						$actions['simplify_capture_payment'] = __( 'Capture authorized amount', 'woocommerce' );
+						$actions['simplify_void_payment']    = __( 'Reverse authorization', 'woocommerce' );
 					}
 				}
 			}

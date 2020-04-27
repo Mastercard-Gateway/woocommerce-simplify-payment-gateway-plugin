@@ -2,7 +2,7 @@
 
 ## v2.1.0
 - Added support for transaction modes, Payment and Authorization
-- Added capture and void capability
+- Added capture and reverse capability
 
 ## v2.0.0
 - Standard integration has been removed

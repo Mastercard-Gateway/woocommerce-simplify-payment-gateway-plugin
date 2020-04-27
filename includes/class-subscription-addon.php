@@ -160,7 +160,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 					$pass_tokens['customer'] = $customer->id;
 					unset( $pass_tokens['token'] );
 				} else {
-					$error_msg = __( 'Error creating user in Simplify Commerce.', 'woocommerce' );
+					$error_msg = __( 'Error creating user in gateway.', 'woocommerce' );
 
 					throw new Simplify_ApiException( $error_msg );
 				}
@@ -263,7 +263,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 					// Store the customer ID in the order
 					update_post_meta( $order->get_id(), '_simplify_customer_id', $customer_id );
 				} else {
-					$error_msg = __( 'Error creating user in Simplify Commerce.', 'woocommerce' );
+					$error_msg = __( 'Error creating user in gateway.', 'woocommerce' );
 
 					throw new Simplify_ApiException( $error_msg );
 				}
@@ -412,7 +412,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				}
 			}
 
-			$order->add_order_note( sprintf( __( 'Simplify payment error: %s', 'woocommerce' ), $error_message ) );
+			$order->add_order_note( sprintf( __( 'Gateway payment error: %s', 'woocommerce' ), $error_message ) );
 
 			return new WP_Error( 'simplify_payment_declined', $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
@@ -422,12 +422,12 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			$order->payment_complete( $payment->id );
 
 			// Add order note
-			$order->add_order_note( sprintf( __( 'Simplify payment approved (ID: %s, Auth Code: %s)', 'woocommerce' ),
+			$order->add_order_note( sprintf( __( 'Gateway payment approved (ID: %s, Auth Code: %s)', 'woocommerce' ),
 				$payment->id, $payment->authCode ) );
 
 			return true;
 		} else {
-			$order->add_order_note( __( 'Simplify payment declined', 'woocommerce' ) );
+			$order->add_order_note( __( 'Gateway payment declined', 'woocommerce' ) );
 
 			return new WP_Error( 'simplify_payment_declined',
 				__( 'Payment was declined - please try another card.', 'woocommerce' ) );
@@ -445,7 +445,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 		if ( is_wp_error( $result ) ) {
 			$renewal_order->update_status( 'failed',
-				sprintf( __( 'Simplify Transaction Failed (%s)', 'woocommerce' ), $result->get_error_message() ) );
+				sprintf( __( 'Gateway Transaction Failed (%s)', 'woocommerce' ), $result->get_error_message() ) );
 		}
 	}
 
@@ -552,14 +552,14 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				$order->payment_complete( $payment->id );
 
 				// Add order note
-				$order->add_order_note( sprintf( __( 'Simplify payment approved (ID: %s, Auth Code: %s)',
+				$order->add_order_note( sprintf( __( 'Gateway payment approved (ID: %s, Auth Code: %s)',
 					'woocommerce' ), $payment->id, $payment->authCode ) );
 			} else {
 				return new WP_Error( 'simplify_payment_declined',
 					__( 'Payment was declined - the customer need to try another card.', 'woocommerce' ) );
 			}
 		} catch ( Exception $e ) {
-			$order_note = sprintf( __( 'Simplify Transaction Failed (%s)', 'woocommerce' ), $e->getMessage() );
+			$order_note = sprintf( __( 'Gateway Transaction Failed (%s)', 'woocommerce' ), $e->getMessage() );
 
 			// Mark order as failed if not already set,
 			// otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
@@ -604,7 +604,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 					$redirect_url = $response['redirect'];
 				} else {
 					$order->update_status( 'failed',
-						__( 'Payment was declined by Simplify Commerce.', 'woocommerce' ) );
+						__( 'Payment was declined by your gateway.', 'woocommerce' ) );
 				}
 
 				wp_redirect( $redirect_url );
