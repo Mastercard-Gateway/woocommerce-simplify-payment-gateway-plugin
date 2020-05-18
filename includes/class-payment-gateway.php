@@ -631,6 +631,13 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$args        = $this->get_hosted_payments_args( $order );
 		$button_args = array();
 		foreach ( $args as $key => $value ) {
+		    $encode = mb_detect_encoding($value);
+		    if ($encode !== 'ASCII') {
+			    $value = trim(iconv($encode, 'ASCII//TRANSLIT//IGNORE', $value));
+			    if (!$value) {
+			        continue;
+			    }
+		    }
 			$button_args[] = 'data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
