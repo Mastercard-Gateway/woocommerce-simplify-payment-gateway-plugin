@@ -633,7 +633,10 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		foreach ( $args as $key => $value ) {
 		    $encode = mb_detect_encoding($value);
 		    if ($encode !== 'ASCII') {
-			    $value = trim(iconv($encode, 'ASCII//TRANSLIT//IGNORE', $value));
+			    $value = remove_accents($value);
+			    $value = iconv($encode, 'ASCII//TRANSLIT//IGNORE', $value);
+			    $value = str_ireplace('?', '', $value);
+			    $value = trim($value);
 			    if (!$value) {
 			        continue;
 			    }
