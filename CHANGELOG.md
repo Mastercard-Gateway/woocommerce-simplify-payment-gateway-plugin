@@ -1,5 +1,9 @@
 # Change Log
 
+## v2.1.0
+- Added support for transaction modes, Payment and Authorization
+- Added capture and reverse capability
+
 ## v2.0.0
 - Standard integration has been removed
 - Compatibility with Wordpress 5.2 and WooCommerce 3.6  

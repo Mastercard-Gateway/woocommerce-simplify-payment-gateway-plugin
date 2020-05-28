@@ -7,5 +7,5 @@ docker-compose.yml export-ignore
 docker-compose.dev.yml export-ignore
 Dockerfile export-ignore
 Dockerfile.dev export-ignore
-make-dist.sh export-ignore
+Makefile export-ignore
 woocommerce-simplify-extension.iml export-ignore
