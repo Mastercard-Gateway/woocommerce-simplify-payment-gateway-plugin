@@ -500,7 +500,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			$data = array(
 				'amount'      => $this->get_total(), // In cents. Rounding to avoid floating point errors.
 				'description' => sprintf( __( '%s - Order #%s', 'woocommerce' ),
-					esc_html( get_bloginfo( 'name', 'display' ) ), $order->get_order_number() ),
+					$order->get_order_number() ),
 				'currency'    => strtoupper( get_woocommerce_currency() ),
 				'reference'   => $order->get_id()
 			);
@@ -583,20 +583,30 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			'amount'          => $this->get_total( $order ),
 			'currency'        => strtoupper( get_woocommerce_currency() ),
 			'reference'       => $order->get_id(),
-			'name'            => esc_html( get_bloginfo( 'name', 'display' ) ),
 			'description'     => sprintf( __( 'Order #%s', 'woocommerce' ), $order->get_order_number() ),
 			'receipt'         => 'false',
 			'color'           => $this->modal_color,
 			'redirect-url'    => WC()->api_request_url( 'WC_Gateway_Simplify_Commerce' ),
-			'address'         => $order->get_billing_address_1() . ' ' . $order->get_billing_address_2(),
-			'address-city'    => $order->get_billing_city(),
-			'address-state'   => $order->get_billing_state(),
-			'address-zip'     => $order->get_billing_postcode(),
-			'address-country' => $order->get_billing_country(),
 			'operation'       => $this->get_payment_operation(),
 		), $order->get_id() );
 
 		return $args;
+	}
+
+	protected function attempt_transliteration($field) {
+		$encode = mb_detect_encoding($field);
+		if ($encode !== 'ASCII') {
+		    if (function_exists('transliterator_transliterate')) {
+		        $field = transliterator_transliterate('Any-Latin; Latin-ASCII; [u0080-u7fff] remove', $field);
+		    } else {
+		        // fall back to iconv if intl module not available
+		        $field = remove_accents($field);
+		        $field = iconv($encode, 'ASCII//TRANSLIT//IGNORE', $field);
+		        $field = str_ireplace('?', '', $field);
+		        $field = trim($field);
+		    }
+		}
+		return $field;
 	}
 
 	/**
@@ -631,6 +641,10 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$args        = $this->get_hosted_payments_args( $order );
 		$button_args = array();
 		foreach ( $args as $key => $value ) {
+			$value = $this->attempt_transliteration($value);
+			if (!$value) {
+				continue;
+			}
 			$button_args[] = 'data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 

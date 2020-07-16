@@ -386,8 +386,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			// Charge the customer
 			$data = array(
 				'amount'      => $amount * 100, // In cents.
-				'description' => sprintf( __( '%s - Order #%s', 'woocommerce' ),
-					esc_html( get_bloginfo( 'name', 'display' ) ), $order->get_order_number() ),
+				'description' => sprintf( __( '%s - Order #%s', 'woocommerce' ), $order->get_order_number() ),
 				'currency'    => strtoupper( get_woocommerce_currency() ),
 				'reference'   => $order->get_id()
 			);
@@ -528,7 +527,6 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			$order_items    = $order->get_items();
 			$order_item     = array_shift( $order_items );
 			$pre_order_name = sprintf( __( '%s - Pre-order for "%s"', 'woocommerce' ),
-					esc_html( get_bloginfo( 'name', 'display' ) ),
 					$order_item['name'] ) . ' ' . sprintf( __( '(Order #%s)', 'woocommerce' ),
 					$order->get_order_number() );
 
