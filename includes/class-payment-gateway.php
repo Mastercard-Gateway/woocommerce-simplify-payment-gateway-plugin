@@ -596,7 +596,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$encode = mb_detect_encoding($field);
 		if ($encode !== 'ASCII') {
 		    if (function_exists('transliterator_transliterate')) {
-		        $field = transliterator_transliterate('Any-Latin; Latin-ASCII; [u0080-u7fff] remove', $field);
+		        $field = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove', $field);
 		    } else {
 		        // fall back to iconv if intl module not available
 		        $field = remove_accents($field);
