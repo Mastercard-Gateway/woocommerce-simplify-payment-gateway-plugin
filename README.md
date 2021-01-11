@@ -8,6 +8,14 @@ The Standard payment form in some of the previous releases is now deprecated and
 
 For any issues or enhancement requests you have with this plugin, please raise them with the bank's support team. Please make sure you also provide your plugin, woocommerce and wordpress version as well as your merchant ID where applicable. This will help to speed up the troubleshooting of any issues you are having.
 
+### Outstanding Issues
+
+Partial Refunds via Simplify is not working as expected in the orders screen. If you are performing a partial refund, please use the "Refund Manually" button and log into your merchant portal to perform the partial refund. 
+
+Using the partial refund button "via Simplify Commerce" at the moment will cause a full refund to occur. 
+![Partial Refund](./docs/PartialRefund.png "Partial Refund")
+
+
 ## Getting Started 
 
 * Get your API keys from your merchant dashboard in your Account Settings - API Keys.
