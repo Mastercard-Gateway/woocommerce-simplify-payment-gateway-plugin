@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Simplify Commerce Payment Gateway for WooCommerce
+ * Plugin Name: Mastercard Payment Gateway Services - Simplify
  * Plugin URI: https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/
- * Description: Simplify Commerce payment gateway plugin from Mastercard lets you to take card payments directly on your WooCommerce store. Requires PHP 5.3+ & WooCommerce 2.6+
- * Author: Simplify Commerce
+ * Description: Mastercard Payment Gateway Services - Simplify plugin from Mastercard lets you to take card payments directly on your WooCommerce store. Requires PHP 5.3+ & WooCommerce 2.6+
+ * Author: Mastercard Payment Gateway Services - Simplify
  * Author URI: http://www.simplify.com/
  * Version: 2.1.0
  *
@@ -169,7 +169,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 				$message = __( 'The plugin could not be activated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.',
 					'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce' );
 			} else {
-				$message = __( 'The WooCommerce Simplify Commerce plugin has been deactivated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.',
+				$message = __( 'The Mastercard Payment Gateway Services - Simplify plugin has been deactivated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.',
 					'woocommerce-gateway-simplify-commerce' );
 			}
 
@@ -181,7 +181,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 				$message = __( 'The plugin could not be activated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.',
 					'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce' );
 			} else {
-				$message = __( 'The WooCommerce Simplify Commerce plugin has been deactivated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.',
+				$message = __( 'The Mastercard Payment Gateway Services - Simplify plugin has been deactivated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.',
 					'woocommerce-gateway-simplify-commerce' );
 			}
 
@@ -194,7 +194,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 					'woocommerce-gateway-simplify-commerce' );
 			}
 
-			return __( 'The WooCommerce Simplify Commerce plugin has been deactivated. cURL is not installed.',
+			return __( 'The Mastercard Payment Gateway Services - Simplify plugin has been deactivated. cURL is not installed.',
 				'woocommerce-gateway-simplify-commerce' );
 		}
 
