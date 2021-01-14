@@ -790,7 +790,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			$payment_id = get_post_meta( $order_id, '_transaction_id', true );
 
 			$refund = Simplify_Refund::createRefund( array(
-				'amount'    => $this->get_total( $order ),
+				'amount'    => (int) round( (float) $amount * 100 ),
 				'payment'   => $payment_id,
 				'reason'    => $reason,
 				'reference' => $order_id
