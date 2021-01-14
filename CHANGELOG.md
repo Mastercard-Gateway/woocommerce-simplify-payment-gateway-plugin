@@ -1,5 +1,8 @@
 # Change Log
 
+## v2.1.2
+- Fixing an issue where performing a partial refund through woocommerce will instead refund the full amount. 
+
 ## v2.1.1
 - Patch to allow for non-latin (e.g. Greek or Arabic) characters in the checkout
 
