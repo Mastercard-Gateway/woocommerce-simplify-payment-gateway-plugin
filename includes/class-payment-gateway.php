@@ -621,9 +621,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @return string
 	 */
 	protected function get_payment_operation() {
-		return $this->txn_mode === self::TXN_MODE_PURCHASE ?
-			'create.payment' :
-			'create.token';
+		return 'create.token';
 	}
 
 	/**
@@ -662,40 +660,50 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		@ob_clean();
 		header( 'HTTP/1.1 200 OK' );
 
+		$pass_tokens = array();
+
+		if ( ! empty ( $cart_token ) ) {
+			$pass_tokens['token'] = $cart_token;
+		}
+
 		// Transaction mode = Payment/Purchase
-		if ( isset( $_REQUEST['reference'] ) && isset( $_REQUEST['paymentId'] ) && isset( $_REQUEST['signature'] ) ) {
-			$signature = strtoupper( md5( $_REQUEST['amount'] . $_REQUEST['reference'] . $_REQUEST['paymentId'] . $_REQUEST['paymentDate'] . $_REQUEST['paymentStatus'] . $this->private_key ) );
+		if ( isset( $_REQUEST['reference'] ) &&  isset( $_REQUEST['cardToken'] )) {
+
 			$order_id  = absint( $_REQUEST['reference'] );
 			$order     = wc_get_order( $order_id );
 
-			if ( hash_equals( $signature, $_REQUEST['signature'] ) ) {
-				$order_complete = $this->process_order_status( $order, $_REQUEST['paymentId'],
-					$_REQUEST['paymentStatus'], $_REQUEST['authCode'], true );
+			// Transaction mode = Authorize
+			if ( $this->txn_mode === self::TXN_MODE_PURCHASE ) {
+
+				$payment_array = array();
+				$payment_array['token'] = $_REQUEST['cardToken'];
+	
+				$payment_response = $this->do_payment( $order, $order->get_total(), $payment_array );
+
+				if ( is_wp_error( $payment_response ) ) {
+					throw new Simplify_ApiException( $payment_response->get_error_message() );
+				} else {
+					// Success, remove cart
+					WC()->cart->empty_cart();
+				}
+			
+				wp_redirect( $this->get_return_url( $order ) );
+				exit();
+			}
+
+			// Transaction mode = Authorize
+			if ( $this->txn_mode === self::TXN_MODE_AUTHORIZE ) {
+
+				$order_complete = $this->authorize( $order, $_REQUEST['cardToken'], $_REQUEST['amount'] );
 
 				if ( ! $order_complete ) {
 					$order->update_status( 'failed',
-						__( 'Payment was declined by your gateway.', 'woocommerce' ) );
+						__( 'Authorization was declined by your gateway.', 'woocommerce' ) );
 				}
 
 				wp_redirect( $this->get_return_url( $order ) );
 				exit();
 			}
-		}
-
-		// Transaction mode = Authorize
-		if ( isset( $_REQUEST['reference'] ) && isset( $_REQUEST['cardToken'] ) && $this->txn_mode === self::TXN_MODE_AUTHORIZE ) {
-			$order_id = absint( $_REQUEST['reference'] );
-			$order    = wc_get_order( $order_id );
-
-			$order_complete = $this->authorize( $order, $_REQUEST['cardToken'], $_REQUEST['amount'] );
-
-			if ( ! $order_complete ) {
-				$order->update_status( 'failed',
-					__( 'Authorization was declined by your gateway.', 'woocommerce' ) );
-			}
-
-			wp_redirect( $this->get_return_url( $order ) );
-			exit();
 		}
 
 		wc_add_notice( 'Unexpected response', 'error' );
