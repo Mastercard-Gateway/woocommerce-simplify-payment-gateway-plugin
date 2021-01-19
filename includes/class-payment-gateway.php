@@ -666,7 +666,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			$pass_tokens['token'] = $cart_token;
 		}
 
-		// Transaction mode = Payment/Purchase
 		if ( isset( $_REQUEST['reference'] ) &&  isset( $_REQUEST['cardToken'] )) {
 
 			$order_id  = absint( $_REQUEST['reference'] );
