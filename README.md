@@ -16,23 +16,17 @@ For any issues or enhancement requests you have with this plugin, please raise t
 
 ## Installation
 
-Please note this plugin requires WooCommerce 3.6 and above. 
-
 **Minimum Requirements**
 
-* WooCommerce 3.6 or greater
+* WooCommerce 3.9.2 or greater
 * PHP version 5.3 or greater
 * cURL
 
-The module has been tested with the following versions of WooCommerce:
-- 3.6
-- 3.7
-- 3.8
-- 3.9
-- 4.0
+The module has been tested and is supported with the following versions of WooCommerce:
+3.9.2 - 4.9.0
 
 ### Steps 
-1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases/latest). You can also download previous versions [here](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases)
+1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases/latest).
 
 2. Add New Plugin
   ![Add New Plugin](./docs/Wordpress_AddNew_Plugin.png "Add New Plugin") 
