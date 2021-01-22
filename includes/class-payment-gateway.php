@@ -447,7 +447,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				$pass_tokens['token'] = $cart_token;
 			}
 
-			$payment_response = $this->do_payment( $order, $order->get_total(), $pass_tokens );
+			$payment_response = $this->do_payment( $order, $this->get_total($order), $pass_tokens );
 
 			if ( is_wp_error( $payment_response ) ) {
 				throw new Simplify_ApiException( $payment_response->get_error_message() );
@@ -498,7 +498,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		try {
 			// Charge the customer
 			$data = array(
-				'amount'      => $this->get_total(), // In cents. Rounding to avoid floating point errors.
+				'amount'      => $this->get_total($order), // In cents. Rounding to avoid floating point errors.
 				'description' => sprintf( __( '%s - Order #%s', 'woocommerce' ), $order->get_order_number() ),
 				'currency'    => strtoupper( get_woocommerce_currency() ),
 				'reference'   => $order->get_id()
@@ -660,13 +660,10 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		@ob_clean();
 		header( 'HTTP/1.1 200 OK' );
 
-		$pass_tokens = array();
+		$payment_array = array();
+		$card_token = $_REQUEST['cardToken'];
 
-		if ( ! empty ( $cart_token ) ) {
-			$pass_tokens['token'] = $cart_token;
-		}
-
-		if ( isset( $_REQUEST['reference'] ) &&  isset( $_REQUEST['cardToken'] )) {
+		if ( isset( $_REQUEST['reference'] ) &&  isset( $card_token )) {
 
 			$order_id  = absint( $_REQUEST['reference'] );
 			$order     = wc_get_order( $order_id );
@@ -674,10 +671,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			// Transaction mode = Authorize
 			if ( $this->txn_mode === self::TXN_MODE_PURCHASE ) {
 
-				$payment_array = array();
-				$payment_array['token'] = $_REQUEST['cardToken'];
-	
-				$payment_response = $this->do_payment( $order, $order->get_total(), $payment_array );
+				$payment_array['token'] = $card_token;
+				$payment_response = $this->do_payment( $order, $this->get_total($order), $payment_array );
 
 				if ( is_wp_error( $payment_response ) ) {
 					throw new Simplify_ApiException( $payment_response->get_error_message() );
@@ -693,7 +688,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			// Transaction mode = Authorize
 			if ( $this->txn_mode === self::TXN_MODE_AUTHORIZE ) {
 
-				$order_complete = $this->authorize( $order, $_REQUEST['cardToken'], $_REQUEST['amount'] );
+				$order_complete = $this->authorize( $order, $card_token, $_REQUEST['amount'] );
 
 				if ( ! $order_complete ) {
 					$order->update_status( 'failed',
