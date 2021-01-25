@@ -205,6 +205,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 		Simplify::$publicKey  = $this->public_key;
 		Simplify::$privateKey = $this->private_key;
+
 		Simplify::$userAgent  = 'SimplifyWooCommercePlugin/' . WC()->version;
 	}
 
@@ -495,10 +496,15 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				__( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.', 'woocommerce' ) );
 		}
 
+		if ( (int) $amount !== $this->get_total( $order ) ) {
+			wc_add_notice( 'Amount mismatch', 'error' );
+			wp_redirect( wc_get_page_permalink( 'cart' ) );
+		}
+
 		try {
 			// Charge the customer
 			$data = array(
-				'amount'      => $this->get_total($order), // In cents. Rounding to avoid floating point errors.
+				'amount'      => $amount, // In cents. Rounding to avoid floating point errors.
 				'description' => sprintf( __( '%s - Order #%s', 'woocommerce' ), $order->get_order_number() ),
 				'currency'    => strtoupper( get_woocommerce_currency() ),
 				'reference'   => $order->get_id()
@@ -672,7 +678,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			if ( $this->txn_mode === self::TXN_MODE_PURCHASE ) {
 
 				$payment_array['token'] = $card_token;
-				$payment_response = $this->do_payment( $order, $this->get_total($order), $payment_array );
+				$payment_response = $this->do_payment( $order, $_REQUEST['amount'] , $payment_array );
 
 				if ( is_wp_error( $payment_response ) ) {
 					throw new Simplify_ApiException( $payment_response->get_error_message() );
