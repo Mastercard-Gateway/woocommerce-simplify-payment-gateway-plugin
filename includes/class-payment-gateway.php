@@ -506,8 +506,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		}
 
 		if ( (int) $amount !== $this->get_total( $order ) ) {
-			wc_add_notice( 'Amount mismatch', 'error' );
-			wp_redirect( wc_get_page_permalink( 'cart' ) );
+			return new WP_Error( 'simplify_error',
+				__( 'Amount mismatch.', 'woocommerce' ) );
 		}
 
 		try {
@@ -690,13 +690,13 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				$payment_response = $this->do_payment( $order, $_REQUEST['amount'] , $payment_array );
 
 				if ( is_wp_error( $payment_response ) ) {
-					throw new Simplify_ApiException( $payment_response->get_error_message() );
+					wc_add_notice($payment_response->get_error_message(), 'error');
+					wp_redirect( wc_get_page_permalink( 'cart' ) );
 				} else {
-					// Success, remove cart
+					// Success, remove cart, show order
 					WC()->cart->empty_cart();
+					wp_redirect( $this->get_return_url( $order ) );
 				}
-			
-				wp_redirect( $this->get_return_url( $order ) );
 				exit();
 			}
 
