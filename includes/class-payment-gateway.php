@@ -206,10 +206,14 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		Simplify::$publicKey  = $this->public_key;
 		Simplify::$privateKey = $this->private_key;
 
-		// try to extract version from main plugin file
-		$plugin_path = dirname( __FILE__ , 2 ) . '/woocommerce-simplify-payment-gateway.php' ;
-		$plugin_data = get_file_data($plugin_path, array('Version' => 'Version'));
-		$plugin_version = $plugin_data['Version'] ?: 'Unknown';
+		try {
+			// try to extract version from main plugin file
+			$plugin_path = dirname( __FILE__ , 2 ) . '/woocommerce-simplify-payment-gateway.php' ;
+			$plugin_data = get_file_data($plugin_path, array('Version' => 'Version'));
+			$plugin_version = $plugin_data['Version'] ?: 'Unknown';
+		} catch ( Exception $e ) {
+			$plugin_version = 'UnknownError';
+		}
 
 		Simplify::$userAgent  = 'SimplifyWooCommercePlugin/' . WC()->version . '/' . $plugin_version;
 	}
