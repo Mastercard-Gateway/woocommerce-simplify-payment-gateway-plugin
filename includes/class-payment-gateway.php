@@ -50,6 +50,21 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	protected $txn_mode;
 
+    /**
+     * @var string
+     */
+    protected $embedded_title;
+
+    /**
+     * @var string
+     */
+    public $embedded_description;
+
+    /**
+     * @var string
+     */
+    public $embedded_enabled;
+
 	/**
 	 * Constructor.
 	 */
@@ -85,14 +100,17 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$this->init_settings();
 
 		// Get setting values
-		$this->title       = $this->get_option( 'title' );
-		$this->description = $this->get_option( 'description' );
-		$this->enabled     = $this->get_option( 'enabled' );
-		$this->modal_color = $this->get_option( 'modal_color', '#333333' );
-		$this->sandbox     = $this->get_option( 'sandbox' );
-		$this->txn_mode    = $this->get_option( 'txn_mode', self::TXN_MODE_PURCHASE );
-		$this->public_key  = $this->sandbox == 'no' ? $this->get_option( 'public_key' ) : $this->get_option( 'sandbox_public_key' );
-		$this->private_key = $this->sandbox == 'no' ? $this->get_option( 'private_key' ) : $this->get_option( 'sandbox_private_key' );
+		$this->title                = $this->get_option( 'title' );
+		$this->embedded_title       = $this->get_option( 'embedded_title' );
+		$this->description          = $this->get_option( 'description' );
+		$this->embedded_description = $this->get_option( 'embedded_description' );
+		$this->enabled              = $this->get_option( 'enabled' );
+		$this->embedded_enabled     = $this->get_option( 'embedded_enabled' );
+		$this->modal_color          = $this->get_option( 'modal_color', '#333333' );
+		$this->sandbox              = $this->get_option( 'sandbox' );
+		$this->txn_mode             = $this->get_option( 'txn_mode', self::TXN_MODE_PURCHASE );
+		$this->public_key           = $this->sandbox == 'no' ? $this->get_option( 'public_key' ) : $this->get_option( 'sandbox_public_key' );
+		$this->private_key          = $this->sandbox == 'no' ? $this->get_option( 'private_key' ) : $this->get_option( 'sandbox_private_key' );
 
 		$this->init_simplify_sdk();
 
@@ -266,7 +284,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * Check if SSL is enabled and notify the user.
 	 */
 	public function checks() {
-		if ( 'no' === $this->enabled ) {
+		if ( 'no' === $this->enabled && 'no' === $this->embedded_enabled ) {
 			return;
 		}
 
@@ -287,7 +305,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @return bool
 	 */
 	public function is_available() {
-		if ( 'yes' !== $this->enabled ) {
+		if ( 'yes' !== $this->enabled && 'yes' !== $this->embedded_enabled ) {
 			return false;
 		}
 
@@ -376,7 +394,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	    return array(
             'enabled'             => array(
                 'title'       => __( 'Enable/Disable', 'woocommerce' ),
-                'label'       => __( 'Enable Mastercard Payment Gateway Services - Simplify', 'woocommerce' ),
+                'label'       => __( 'Enable Popup Mastercard Payment Gateway Services - Simplify', 'woocommerce' ),
                 'type'        => 'checkbox',
                 'description' => '',
                 'default'     => 'no'
@@ -385,7 +403,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
                 'title'       => __( 'Title', 'woocommerce' ),
                 'type'        => 'text',
                 'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-                'default'     => __( 'Pay with Card', 'woocommerce' ),
+                'default'     => __( 'Pay with Card (Popup)', 'woocommerce' ),
                 'desc_tip'    => true
             ),
             'description'         => array(
@@ -403,7 +421,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
         return array(
             'embedded_enabled'             => array(
                 'title'       => __( 'Enable/Disable', 'woocommerce' ),
-                'label'       => __( 'Enable Mastercard Payment Gateway Services - Simplify', 'woocommerce' ),
+                'label'       => __( 'Enable Embedded Mastercard Payment Gateway Services - Simplify', 'woocommerce' ),
                 'type'        => 'checkbox',
                 'description' => '',
                 'default'     => 'no'
@@ -412,7 +430,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
                 'title'       => __( 'Title', 'woocommerce' ),
                 'type'        => 'text',
                 'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-                'default'     => __( 'Pay with Card', 'woocommerce' ),
+                'default'     => __( 'Pay with Card (Embedded)', 'woocommerce' ),
                 'desc_tip'    => true
             ),
             'embedded_description'         => array(
@@ -445,6 +463,32 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 		return $_POST;
 	}
+
+    /**
+     * Return the gateway's title.
+     *
+     * @return string
+     */
+    public function get_title() {
+        return apply_filters(
+            'woocommerce_gateway_title',
+            $this->enabled === 'yes' ? $this->title : $this->embedded_title,
+            $this->id
+        );
+    }
+
+    /**
+     * Return the gateway's description.
+     *
+     * @return string
+     */
+    public function get_description() {
+        return apply_filters(
+            'woocommerce_gateway_description',
+            $this->enabled === 'yes' ? $this->description : $this->embedded_description,
+            $this->id
+        );
+    }
 
 	/**
 	 * Payment form on checkout page.
@@ -695,12 +739,21 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			$button_args[] = 'data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
-		echo '<script type="text/javascript" src="https://www.simplify.com/commerce/simplify.pay.js"></script>
-			<button class="button alt" id="simplify-payment-button" ' . implode( ' ',
-				$button_args ) . '>' . __( 'Pay Now',
-				'woocommerce' ) . '</button> <a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel order &amp; restore cart',
-				'woocommerce' ) . '</a>
-			';
+		$paymentScript = '<script type="text/javascript" src="https://www.simplify.com/commerce/simplify.pay.js"></script>';
+
+		if ($this->enabled === 'yes') {
+            $paymentBodyHtml = '<button class="button alt" id="simplify-payment-button" ' . implode( ' ',
+                    $button_args ) . '>' . __( 'Pay Now',
+                    'woocommerce' ) . '</button>';
+        } else {
+            $paymentBodyHtml = '<iframe name="simplifycommerce_embedded" width="100%" height="450px" '
+                . implode( ' ', $button_args ) . '></iframe>';
+        }
+
+		$cancelButtonHtml = '<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel order &amp; restore cart',
+				'woocommerce' ) . '</a>';
+
+		echo $paymentScript . $paymentBodyHtml . ' ' . $cancelButtonHtml;
 	}
 
 	/**
