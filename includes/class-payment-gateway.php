@@ -217,9 +217,20 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
         <h3><?php _e( 'Mastercard Payment Gateway Services - Simplify', 'woocommerce' ); ?></h3>
 
 		<?php $this->checks(); ?>
+        <table class="form-table">
+            <?php $this->generate_settings_html($this->get_payment_form_fields()); ?>
+        </table>
+
+        <h3><?php _e( 'Hosted Payment', 'woocommerce' ); ?></h3>
 
         <table class="form-table">
-			<?php $this->generate_settings_html(); ?>
+            <?php $this->generate_settings_html($this->get_hosted_form_fields()); ?>
+        </table>
+
+        <h3><?php _e( 'Embedded Payment', 'woocommerce' ); ?></h3>
+
+        <table class="form-table">
+			<?php $this->generate_settings_html($this->get_embedded_form_fields()); ?>
             <script type="text/javascript">
                 jQuery('#woocommerce_simplify_commerce_sandbox').on('change', function () {
                     var sandbox = jQuery('#woocommerce_simplify_commerce_sandbox_public_key, #woocommerce_simplify_commerce_sandbox_private_key').closest('tr'),
@@ -291,89 +302,129 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled'             => array(
-				'title'       => __( 'Enable/Disable', 'woocommerce' ),
-				'label'       => __( 'Enable Mastercard Payment Gateway Services - Simplify', 'woocommerce' ),
-				'type'        => 'checkbox',
-				'description' => '',
-				'default'     => 'no'
-			),
-			'title'               => array(
-				'title'       => __( 'Title', 'woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-				'default'     => __( 'Pay with Card', 'woocommerce' ),
-				'desc_tip'    => true
-			),
-			'description'         => array(
-				'title'       => __( 'Description', 'woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'This controls the description which the user sees during checkout.',
-					'woocommerce' ),
-				'default'     => 'Pay with your card via Mastercard Payment Gateway Services - Simplify.',
-				'desc_tip'    => true
-			),
-			'modal_color'         => array(
-				'title'       => __( 'Modal Color', 'woocommerce' ),
-				'type'        => 'color',
-				'description' => __( 'Set the color of the buttons and titles on the modal dialog.', 'woocommerce' ),
-				'default'     => '#a46497',
-				'desc_tip'    => true
-			),
-			'txn_mode'            => array(
-				'title'       => __( 'Transaction Mode', 'woocommerce' ),
-				'type'        => 'select',
-				'options'     => array(
-					self::TXN_MODE_PURCHASE  => __( 'Payment', 'woocommerce' ),
-					self::TXN_MODE_AUTHORIZE => __( 'Authorization', 'woocommerce' )
-				),
-				'default'     => self::TXN_MODE_PURCHASE,
-				'description' => __( 'In "Payment" mode, the customer is charged immediately. In "Authorization" mode, the transaction is only authorized and the capturing of funds is a manual process that you do using the Woocommerce admin panel. You will need to capture the authorization typically within a week of an order being placed. If you do not, you will lose the payment and will be unable to capture it again even though you might have shipped the order. Please contact your gateway for more details.',
-					'woocommerce' ),
-			),
-			'sandbox'             => array(
-				'title'       => __( 'Sandbox', 'woocommerce' ),
-				'label'       => __( 'Enable Sandbox Mode', 'woocommerce' ),
-				'type'        => 'checkbox',
-				'description' => __( 'Place the payment gateway in sandbox mode using sandbox API keys (real payments will not be taken).',
-					'woocommerce' ),
-				'default'     => 'yes'
-			),
-			'sandbox_public_key'  => array(
-				'title'       => __( 'Sandbox Public Key', 'woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
-					'woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true
-			),
-			'sandbox_private_key' => array(
-				'title'       => __( 'Sandbox Private Key', 'woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
-					'woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true
-			),
-			'public_key'          => array(
-				'title'       => __( 'Public Key', 'woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
-					'woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true
-			),
-			'private_key'         => array(
-				'title'       => __( 'Private Key', 'woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
-					'woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true
-			),
-		);
+        $this->form_fields = array_merge(
+            $this->get_payment_form_fields(),
+            $this->get_hosted_form_fields(),
+            $this->get_embedded_form_fields()
+        );
 	}
+
+	protected function get_payment_form_fields() {
+        return $this->form_fields = array(
+            'sandbox'             => array(
+                'title'       => __( 'Sandbox', 'woocommerce' ),
+                'label'       => __( 'Enable Sandbox Mode', 'woocommerce' ),
+                'type'        => 'checkbox',
+                'description' => __( 'Place the payment gateway in sandbox mode using sandbox API keys (real payments will not be taken).',
+                    'woocommerce' ),
+                'default'     => 'yes'
+            ),
+            'sandbox_public_key'  => array(
+                'title'       => __( 'Sandbox Public Key', 'woocommerce' ),
+                'type'        => 'text',
+                'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
+                    'woocommerce' ),
+                'default'     => '',
+                'desc_tip'    => true
+            ),
+            'sandbox_private_key' => array(
+                'title'       => __( 'Sandbox Private Key', 'woocommerce' ),
+                'type'        => 'text',
+                'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
+                    'woocommerce' ),
+                'default'     => '',
+                'desc_tip'    => true
+            ),
+            'public_key'          => array(
+                'title'       => __( 'Public Key', 'woocommerce' ),
+                'type'        => 'text',
+                'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
+                    'woocommerce' ),
+                'default'     => '',
+                'desc_tip'    => true
+            ),
+            'private_key'         => array(
+                'title'       => __( 'Private Key', 'woocommerce' ),
+                'type'        => 'text',
+                'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
+                    'woocommerce' ),
+                'default'     => '',
+                'desc_tip'    => true
+            ),
+            'txn_mode'            => array(
+                'title'       => __( 'Transaction Mode', 'woocommerce' ),
+                'type'        => 'select',
+                'options'     => array(
+                    self::TXN_MODE_PURCHASE  => __( 'Payment', 'woocommerce' ),
+                    self::TXN_MODE_AUTHORIZE => __( 'Authorization', 'woocommerce' )
+                ),
+                'default'     => self::TXN_MODE_PURCHASE,
+                'description' => __( 'In "Payment" mode, the customer is charged immediately. In "Authorization" mode, the transaction is only authorized and the capturing of funds is a manual process that you do using the Woocommerce admin panel. You will need to capture the authorization typically within a week of an order being placed. If you do not, you will lose the payment and will be unable to capture it again even though you might have shipped the order. Please contact your gateway for more details.',
+                    'woocommerce' ),
+            ),
+            'modal_color'         => array(
+                'title'       => __( 'Modal Color', 'woocommerce' ),
+                'type'        => 'color',
+                'description' => __( 'Set the color of the buttons and titles on the modal dialog.', 'woocommerce' ),
+                'default'     => '#a46497',
+                'desc_tip'    => true
+            ),
+        );
+    }
+
+    protected function get_hosted_form_fields() {
+	    return array(
+            'enabled'             => array(
+                'title'       => __( 'Enable/Disable', 'woocommerce' ),
+                'label'       => __( 'Enable Mastercard Payment Gateway Services - Simplify', 'woocommerce' ),
+                'type'        => 'checkbox',
+                'description' => '',
+                'default'     => 'no'
+            ),
+            'title'               => array(
+                'title'       => __( 'Title', 'woocommerce' ),
+                'type'        => 'text',
+                'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
+                'default'     => __( 'Pay with Card', 'woocommerce' ),
+                'desc_tip'    => true
+            ),
+            'description'         => array(
+                'title'       => __( 'Description', 'woocommerce' ),
+                'type'        => 'text',
+                'description' => __( 'This controls the description which the user sees during checkout.',
+                    'woocommerce' ),
+                'default'     => 'Pay with your card via Mastercard Payment Gateway Services - Simplify.',
+                'desc_tip'    => true
+            ),
+        );
+    }
+
+    protected function get_embedded_form_fields() {
+        return array(
+            'embedded_enabled'             => array(
+                'title'       => __( 'Enable/Disable', 'woocommerce' ),
+                'label'       => __( 'Enable Mastercard Payment Gateway Services - Simplify', 'woocommerce' ),
+                'type'        => 'checkbox',
+                'description' => '',
+                'default'     => 'no'
+            ),
+            'embedded_title'               => array(
+                'title'       => __( 'Title', 'woocommerce' ),
+                'type'        => 'text',
+                'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
+                'default'     => __( 'Pay with Card', 'woocommerce' ),
+                'desc_tip'    => true
+            ),
+            'embedded_description'         => array(
+                'title'       => __( 'Description', 'woocommerce' ),
+                'type'        => 'text',
+                'description' => __( 'This controls the description which the user sees during checkout.',
+                    'woocommerce' ),
+                'default'     => 'Pay with your card via Mastercard Payment Gateway Services - Simplify.',
+                'desc_tip'    => true
+            ),
+        );
+    }
 
 	/**
 	 * Returns the POSTed data, to be used to save the settings.
