@@ -106,14 +106,21 @@ class WC_Gateway_Simplify_Commerce_Loader {
 
 		add_filter( 'woocommerce_order_actions', function ( $actions ) {
 			$order = new WC_Order( $_REQUEST['post'] );
-			if ( $order->get_payment_method() == WC_Gateway_Simplify_Commerce::ID ) {
-				if ( $order->get_meta( '_simplify_order_captured' ) === '0' ) {
-					if ( $order->get_status() == 'processing' ) {
-						$actions['simplify_capture_payment'] = __( 'Capture authorized amount', 'woocommerce' );
-						$actions['simplify_void_payment']    = __( 'Reverse authorization', 'woocommerce' );
-					}
-				}
+			if ( $order->get_payment_method() == WC_Gateway_Simplify_Commerce::ID
+                && $order->get_meta( '_simplify_order_captured' ) === '0'
+                && $order->get_status() == 'processing'
+            ) {
+                $actions[WC_Gateway_Simplify_Commerce::ID . '_capture_payment'] = __( 'Capture authorized amount', 'woocommerce' );
+                $actions[WC_Gateway_Simplify_Commerce::ID . '_void_payment']    = __( 'Reverse authorization', 'woocommerce' );
 			}
+
+            if ( $order->get_payment_method() == WC_Gateway_Embedded_Simplify_Commerce::ID
+                && $order->get_meta( '_simplify_order_captured' ) === '0'
+                && $order->get_status() == 'processing'
+            ) {
+                $actions[WC_Gateway_Embedded_Simplify_Commerce::ID . '_capture_payment'] = __( 'Capture authorized amount', 'woocommerce' );
+                $actions[WC_Gateway_Embedded_Simplify_Commerce::ID . '_void_payment']    = __( 'Reverse authorization', 'woocommerce' );
+            }
 
 			return $actions;
 		} );
@@ -209,7 +216,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	public function plugin_action_links( $links ) {
 		$plugin_links = array(
 			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' . __( 'Settings',
-				'woocommerce-gateway-simplify-commerce' ) . '</a>',
+				'woocommerce-gateway-simplify-commerce' ) . '22222</a>',
 			'<a href="https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin">' . __( 'Docs',
 				'woocommerce-gateway-simplify-commerce' ) . '</a>',
 		);
@@ -243,6 +250,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 		}
 
 		require_once( plugin_basename( 'includes/class-payment-gateway.php' ) );
+		require_once( plugin_basename( 'includes/class-embedded-payment-gateway.php' ) );
 
 		load_plugin_textdomain( 'woocommerce-gateway-simplify-commerce', false,
 			trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) );
@@ -263,6 +271,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 			$methods[] = 'WC_Addons_Gateway_Simplify_Commerce';
 		} else {
 			$methods[] = 'WC_Gateway_Simplify_Commerce';
+			$methods[] = 'WC_Gateway_Embedded_Simplify_Commerce';
 		}
 
 		return $methods;
