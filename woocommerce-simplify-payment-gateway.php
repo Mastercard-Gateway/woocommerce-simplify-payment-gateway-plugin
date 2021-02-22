@@ -215,8 +215,10 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 */
 	public function plugin_action_links( $links ) {
 		$plugin_links = array(
-			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' . __( 'Settings',
-				'woocommerce-gateway-simplify-commerce' ) . '22222</a>',
+			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' . __( 'Popup Settings',
+				'woocommerce-gateway-simplify-commerce' ) . '</a>',
+            '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=embedded_simplify_commerce' ) . '">' . __( 'Embedded Settings',
+                'woocommerce-gateway-simplify-commerce' ) . '</a>',
 			'<a href="https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin">' . __( 'Docs',
 				'woocommerce-gateway-simplify-commerce' ) . '</a>',
 		);

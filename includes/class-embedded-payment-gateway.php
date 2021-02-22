@@ -137,7 +137,6 @@ class WC_Gateway_Embedded_Simplify_Commerce extends WC_Gateway_Simplify_Commerce
 			'description'     => sprintf( __( 'Order #%s', 'woocommerce' ), $order->get_order_number() ),
 			'receipt'         => 'false',
 			'color'           => $this->modal_color,
-			'redirect-url'    => WC()->api_request_url( 'WC_Gateway_Embedded_Simplify_Commerce' ),
 			'operation'       => $this->get_payment_operation(),
 		), $order->get_id() );
 
@@ -183,8 +182,20 @@ class WC_Gateway_Embedded_Simplify_Commerce extends WC_Gateway_Simplify_Commerce
 
         $paymentScript = '<script type="text/javascript" src="https://www.simplify.com/commerce/simplify.pay.js"></script>';
 
-        $paymentBodyHtml = '<iframe name="simplifycommerce_embedded" width="100%" height="450px" '
+        $paymentBodyHtml = '<iframe name="embedded_pay" width="100%" height="450px" '
             . implode( ' ', $button_args ) . '></iframe>';
+
+        $paymentBodyHtml .= '<script>
+var redirectUrl = "' .  WC()->api_request_url( 'WC_Gateway_Embedded_Simplify_Commerce' ) . '"
+SimplifyCommerce.hostedPayments(
+            function(res) {
+                console.log(res, redirectUrl);
+            },
+            {
+                scKey: "lvpb_ZDdkMDI4OTAtN2VjNC00NDFmLWFiMTgtOGVmMzFkYjEwZWNh",
+            }
+        );
+</script>';
 
         $cancelButtonHtml = '<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel order &amp; restore cart',
                 'woocommerce' ) . '</a>';
