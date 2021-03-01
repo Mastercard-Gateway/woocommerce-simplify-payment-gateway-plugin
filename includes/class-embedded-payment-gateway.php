@@ -171,35 +171,20 @@ class WC_Gateway_Embedded_Simplify_Commerce extends WC_Gateway_Simplify_Commerce
                 'woocommerce' ) . '</p>';
 
         $args        = $this->get_hosted_payments_args( $order );
-        $button_args = array();
+        $iframe_args = array();
         foreach ( $args as $key => $value ) {
             $value = $this->attempt_transliteration($value);
             if (!$value) {
                 continue;
             }
-            $button_args[] = 'data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+            $iframe_args[] = 'data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
         }
+        // TEMPLATE VARS
+        $redirect_url = WC()->api_request_url( 'WC_Gateway_Embedded_Simplify_Commerce' );
+        $is_purchase = $this->txn_mode === self::TXN_MODE_PURCHASE;
+        $public_key = $this->public_key;
+        // TEMPLATE VARS
 
-        $paymentScript = '<script type="text/javascript" src="https://www.simplify.com/commerce/simplify.pay.js"></script>';
-
-        $paymentBodyHtml = '<iframe name="embedded_pay" width="100%" height="450px" '
-            . implode( ' ', $button_args ) . '></iframe>';
-
-        $paymentBodyHtml .= '<script>
-var redirectUrl = "' .  WC()->api_request_url( 'WC_Gateway_Embedded_Simplify_Commerce' ) . '"
-SimplifyCommerce.hostedPayments(
-            function(res) {
-                console.log(res, redirectUrl);
-            },
-            {
-                scKey: "lvpb_ZDdkMDI4OTAtN2VjNC00NDFmLWFiMTgtOGVmMzFkYjEwZWNh",
-            }
-        );
-</script>';
-
-        $cancelButtonHtml = '<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel order &amp; restore cart',
-                'woocommerce' ) . '</a>';
-
-        echo $paymentScript . $paymentBodyHtml . ' ' . $cancelButtonHtml;
+        require plugin_basename('embedded-template.php');
     }
 }
