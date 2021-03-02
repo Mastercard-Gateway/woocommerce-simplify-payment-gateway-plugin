@@ -32,96 +32,6 @@ class WC_Gateway_Embedded_Simplify_Commerce extends WC_Gateway_Simplify_Commerce
 	}
 
 	/**
-	 * do payment function.
-	 *
-	 * @param WC_order $order
-	 * @param int $amount (default: 0)
-	 * @param array $token
-	 *
-	 * @return bool|WP_Error
-	 * @uses  Simplify_BadRequestException
-	 */
-	public function do_payment( $order, $amount = 0, $token = array() ) {
-		if ( $this->get_total( $order ) < 50 ) {
-			return new WP_Error( 'simplify_error',
-				__( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.', 'woocommerce' ) );
-		}
-
-		try {
-			// Charge the customer
-			$data = array(
-				'amount'      => $this->get_total(), // In cents. Rounding to avoid floating point errors.
-				'description' => sprintf( __( '%s - Order #%s', 'woocommerce' ), $order->get_order_number() ),
-				'currency'    => strtoupper( get_woocommerce_currency() ),
-				'reference'   => $order->get_id()
-			);
-
-			$data    = array_merge( $data, $token );
-			$payment = Simplify_Payment::createPayment( $data );
-
-		} catch ( Exception $e ) {
-
-			$error_message = $e->getMessage();
-
-			if ( $e instanceof Simplify_BadRequestException && $e->hasFieldErrors() && $e->getFieldErrors() ) {
-				$error_message = '';
-				foreach ( $e->getFieldErrors() as $error ) {
-					$error_message .= ' ' . $error->getFieldName() . ': "' . $error->getMessage() . '" (' . $error->getErrorCode() . ')';
-				}
-			}
-
-			$order->add_order_note( sprintf( __( 'Gateway payment error: %s', 'woocommerce' ), $error_message ) );
-
-			return new WP_Error( 'simplify_payment_declined', $e->getMessage(), array( 'status' => $e->getCode() ) );
-		}
-
-		if ( 'APPROVED' == $payment->paymentStatus ) {
-			// Payment complete
-			$order->payment_complete( $payment->id );
-
-			// Add order note
-			$order->add_order_note( sprintf( __( 'Gateway payment approved (ID: %s, Auth Code: %s)', 'woocommerce' ),
-				$payment->id, $payment->authCode ) );
-
-			return true;
-		} else {
-			$order->add_order_note( __( 'Gateway payment declined', 'woocommerce' ) );
-
-			return new WP_Error( 'simplify_payment_declined',
-				__( 'Payment was declined by your gateway - please try another card.', 'woocommerce' ) );
-		}
-	}
-
-	/**
-	 * Process standard payments.
-	 *
-	 * @param WC_Order $order
-	 *
-	 * @return array
-	 */
-	protected function process_hosted_payments( $order ) {
-		return array(
-			'result'   => 'success',
-			'redirect' => $order->get_checkout_payment_url( true )
-		);
-	}
-
-	/**
-	 * Process the payment.
-	 *
-	 * @param int $order_id
-	 *
-	 * @return array
-	 */
-	public function process_payment( $order_id ) {
-
-		$order = wc_get_order( $order_id );
-
-		return $this->process_hosted_payments( $order );
-
-	}
-
-	/**
 	 * Hosted payment args.
 	 *
 	 * @param WC_Order $order
@@ -141,22 +51,6 @@ class WC_Gateway_Embedded_Simplify_Commerce extends WC_Gateway_Simplify_Commerce
 		), $order->get_id() );
 
 		return $args;
-	}
-
-	protected function attempt_transliteration($field) {
-		$encode = mb_detect_encoding($field);
-		if ($encode !== 'ASCII') {
-		    if (function_exists('transliterator_transliterate')) {
-		        $field = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove', $field);
-		    } else {
-		        // fall back to iconv if intl module not available
-		        $field = remove_accents($field);
-		        $field = iconv($encode, 'ASCII//TRANSLIT//IGNORE', $field);
-		        $field = str_ireplace('?', '', $field);
-		        $field = trim($field);
-		    }
-		}
-		return $field;
 	}
 
     /**
