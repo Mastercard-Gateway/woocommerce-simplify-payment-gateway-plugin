@@ -5,6 +5,7 @@
  * Description: Mastercard Payment Gateway Services - Simplify plugin from Mastercard lets you to take card payments directly on your WooCommerce store. Requires PHP 5.3+ & WooCommerce 2.6+
  * Author: Mastercard Payment Gateway Services - Simplify
  * Author URI: http://www.simplify.com/
+ * Text Domain: woocommerce-gateway-simplify-commerce
  * Version: 2.1.0
  *
  * Copyright (c) 2017-2019 Mastercard
@@ -36,14 +37,14 @@ define( 'WC_SIMPLIFY_COMMERCE_FILE', __FILE__ );
 class WC_Gateway_Simplify_Commerce_Loader {
 
 	/**
-	 * @var Singleton The reference the *Singleton* instance of this class
+	 * @var WC_Gateway_Simplify_Commerce_Loader The reference the *Singleton* instance of this class
 	 */
 	private static $instance;
 
 	/**
 	 * Returns the *Singleton* instance of this class.
 	 *
-	 * @return Singleton The *Singleton* instance.
+	 * @return WC_Gateway_Simplify_Commerce_Loader The *Singleton* instance.
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -71,7 +72,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	private function __wakeup() {
 	}
 
-	/** @var whether or not we need to load code for / support subscriptions */
+	/** @var bool whether or not we need to load code for / support subscriptions */
 	private $subscription_support_enabled = false;
 
 	/**
@@ -109,8 +110,8 @@ class WC_Gateway_Simplify_Commerce_Loader {
 			if ( $order->get_payment_method() == WC_Gateway_Simplify_Commerce::ID ) {
 				if ( $order->get_meta( '_simplify_order_captured' ) === '0' ) {
 					if ( $order->get_status() == 'processing' ) {
-						$actions['simplify_capture_payment'] = __( 'Capture authorized amount', 'woocommerce' );
-						$actions['simplify_void_payment']    = __( 'Reverse authorization', 'woocommerce' );
+						$actions['simplify_capture_payment'] = __( 'Capture authorized amount', 'woocommerce-gateway-simplify-commerce' );
+						$actions['simplify_void_payment']    = __( 'Reverse authorization', 'woocommerce-gateway-simplify-commerce' );
 					}
 				}
 			}
