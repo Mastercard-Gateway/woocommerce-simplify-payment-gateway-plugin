@@ -47,9 +47,9 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				array( $this, 'process_pre_order_release_payment' ) );
 		}
 
-		add_filter( 'woocommerce_simplify_commerce_hosted_args', array( $this, 'hosted_payment_args' ), 10, 2 );
-		add_action( 'woocommerce_api_wc_addons_gateway_simplify_commerce', array( $this, 'return_handler' ) );
-		add_action( 'woocommerce_api_wc_gateway_simplify_commerce', array( $this, 'return_handler' ) );
+		add_filter( 'woocommerce_' . $this->id . '_hosted_args', array( $this, 'hosted_payment_args' ), 10, 2 );
+		add_action( 'woocommerce_api_wc_addons_gateway_' . $this->id, array( $this, 'return_handler' ) );
+		add_action( 'woocommerce_api_wc_gateway_' . $this->id, array( $this, 'return_handler' ) );
 	}
 
 	/**
