@@ -649,6 +649,14 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				$button_args ) . '>' . __( 'Pay Now',
 				'woocommerce' ) . '</button> <a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel order &amp; restore cart',
 				'woocommerce' ) . '</a>
+			<script>
+                var intervalId = setInterval(function () {
+                    if (window.SimplifyCommerce) {
+                        jQuery("#simplify-payment-button").trigger("click");
+                        clearInterval(intervalId);
+                    }
+                }, 100);
+            </script>
 			';
 	}
 
