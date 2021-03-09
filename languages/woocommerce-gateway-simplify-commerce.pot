@@ -14,19 +14,18 @@ msgstr ""
 "Project-Id-Version: Mastercard Payment Gateway Services - Simplify 2.0.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/woocommerce-gateway-simplify-"
 "commerce\n"
-"POT-Creation-Date: 2021-03-05 11:26+0000\n"
+"POT-Creation-Date: 2021-03-09 13:01+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"\n"
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "X-Generator: Loco https://localise.biz/"
 
-#: includes/class-payment-gateway.php:499
+#: includes/class-payment-gateway.php:502
 #: includes/class-subscription-addon.php:389
 msgid "%s - Order #%s"
 msgstr ""
@@ -39,19 +38,20 @@ msgstr ""
 msgid "(Order #%s)"
 msgstr ""
 
-#: includes/class-payment-gateway.php:329
+#: includes/class-payment-gateway.php:332
 msgid "Authorization"
 msgstr ""
 
-#: includes/class-payment-gateway.php:691
+#: includes/class-payment-gateway.php:702
 msgid "Authorization was declined by your gateway."
 msgstr ""
 
-#: includes/class-payment-gateway.php:650
+#: includes/embedded-template.php:73 includes/class-payment-gateway.php:653
 msgid "Cancel order &amp; restore cart"
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:113
+#: woocommerce-simplify-payment-gateway.php:114
+#: woocommerce-simplify-payment-gateway.php:122
 msgid "Capture authorized amount"
 msgstr ""
 
@@ -60,11 +60,11 @@ msgstr ""
 msgid "Customer not found"
 msgstr ""
 
-#: includes/class-payment-gateway.php:310
+#: includes/class-payment-gateway.php:313
 msgid "Description"
 msgstr ""
 
-#: includes/class-payment-gateway.php:432
+#: includes/class-payment-gateway.php:435
 #: includes/class-subscription-addon.php:113
 #: includes/class-subscription-addon.php:245
 msgid ""
@@ -72,19 +72,23 @@ msgid ""
 "JavaScript errors on the page."
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:214
+#: woocommerce-simplify-payment-gateway.php:223
 msgid "Docs"
 msgstr ""
 
-#: includes/class-payment-gateway.php:297
+#: woocommerce-simplify-payment-gateway.php:221
+msgid "Embedded Settings"
+msgstr ""
+
+#: includes/class-payment-gateway.php:300
 msgid "Enable Mastercard Payment Gateway Services - Simplify"
 msgstr ""
 
-#: includes/class-payment-gateway.php:337
+#: includes/class-payment-gateway.php:340
 msgid "Enable Sandbox Mode"
 msgstr ""
 
-#: includes/class-payment-gateway.php:296
+#: includes/class-payment-gateway.php:299
 msgid "Enable/Disable"
 msgstr ""
 
@@ -93,52 +97,52 @@ msgstr ""
 msgid "Error creating user in gateway."
 msgstr ""
 
-#: includes/class-payment-gateway.php:758
+#: includes/class-payment-gateway.php:769
 #, php-format
 msgid "Gateway authorization approved (ID: %s, Auth Code: %s)"
 msgstr ""
 
-#: includes/class-payment-gateway.php:137
+#: includes/class-payment-gateway.php:138
 #, php-format
 msgid "Gateway captured amount %s (ID: %s)"
 msgstr ""
 
-#: includes/class-payment-gateway.php:268
+#: includes/class-payment-gateway.php:271
 msgid "Gateway Error: Please enter your public and private keys"
 msgstr ""
 
-#: includes/class-payment-gateway.php:264
+#: includes/class-payment-gateway.php:267
 #, php-format
 msgid ""
 "Gateway Error: Simplify commerce requires PHP 5.3 and above. You are using "
 "version %s."
 msgstr ""
 
-#: includes/class-payment-gateway.php:528
-#: includes/class-payment-gateway.php:754
+#: includes/class-payment-gateway.php:531
+#: includes/class-payment-gateway.php:765
 #: includes/class-subscription-addon.php:424
 #: includes/class-subscription-addon.php:553
 #, php-format
 msgid "Gateway payment approved (ID: %s, Auth Code: %s)"
 msgstr ""
 
-#: includes/class-payment-gateway.php:533
+#: includes/class-payment-gateway.php:536
 #: includes/class-subscription-addon.php:429
 msgid "Gateway payment declined"
 msgstr ""
 
-#: includes/class-payment-gateway.php:518
+#: includes/class-payment-gateway.php:521
 #: includes/class-subscription-addon.php:414
 #, php-format
 msgid "Gateway payment error: %s"
 msgstr ""
 
-#: includes/class-payment-gateway.php:797
+#: includes/class-payment-gateway.php:808
 #, php-format
 msgid "Gateway refund approved (ID: %s, Amount: %s)"
 msgstr ""
 
-#: includes/class-payment-gateway.php:179
+#: includes/class-payment-gateway.php:181
 #, php-format
 msgid "Gateway reverse authorization (ID: %s)"
 msgstr ""
@@ -149,10 +153,10 @@ msgstr ""
 msgid "Gateway Transaction Failed (%s)"
 msgstr ""
 
-#: includes/class-payment-gateway.php:346
-#: includes/class-payment-gateway.php:354
-#: includes/class-payment-gateway.php:362
-#: includes/class-payment-gateway.php:370
+#: includes/class-payment-gateway.php:349
+#: includes/class-payment-gateway.php:357
+#: includes/class-payment-gateway.php:365
+#: includes/class-payment-gateway.php:373
 msgid ""
 "Get your API keys from your merchant account: Account Settings > API Keys."
 msgstr ""
@@ -166,7 +170,7 @@ msgid ""
 "https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/"
 msgstr ""
 
-#: includes/class-payment-gateway.php:332
+#: includes/class-payment-gateway.php:335
 msgid ""
 "In \"Payment\" mode, the customer is charged immediately. In "
 "\"Authorization\" mode, the transaction is only authorized and the capturing "
@@ -179,8 +183,12 @@ msgstr ""
 
 #. Name of the plugin
 #. Author of the plugin
-#: includes/class-payment-gateway.php:59 includes/class-payment-gateway.php:217
+#: includes/class-payment-gateway.php:59
 msgid "Mastercard Payment Gateway Services - Simplify"
+msgstr ""
+
+#: includes/class-embedded-payment-gateway.php:31
+msgid "Mastercard Payment Gateway Services - Simplify (Embedded)"
 msgstr ""
 
 #. Description of the plugin
@@ -190,23 +198,24 @@ msgid ""
 "3+ & WooCommerce 2.6+"
 msgstr ""
 
-#: includes/class-payment-gateway.php:318
+#: includes/class-payment-gateway.php:321
 msgid "Modal Color"
 msgstr ""
 
-#: includes/class-payment-gateway.php:582
+#: includes/class-embedded-payment-gateway.php:47
+#: includes/class-payment-gateway.php:585
 msgid "Order #%s"
 msgstr ""
 
-#: includes/class-payment-gateway.php:649
+#: includes/class-payment-gateway.php:652
 msgid "Pay Now"
 msgstr ""
 
-#: includes/class-payment-gateway.php:306
+#: includes/class-payment-gateway.php:309
 msgid "Pay with Card"
 msgstr ""
 
-#: includes/class-payment-gateway.php:328
+#: includes/class-payment-gateway.php:331
 msgid "Payment"
 msgstr ""
 
@@ -218,22 +227,22 @@ msgstr ""
 msgid "Payment was declined - the customer need to try another card."
 msgstr ""
 
-#: includes/class-payment-gateway.php:536
+#: includes/class-payment-gateway.php:539
 msgid "Payment was declined by your gateway - please try another card."
 msgstr ""
 
-#: includes/class-payment-gateway.php:674
+#: includes/class-payment-gateway.php:685
 #: includes/class-subscription-addon.php:605
 msgid "Payment was declined by your gateway."
 msgstr ""
 
-#: includes/class-payment-gateway.php:339
+#: includes/class-payment-gateway.php:342
 msgid ""
 "Place the payment gateway in sandbox mode using sandbox API keys (real "
 "payments will not be taken)."
 msgstr ""
 
-#: includes/class-payment-gateway.php:428
+#: includes/class-payment-gateway.php:431
 #: includes/class-subscription-addon.php:109
 #: includes/class-subscription-addon.php:241
 #: includes/class-subscription-addon.php:335
@@ -242,43 +251,44 @@ msgid ""
 "browser supports JavaScript."
 msgstr ""
 
-#: includes/class-payment-gateway.php:368
+#: woocommerce-simplify-payment-gateway.php:219
+msgid "Popup Settings"
+msgstr ""
+
+#: includes/class-payment-gateway.php:371
 msgid "Private Key"
 msgstr ""
 
-#: includes/class-payment-gateway.php:360
+#: includes/class-payment-gateway.php:363
 msgid "Public Key"
 msgstr ""
 
-#: includes/class-payment-gateway.php:802
+#: includes/class-payment-gateway.php:813
 msgid "Refund was declined."
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:114
+#: woocommerce-simplify-payment-gateway.php:115
+#: woocommerce-simplify-payment-gateway.php:123
 msgid "Reverse authorization"
 msgstr ""
 
-#: includes/class-payment-gateway.php:336
+#: includes/class-payment-gateway.php:339
 msgid "Sandbox"
 msgstr ""
 
-#: includes/class-payment-gateway.php:352
+#: includes/class-payment-gateway.php:355
 msgid "Sandbox Private Key"
 msgstr ""
 
-#: includes/class-payment-gateway.php:344
+#: includes/class-payment-gateway.php:347
 msgid "Sandbox Public Key"
 msgstr ""
 
-#: includes/class-payment-gateway.php:320
+#: includes/class-payment-gateway.php:323
 msgid "Set the color of the buttons and titles on the modal dialog."
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:212
-msgid "Settings"
-msgstr ""
-
-#: includes/class-payment-gateway.php:492
+#: includes/class-payment-gateway.php:495
 #: includes/class-subscription-addon.php:234
 #: includes/class-subscription-addon.php:376
 msgid ""
@@ -292,65 +302,66 @@ msgid ""
 "Requires SSL when sandbox is disabled."
 msgstr ""
 
-#: includes/class-payment-gateway.php:405
+#: includes/class-payment-gateway.php:408
 msgid "TEST MODE ENABLED. Use a test card: %s"
 msgstr ""
 
-#: includes/class-payment-gateway.php:634
+#: includes/class-embedded-payment-gateway.php:64
+#: includes/class-payment-gateway.php:637
 msgid ""
 "Thank you for your order, please click the button below to pay with credit "
 "card using Mastercard Payment Gateway Services - Simplify."
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:198
+#: woocommerce-simplify-payment-gateway.php:205
 msgid ""
 "The Mastercard Payment Gateway Services - Simplify plugin has been "
 "deactivated. cURL is not installed."
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:173
+#: woocommerce-simplify-payment-gateway.php:180
 msgid ""
 "The Mastercard Payment Gateway Services - Simplify plugin has been "
 "deactivated. The minimum PHP version required for this plugin is %1$s. You "
 "are running %2$s."
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:185
+#: woocommerce-simplify-payment-gateway.php:192
 msgid ""
 "The Mastercard Payment Gateway Services - Simplify plugin has been "
 "deactivated. The minimum WooCommerce version required for this plugin is "
 "%1$s. You are running %2$s."
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:194
+#: woocommerce-simplify-payment-gateway.php:201
 msgid "The plugin could not be activated. cURL is not installed."
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:170
+#: woocommerce-simplify-payment-gateway.php:177
 msgid ""
 "The plugin could not be activated. The minimum PHP version required for this "
 "plugin is %1$s. You are running %2$s."
 msgstr ""
 
-#: woocommerce-simplify-payment-gateway.php:182
+#: woocommerce-simplify-payment-gateway.php:189
 msgid ""
 "The plugin could not be activated. The minimum WooCommerce version required "
 "for this plugin is %1$s. You are running %2$s."
 msgstr ""
 
-#: includes/class-payment-gateway.php:312
+#: includes/class-payment-gateway.php:315
 msgid "This controls the description which the user sees during checkout."
 msgstr ""
 
-#: includes/class-payment-gateway.php:305
+#: includes/class-payment-gateway.php:308
 msgid "This controls the title which the user sees during checkout."
 msgstr ""
 
-#: includes/class-payment-gateway.php:303
+#: includes/class-payment-gateway.php:306
 msgid "Title"
 msgstr ""
 
-#: includes/class-payment-gateway.php:325
+#: includes/class-payment-gateway.php:328
 msgid "Transaction Mode"
 msgstr ""
 

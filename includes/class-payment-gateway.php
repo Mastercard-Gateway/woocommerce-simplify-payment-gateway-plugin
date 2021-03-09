@@ -55,7 +55,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	public function __construct() {
 
-		$this->id                   = self::ID;
+		$this->id                   = static::ID;
 		$this->method_title         = __( 'Mastercard Payment Gateway Services - Simplify', 'woocommerce-gateway-simplify-commerce' );
 		$this->method_description   = __( 'Take payments via the Simplify payment gateway - uses simplify.js to create card tokens and the Mastercard Payment Gateway Services - Simplify SDK. Requires SSL when sandbox is disabled.',
 			'woocommerce-gateway-simplify-commerce' );
@@ -100,9 +100,9 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id,
 			array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );
-		add_action( 'woocommerce_api_wc_gateway_simplify_commerce', array( $this, 'return_handler' ) );
-		add_action( 'woocommerce_order_action_simplify_capture_payment', array( $this, 'capture_authorized_order' ) );
-		add_action( 'woocommerce_order_action_simplify_void_payment', array( $this, 'void_authorized_order' ) );
+		add_action( 'woocommerce_api_wc_gateway_' . $this->id, array( $this, 'return_handler' ) );
+		add_action( 'woocommerce_order_action_' . $this->id . '_capture_payment', array( $this, 'capture_authorized_order' ) );
+		add_action( 'woocommerce_order_action_' . $this->id . '_void_payment', array( $this, 'void_authorized_order' ) );
 	}
 
 	/**
@@ -110,6 +110,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	public function capture_authorized_order() {
 		try {
+            $this->init_simplify_sdk(); // re init static variables
 			$order = new WC_Order( $_REQUEST['post_ID'] );
 			if ( $order->get_payment_method() != $this->id ) {
 				throw new Exception( 'Wrong payment method' );
@@ -157,6 +158,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	public function void_authorized_order() {
 		try {
+		    $this->init_simplify_sdk(); // re init static variables
 			$order = new WC_Order( $_REQUEST['post_ID'] );
 			if ( $order->get_payment_method() != $this->id ) {
 				throw new Exception( 'Wrong payment method' );
@@ -214,16 +216,17 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	public function admin_options() {
 		?>
-        <h3><?php _e( 'Mastercard Payment Gateway Services - Simplify', 'woocommerce-gateway-simplify-commerce' ); ?></h3>
+        <h3><?php echo $this->method_title ?></h3>
 
 		<?php $this->checks(); ?>
 
         <table class="form-table">
 			<?php $this->generate_settings_html(); ?>
             <script type="text/javascript">
-                jQuery('#woocommerce_simplify_commerce_sandbox').on('change', function () {
-                    var sandbox = jQuery('#woocommerce_simplify_commerce_sandbox_public_key, #woocommerce_simplify_commerce_sandbox_private_key').closest('tr'),
-                        production = jQuery('#woocommerce_simplify_commerce_public_key, #woocommerce_simplify_commerce_private_key').closest('tr');
+                var PAYMENT_CODE = "<?php echo $this->id ?>";
+                jQuery('#woocommerce_' + PAYMENT_CODE + '_sandbox').on('change', function () {
+                    var sandbox = jQuery('#woocommerce_' + PAYMENT_CODE + '_sandbox_public_key, #woocommerce_' + PAYMENT_CODE + '_sandbox_private_key').closest('tr'),
+                        production = jQuery('#woocommerce_' + PAYMENT_CODE + '_public_key, #woocommerce_' + PAYMENT_CODE + '_private_key').closest('tr');
 
                     if (jQuery(this).is(':checked')) {
                         sandbox.show();
@@ -234,9 +237,9 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
                     }
                 }).change();
 
-                jQuery('#woocommerce_simplify_commerce_mode').on('change', function () {
-                    var color = jQuery('#woocommerce_simplify_commerce_modal_color').closest('tr');
-                    var supportedCardTypes = jQuery('#woocommerce_simplify_commerce_supported_card_types').closest('tr');
+                jQuery('#woocommerce_' + PAYMENT_CODE + '_mode').on('change', function () {
+                    var color = jQuery('#woocommerce_' + PAYMENT_CODE + '_modal_color').closest('tr');
+                    var supportedCardTypes = jQuery('#woocommerce_' + PAYMENT_CODE + '_supported_card_types').closest('tr');
 
                     if ('standard' === jQuery(this).val()) {
                         color.hide();
