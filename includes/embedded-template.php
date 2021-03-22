@@ -70,4 +70,4 @@ $url_query_parts = $url_query ? explode('&', $url_query) : [];
 
 <a class="button cancel"
    href="<?php echo esc_url( $order->get_cancel_order_url() ) ?>"
-><?php echo __( 'Cancel order &amp; restore cart', 'woocommerce' ) ?></a>
+><?php echo __( 'Cancel order &amp; restore cart', 'woocommerce-gateway-simplify-commerce' ) ?></a>

@@ -28,7 +28,7 @@ class WC_Gateway_Embedded_Simplify_Commerce extends WC_Gateway_Simplify_Commerce
 	 */
 	public function __construct() {
 	    parent::__construct();
-		$this->method_title         = __( 'Mastercard Payment Gateway Services - Simplify (Embedded)', 'woocommerce' );
+		$this->method_title         = __( 'Mastercard Payment Gateway Services - Simplify (Embedded)', 'woocommerce-gateway-simplify-commerce' );
 	}
 
 	/**
@@ -44,7 +44,7 @@ class WC_Gateway_Embedded_Simplify_Commerce extends WC_Gateway_Simplify_Commerce
 			'amount'          => $this->get_total( $order ),
 			'currency'        => strtoupper( get_woocommerce_currency() ),
 			'reference'       => $order->get_id(),
-			'description'     => sprintf( __( 'Order #%s', 'woocommerce' ), $order->get_order_number() ),
+			'description'     => sprintf( __( 'Order #%s', 'woocommerce-gateway-simplify-commerce' ), $order->get_order_number() ),
 			'receipt'         => 'false',
 			'color'           => $this->modal_color,
 			'operation'       => $this->get_payment_operation(),
@@ -62,7 +62,7 @@ class WC_Gateway_Embedded_Simplify_Commerce extends WC_Gateway_Simplify_Commerce
         $order = wc_get_order( $order_id );
 
         echo '<p>' . __( 'Thank you for your order, please click the button below to pay with credit card using Mastercard Payment Gateway Services - Simplify.',
-                'woocommerce' ) . '</p>';
+                'woocommerce-gateway-simplify-commerce' ) . '</p>';
 
         $args        = $this->get_hosted_payments_args( $order );
         $iframe_args = array();
