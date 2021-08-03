@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2017-2019 Mastercard
+ * Copyright (c) 2017-2021 Mastercard
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
-
 	const ID = 'simplify_commerce';
+
 	const TXN_MODE_PURCHASE = 'purchase';
 	const TXN_MODE_AUTHORIZE = 'authorize';
+
+	const INTEGRATION_MODE_MODAL = 'modal';
+	const INTEGRATION_MODE_EMBEDDED = 'embedded';
 
 	/**
 	 * @var string
@@ -51,15 +54,27 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	protected $txn_mode;
 
 	/**
+	 * @var bool
+	 */
+	protected $is_modal_integration_model;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-
 		$this->id                   = static::ID;
-		$this->method_title         = __( 'Mastercard Payment Gateway Services - Simplify', 'woocommerce-gateway-simplify-commerce' );
-		$this->method_description   = __( 'Take payments via the Simplify payment gateway - uses simplify.js to create card tokens and the Mastercard Payment Gateway Services - Simplify SDK. Requires SSL when sandbox is disabled.',
-			'woocommerce-gateway-simplify-commerce' );
-		$this->new_method_label     = __( 'Use a new card', 'woocommerce-gateway-simplify-commerce' );
+		$this->method_title         = __(
+			'Mastercard Payment Gateway Services - Simplify',
+			'woocommerce-gateway-simplify-commerce'
+		);
+		$this->method_description   = __(
+			'Take payments via the Simplify payment gateway - uses simplify.js to create card tokens and the Mastercard Payment Gateway Services - Simplify SDK. Requires SSL when sandbox is disabled.',
+			'woocommerce-gateway-simplify-commerce'
+		);
+		$this->new_method_label     = __(
+			'Use a new card',
+			'woocommerce-gateway-simplify-commerce'
+		);
 		$this->has_fields           = true;
 		$this->supports             = array(
 			'subscriptions',
@@ -85,24 +100,39 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$this->init_settings();
 
 		// Get setting values
-		$this->title       = $this->get_option( 'title' );
-		$this->description = $this->get_option( 'description' );
-		$this->enabled     = $this->get_option( 'enabled' );
-		$this->modal_color = $this->get_option( 'modal_color', '#333333' );
-		$this->sandbox     = $this->get_option( 'sandbox' );
-		$this->txn_mode    = $this->get_option( 'txn_mode', self::TXN_MODE_PURCHASE );
-		$this->public_key  = $this->sandbox == 'no' ? $this->get_option( 'public_key' ) : $this->get_option( 'sandbox_public_key' );
-		$this->private_key = $this->sandbox == 'no' ? $this->get_option( 'private_key' ) : $this->get_option( 'sandbox_private_key' );
+		$this->title                      = $this->get_option( 'title' );
+		$this->description                = $this->get_option( 'description' );
+		$this->enabled                    = $this->get_option( 'enabled' );
+		$this->modal_color                = $this->get_option( 'modal_color', '#333333' );
+		$this->sandbox                    = $this->get_option( 'sandbox' );
+		$this->txn_mode                   = $this->get_option( 'txn_mode', self::TXN_MODE_PURCHASE );
+		$this->public_key                 = $this->sandbox === 'no' ? $this->get_option( 'public_key' ) : $this->get_option( 'sandbox_public_key' );
+		$this->private_key                = $this->sandbox === 'no' ? $this->get_option( 'private_key' ) : $this->get_option( 'sandbox_private_key' );
+		$this->is_modal_integration_model = $this->get_option( 'integration_mode' ) === self::INTEGRATION_MODE_MODAL;
 
 		$this->init_simplify_sdk();
 
 		// Hooks
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id,
-			array( $this, 'process_admin_options' ) );
-		add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );
-		add_action( 'woocommerce_api_wc_gateway_' . $this->id, array( $this, 'return_handler' ) );
-		add_action( 'woocommerce_order_action_' . $this->id . '_capture_payment', array( $this, 'capture_authorized_order' ) );
-		add_action( 'woocommerce_order_action_' . $this->id . '_void_payment', array( $this, 'void_authorized_order' ) );
+		add_action(
+			sprintf( "woocommerce_update_options_payment_gateways_%s", $this->id ),
+			array( $this, 'process_admin_options' )
+		);
+		add_action(
+			sprintf( "woocommerce_receipt_%s", $this->id ),
+			array( $this, 'receipt_page' )
+		);
+		add_action(
+			sprintf( "woocommerce_api_wc_gateway_%s", $this->id ),
+			array( $this, 'return_handler' )
+		);
+		add_action(
+			sprintf( "woocommerce_order_action_%s_capture_payment", $this->id ),
+			array( $this, 'capture_authorized_order' )
+		);
+		add_action(
+			sprintf( "woocommerce_order_action_%s_void_payment", $this->id ),
+			array( $this, 'void_authorized_order' )
+		);
 	}
 
 	/**
@@ -110,7 +140,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	public function capture_authorized_order() {
 		try {
-            $this->init_simplify_sdk(); // re init static variables
+			$this->init_simplify_sdk(); // re init static variables
 			$order = new WC_Order( $_REQUEST['post_ID'] );
 			if ( $order->get_payment_method() != $this->id ) {
 				throw new Exception( 'Wrong payment method' );
@@ -135,7 +165,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			) );
 
 			if ( $payment->paymentStatus === 'APPROVED' ) {
-				$order->add_order_note( sprintf( __( 'Gateway captured amount %s (ID: %s)', 'woocommerce-gateway-simplify-commerce' ),
+				$order->add_order_note( sprintf( __( 'Gateway captured amount %s (ID: %s)',
+					'woocommerce-gateway-simplify-commerce' ),
 					$order->get_total(), $payment->id ) );
 			} else {
 				throw new Exception( 'Capture declined' );
@@ -158,7 +189,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	public function void_authorized_order() {
 		try {
-		    $this->init_simplify_sdk(); // re init static variables
+			$this->init_simplify_sdk(); // re init static variables
 			$order = new WC_Order( $_REQUEST['post_ID'] );
 			if ( $order->get_payment_method() != $this->id ) {
 				throw new Exception( 'Wrong payment method' );
@@ -178,7 +209,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			$authTxn = Simplify_Authorization::findAuthorization( $authCode );
 			$authTxn->deleteAuthorization();
 
-			$order->add_order_note( sprintf( __( 'Gateway reverse authorization (ID: %s)', 'woocommerce-gateway-simplify-commerce' ),
+			$order->add_order_note( sprintf( __( 'Gateway reverse authorization (ID: %s)',
+				'woocommerce-gateway-simplify-commerce' ),
 				$authCode ) );
 
 			wc_create_refund( array(
@@ -264,12 +296,25 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 		// PHP Version
 		if ( version_compare( phpversion(), '5.3', '<' ) ) {
-			echo '<div class="error"><p>' . sprintf( __( 'Gateway Error: Simplify commerce requires PHP 5.3 and above. You are using version %s.',
-					'woocommerce-gateway-simplify-commerce' ), phpversion() ) . '</p></div>';
+			echo sprintf(
+				"<div class=\"error\"><p>%s</p></div>",
+				sprintf(
+					__(
+						'Gateway Error: Simplify commerce requires PHP 5.3 and above. You are using version %s.',
+						'woocommerce-gateway-simplify-commerce'
+					),
+					phpversion()
+				)
+			);
 		} // Check required fields
         elseif ( ! $this->public_key || ! $this->private_key ) {
-			echo '<div class="error"><p>' . __( 'Gateway Error: Please enter your public and private keys',
-					'woocommerce-gateway-simplify-commerce' ) . '</p></div>';
+			echo sprintf(
+				"<div class=\"error\"><p>%s</p></div>",
+				__(
+					'Gateway Error: Please enter your public and private keys',
+					'woocommerce-gateway-simplify-commerce'
+				)
+			);
 		}
 	}
 
@@ -297,7 +342,10 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$this->form_fields = array(
 			'enabled'             => array(
 				'title'       => __( 'Enable/Disable', 'woocommerce-gateway-simplify-commerce' ),
-				'label'       => __( 'Enable Mastercard Payment Gateway Services - Simplify', 'woocommerce-gateway-simplify-commerce' ),
+				'label'       => __(
+					'Enable Mastercard Payment Gateway Services - Simplify',
+					'woocommerce-gateway-simplify-commerce'
+				),
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no'
@@ -305,22 +353,30 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			'title'               => array(
 				'title'       => __( 'Title', 'woocommerce-gateway-simplify-commerce' ),
 				'type'        => 'text',
-				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce-gateway-simplify-commerce' ),
+				'description' => __(
+					'This controls the title which the user sees during checkout.',
+					'woocommerce-gateway-simplify-commerce'
+				),
 				'default'     => __( 'Pay with Card', 'woocommerce-gateway-simplify-commerce' ),
 				'desc_tip'    => true
 			),
 			'description'         => array(
 				'title'       => __( 'Description', 'woocommerce-gateway-simplify-commerce' ),
 				'type'        => 'text',
-				'description' => __( 'This controls the description which the user sees during checkout.',
-					'woocommerce-gateway-simplify-commerce' ),
+				'description' => __(
+					'This controls the description which the user sees during checkout.',
+					'woocommerce-gateway-simplify-commerce'
+				),
 				'default'     => 'Pay with your card via Mastercard Payment Gateway Services - Simplify.',
 				'desc_tip'    => true
 			),
 			'modal_color'         => array(
-				'title'       => __( 'Modal Color', 'woocommerce-gateway-simplify-commerce' ),
+				'title'       => __( 'Color', 'woocommerce-gateway-simplify-commerce' ),
 				'type'        => 'color',
-				'description' => __( 'Set the color of the buttons and titles on the modal dialog.', 'woocommerce-gateway-simplify-commerce' ),
+				'description' => __(
+					'Set the color of the buttons and titles on the modal dialog.',
+					'woocommerce-gateway-simplify-commerce'
+				),
 				'default'     => '#a46497',
 				'desc_tip'    => true
 			),
@@ -332,46 +388,71 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 					self::TXN_MODE_AUTHORIZE => __( 'Authorization', 'woocommerce-gateway-simplify-commerce' )
 				),
 				'default'     => self::TXN_MODE_PURCHASE,
-				'description' => __( 'In "Payment" mode, the customer is charged immediately. In "Authorization" mode, the transaction is only authorized and the capturing of funds is a manual process that you do using the Woocommerce admin panel. You will need to capture the authorization typically within a week of an order being placed. If you do not, you will lose the payment and will be unable to capture it again even though you might have shipped the order. Please contact your gateway for more details.',
-					'woocommerce-gateway-simplify-commerce' ),
+				'description' => __(
+					'In "Payment" mode, the customer is charged immediately. In "Authorization" mode, the transaction is only authorized and the capturing of funds is a manual process that you do using the Woocommerce admin panel. You will need to capture the authorization typically within a week of an order being placed. If you do not, you will lose the payment and will be unable to capture it again even though you might have shipped the order. Please contact your gateway for more details.',
+					'woocommerce-gateway-simplify-commerce'
+				),
+			),
+			'integration_mode'    => array(
+				'title'       => __( 'Integration Mode', 'woocommerce-gateway-simplify-commerce' ),
+				'type'        => 'select',
+				'options'     => array(
+					self::INTEGRATION_MODE_EMBEDDED => __( 'Embedded Form', 'woocommerce-gateway-simplify-commerce' ),
+					self::INTEGRATION_MODE_MODAL    => __( 'Modal Form', 'woocommerce-gateway-simplify-commerce' )
+				),
+				'default'     => self::INTEGRATION_MODE_EMBEDDED,
+				'description' => __(
+					'In the "Embedded Form" mode, the form to input payment details will be displayed as a part of the Checkout Page. In the "Modal Form" mode, the form to input payment details will be hidden until the payment confirmation moment, then appear over the screen.',
+					'woocommerce-gateway-simplify-commerce'
+				),
 			),
 			'sandbox'             => array(
 				'title'       => __( 'Sandbox', 'woocommerce-gateway-simplify-commerce' ),
 				'label'       => __( 'Enable Sandbox Mode', 'woocommerce-gateway-simplify-commerce' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Place the payment gateway in sandbox mode using sandbox API keys (real payments will not be taken).',
-					'woocommerce-gateway-simplify-commerce' ),
+				'description' => __(
+					'Place the payment gateway in sandbox mode using sandbox API keys (real payments will not be taken).',
+					'woocommerce-gateway-simplify-commerce'
+				),
 				'default'     => 'yes'
 			),
 			'sandbox_public_key'  => array(
 				'title'       => __( 'Sandbox Public Key', 'woocommerce-gateway-simplify-commerce' ),
 				'type'        => 'text',
-				'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
-					'woocommerce-gateway-simplify-commerce' ),
+				'description' => __(
+					'Get your API keys from your merchant account: Account Settings > API Keys.',
+					'woocommerce-gateway-simplify-commerce'
+				),
 				'default'     => '',
 				'desc_tip'    => true
 			),
 			'sandbox_private_key' => array(
 				'title'       => __( 'Sandbox Private Key', 'woocommerce-gateway-simplify-commerce' ),
 				'type'        => 'text',
-				'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
-					'woocommerce-gateway-simplify-commerce' ),
+				'description' => __(
+					'Get your API keys from your merchant account: Account Settings > API Keys.',
+					'woocommerce-gateway-simplify-commerce'
+				),
 				'default'     => '',
 				'desc_tip'    => true
 			),
 			'public_key'          => array(
 				'title'       => __( 'Public Key', 'woocommerce-gateway-simplify-commerce' ),
 				'type'        => 'text',
-				'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
-					'woocommerce-gateway-simplify-commerce' ),
+				'description' => __(
+					'Get your API keys from your merchant account: Account Settings > API Keys.',
+					'woocommerce-gateway-simplify-commerce'
+				),
 				'default'     => '',
 				'desc_tip'    => true
 			),
 			'private_key'         => array(
 				'title'       => __( 'Private Key', 'woocommerce-gateway-simplify-commerce' ),
 				'type'        => 'text',
-				'description' => __( 'Get your API keys from your merchant account: Account Settings > API Keys.',
-					'woocommerce-gateway-simplify-commerce' ),
+				'description' => __(
+					'Get your API keys from your merchant account: Account Settings > API Keys.',
+					'woocommerce-gateway-simplify-commerce'
+				),
 				'default'     => '',
 				'desc_tip'    => true
 			),
@@ -405,8 +486,16 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		$description = $this->get_description();
 
 		if ( 'yes' == $this->sandbox ) {
-			$description .= ' ' . sprintf( __( 'TEST MODE ENABLED. Use a test card: %s', 'woocommerce-gateway-simplify-commerce' ),
-					'<a href="https://www.simplify.com/commerce/docs/tutorial/index#testing">https://www.simplify.com/commerce/docs/tutorial/index#testing</a>' );
+			$description .= sprintf(
+				" %s",
+				sprintf(
+					__(
+						'TEST MODE ENABLED. Use the following test cards: %s',
+						'woocommerce-gateway-simplify-commerce'
+					),
+					'<a href="https://www.simplify.com/commerce/docs/testing/test-card-numbers">https://www.simplify.com/commerce/docs/testing/test-card-numbers</a>'
+				)
+			);
 		}
 
 		if ( $description ) {
@@ -426,14 +515,20 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	protected function process_standard_payments( $order, $cart_token = '' ) {
 		try {
-
 			if ( empty( $cart_token ) ) {
-				$error_msg = __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.',
-					'woocommerce-gateway-simplify-commerce' );
+				$error_msg = __(
+					'Please make sure your card details have been entered correctly and that your browser supports JavaScript.',
+					'woocommerce-gateway-simplify-commerce'
+				);
 
 				if ( 'yes' == $this->sandbox ) {
-					$error_msg .= ' ' . __( 'Developers: Please make sure that you\'re including jQuery and there are no JavaScript errors on the page.',
-							'woocommerce-gateway-simplify-commerce' );
+					$error_msg .= sprintf(
+						" %s",
+						__(
+							'Developers: Please make sure that you\'re including jQuery and there are no JavaScript errors on the page.',
+							'woocommerce-gateway-simplify-commerce'
+						)
+					);
 				}
 
 				throw new Simplify_ApiException( $error_msg );
@@ -448,7 +543,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			}
 
 			$payment_response = $this->do_payment( $order, $order->get_total(), $pass_tokens );
-
 			if ( is_wp_error( $payment_response ) ) {
 				throw new Simplify_ApiException( $payment_response->get_error_message() );
 			} else {
@@ -490,16 +584,28 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @uses  Simplify_BadRequestException
 	 */
 	public function do_payment( $order, $amount = 0, $token = array() ) {
+		if ( ! is_array( $token ) ) {
+			$token = array( 'token' => $token );
+		}
+
 		if ( $this->get_total( $order ) < 50 ) {
-			return new WP_Error( 'simplify_error',
-				__( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.', 'woocommerce-gateway-simplify-commerce' ) );
+			return new WP_Error(
+				'simplify_error',
+				__(
+					'Sorry, the minimum allowed order total is 0.50 to use this payment method.',
+					'woocommerce-gateway-simplify-commerce'
+				)
+			);
 		}
 
 		try {
 			// Charge the customer
 			$data = array(
-				'amount'      => $this->get_total(), // In cents. Rounding to avoid floating point errors.
-				'description' => sprintf( __( '%s - Order #%s', 'woocommerce-gateway-simplify-commerce' ), $order->get_order_number() ),
+				'amount'      => $this->get_total( $order ), // In cents. Rounding to avoid floating point errors.
+				'description' => sprintf(
+					__( 'Order #%s', 'woocommerce-gateway-simplify-commerce' ),
+					$order->get_order_number()
+				),
 				'currency'    => strtoupper( get_woocommerce_currency() ),
 				'reference'   => $order->get_id()
 			);
@@ -518,7 +624,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				}
 			}
 
-			$order->add_order_note( sprintf( __( 'Gateway payment error: %s', 'woocommerce-gateway-simplify-commerce' ), $error_message ) );
+			$order->add_order_note( sprintf( __( 'Gateway payment error: %s', 'woocommerce-gateway-simplify-commerce' ),
+				$error_message ) );
 
 			return new WP_Error( 'simplify_payment_declined', $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
@@ -528,15 +635,27 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			$order->payment_complete( $payment->id );
 
 			// Add order note
-			$order->add_order_note( sprintf( __( 'Gateway payment approved (ID: %s, Auth Code: %s)', 'woocommerce-gateway-simplify-commerce' ),
-				$payment->id, $payment->authCode ) );
+			$order->add_order_note(
+				sprintf(
+					__( 'Gateway payment approved (ID: %s, Auth Code: %s)',
+						'woocommerce-gateway-simplify-commerce'
+					),
+					$payment->id,
+					$payment->authCode
+				)
+			);
 
 			return true;
 		} else {
 			$order->add_order_note( __( 'Gateway payment declined', 'woocommerce-gateway-simplify-commerce' ) );
 
-			return new WP_Error( 'simplify_payment_declined',
-				__( 'Payment was declined by your gateway - please try another card.', 'woocommerce-gateway-simplify-commerce' ) );
+			return new WP_Error(
+				'simplify_payment_declined',
+				__(
+					'Payment was declined by your gateway - please try another card.',
+					'woocommerce-gateway-simplify-commerce'
+				)
+			);
 		}
 	}
 
@@ -562,11 +681,9 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
-
 		$order = wc_get_order( $order_id );
 
 		return $this->process_hosted_payments( $order );
-
 	}
 
 	/**
@@ -578,33 +695,35 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	protected function get_hosted_payments_args( $order ) {
 		$args = apply_filters( 'woocommerce_simplify_commerce_hosted_args', array(
-			'sc-key'          => $this->public_key,
-			'amount'          => $this->get_total( $order ),
-			'currency'        => strtoupper( get_woocommerce_currency() ),
-			'reference'       => $order->get_id(),
-			'description'     => sprintf( __( 'Order #%s', 'woocommerce-gateway-simplify-commerce' ), $order->get_order_number() ),
-			'receipt'         => 'false',
-			'color'           => $this->modal_color,
-			'redirect-url'    => WC()->api_request_url( 'WC_Gateway_Simplify_Commerce' ),
-			'operation'       => $this->get_payment_operation(),
+			'sc-key'        => $this->public_key,
+			'customer-name' => sprintf( "%s %s", $order->get_billing_first_name(), $order->get_billing_last_name() ),
+			'amount'        => $this->get_total( $order ),
+			'currency'      => strtoupper( get_woocommerce_currency() ),
+			'reference'     => $order->get_id(),
+			'description'   => sprintf( __( 'Order #%s', 'woocommerce-gateway-simplify-commerce' ), $order->get_order_number() ),
+			'receipt'       => 'false',
+			'color'         => $this->modal_color,
+			'redirect-url'  => WC()->api_request_url( 'WC_Gateway_Simplify_Commerce' ),
+			'operation'     => 'create.token',
 		), $order->get_id() );
 
 		return $args;
 	}
 
-	protected function attempt_transliteration($field) {
-		$encode = mb_detect_encoding($field);
-		if ($encode !== 'ASCII') {
-		    if (function_exists('transliterator_transliterate')) {
-		        $field = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove', $field);
-		    } else {
-		        // fall back to iconv if intl module not available
-		        $field = remove_accents($field);
-		        $field = iconv($encode, 'ASCII//TRANSLIT//IGNORE', $field);
-		        $field = str_ireplace('?', '', $field);
-		        $field = trim($field);
-		    }
+	protected function attempt_transliteration( $field ) {
+		$encode = mb_detect_encoding( $field );
+		if ( $encode !== 'ASCII' ) {
+			if ( function_exists( 'transliterator_transliterate' ) ) {
+				$field = transliterator_transliterate( 'Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove', $field );
+			} else {
+				// fall back to iconv if intl module not available
+				$field = remove_accents( $field );
+				$field = iconv( $encode, 'ASCII//TRANSLIT//IGNORE', $field );
+				$field = str_ireplace( '?', '', $field );
+				$field = trim( $field );
+			}
 		}
+
 		return $field;
 	}
 
@@ -617,14 +736,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		return (int) round( $order->get_total() * 100 );
 	}
 
-	/**
-	 * @return string
-	 */
-	protected function get_payment_operation() {
-		return $this->txn_mode === self::TXN_MODE_PURCHASE ?
-			'create.payment' :
-			'create.token';
-	}
 
 	/**
 	 * Receipt page.
@@ -632,19 +743,42 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @param int $order_id
 	 */
 	public function receipt_page( $order_id ) {
-		$order = wc_get_order( $order_id );
+		if ( $this->is_modal_integration_model ) {
+			return $this->get_modal_receipt_page( $order_id );
+		} else {
+			return $this->get_embedded_receipt_page( $order_id );
+		}
+	}
 
-		echo '<p>' . __( 'Thank you for your order, please click the button below to pay with credit card using Mastercard Payment Gateway Services - Simplify.',
-				'woocommerce-gateway-simplify-commerce' ) . '</p>';
+	/**
+	 * Receipt Page for Modal Integration Mode.
+	 *
+	 * @param int $order_id
+	 */
+	protected function get_modal_receipt_page( int $order_id ) {
+		$order = wc_get_order( $order_id );
+		echo sprintf(
+			"<p>%s</p>",
+			__(
+				'Thank you for your order, please click the button below to pay with credit card using Mastercard Payment Gateway Services - Simplify.',
+				'woocommerce-gateway-simplify-commerce'
+			)
+		);
 
 		$args        = $this->get_hosted_payments_args( $order );
 		$button_args = array();
 		foreach ( $args as $key => $value ) {
-            $value = $this->attempt_transliteration($value);
-            if (!$value) {
-                continue;
-            }
-			$button_args[] = 'data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+			$value = $this->attempt_transliteration( $value );
+
+			if ( ! $value ) {
+				continue;
+			}
+
+			$button_args[] = sprintf(
+				"data-%s=\"%s\"",
+				esc_attr( $key ),
+				esc_attr( $value )
+			);
 		}
 
 		echo '<script type="text/javascript" src="https://www.simplify.com/commerce/simplify.pay.js"></script>
@@ -653,14 +787,53 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				'woocommerce-gateway-simplify-commerce' ) . '</button> <a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel order &amp; restore cart',
 				'woocommerce-gateway-simplify-commerce' ) . '</a>
 			<script>
-                var intervalId = setInterval(function () {
-                    if (window.SimplifyCommerce) {
-                        jQuery("#simplify-payment-button").trigger("click");
-                        clearInterval(intervalId);
-                    }
-                }, 100);
-            </script>
+				var intervalId = setInterval(function () {
+					if (window.SimplifyCommerce) {
+						jQuery("#simplify-payment-button").trigger("click");
+						clearInterval(intervalId);
+					}
+				}, 100);
+			</script>
 			';
+	}
+
+	/**
+	 * Receipt Page for Embedded Integration Mode.
+	 *
+	 * @param int $order_id
+	 */
+	protected function get_embedded_receipt_page( int $order_id ) {
+		$order = wc_get_order( $order_id );
+		echo sprintf(
+			"<p>%s</p>",
+			__(
+				'Thank you for your order, please click the button below to pay with credit card using Mastercard Payment Gateway Services - Simplify.',
+				'woocommerce-gateway-simplify-commerce'
+			)
+		);
+
+		$args = $this->get_hosted_payments_args( $order );
+
+		$iframe_args = array();
+		foreach ( $args as $key => $value ) {
+			$value = $this->attempt_transliteration( $value );
+			if ( ! $value ) {
+				continue;
+			}
+			$iframe_args[] = sprintf(
+				"data-%s=\"%s\"",
+				esc_attr( $key ),
+				esc_attr( $value )
+			);
+		}
+
+		// TEMPLATE VARS
+		$redirect_url = WC()->api_request_url( 'WC_Gateway_Simplify_Commerce' );
+		$is_purchase  = $this->txn_mode === self::TXN_MODE_PURCHASE;
+		$public_key   = $this->public_key;
+		// TEMPLATE VARS
+
+		require plugin_basename( 'embedded-template.php' );
 	}
 
 	/**
@@ -671,21 +844,22 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		header( 'HTTP/1.1 200 OK' );
 
 		// Transaction mode = Payment/Purchase
-		if ( isset( $_REQUEST['reference'] ) && isset( $_REQUEST['paymentId'] ) && isset( $_REQUEST['signature'] ) ) {
-			$signature = strtoupper( md5( $_REQUEST['amount'] . $_REQUEST['reference'] . $_REQUEST['paymentId'] . $_REQUEST['paymentDate'] . $_REQUEST['paymentStatus'] . $this->private_key ) );
-			$order_id  = absint( $_REQUEST['reference'] );
-			$order     = wc_get_order( $order_id );
+		if ( isset( $_REQUEST['reference'] ) && isset( $_REQUEST['cardToken'] ) && $this->txn_mode === self::TXN_MODE_PURCHASE ) {
+			$order_id = absint( $_REQUEST['reference'] );
+			$order    = wc_get_order( $order_id );
 
-			if ( hash_equals( $signature, $_REQUEST['signature'] ) ) {
-				$order_complete = $this->process_order_status( $order, $_REQUEST['paymentId'],
-					$_REQUEST['paymentStatus'], $_REQUEST['authCode'], true );
+			$order_complete = $this->do_payment( $order, $_REQUEST['amount'], $_REQUEST['cardToken'] );
 
-				if ( ! $order_complete ) {
-					$order->update_status( 'failed',
-						__( 'Payment was declined by your gateway.', 'woocommerce-gateway-simplify-commerce' ) );
-				}
+			if ( ! $order_complete | $order_complete instanceof WP_Error ) {
+				$order->update_status( 'failed',
+					__( 'Payment was declined by your gateway.', 'woocommerce-gateway-simplify-commerce' )
+				);
 
-				wp_redirect( $this->get_return_url( $order ) );
+				wc_add_notice(
+					__( 'Your payment was declined.', 'woocommerce-gateway-simplify-commerce' ),
+					'error'
+				);
+				wp_redirect( wc_get_page_permalink( 'cart' ) );
 				exit();
 			}
 		}
@@ -699,15 +873,19 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 			if ( ! $order_complete ) {
 				$order->update_status( 'failed',
-					__( 'Authorization was declined by your gateway.', 'woocommerce-gateway-simplify-commerce' ) );
-			}
+					__( 'Authorization was declined by your gateway.', 'woocommerce-gateway-simplify-commerce' )
+				);
 
-			wp_redirect( $this->get_return_url( $order ) );
-			exit();
+				wc_add_notice(
+					__( 'Your payment was declined.', 'woocommerce-gateway-simplify-commerce' ),
+					'error'
+				);
+				wp_redirect( wc_get_page_permalink( 'cart' ) );
+				exit();
+			}
 		}
 
-		wc_add_notice( 'Unexpected response', 'error' );
-		wp_redirect( wc_get_page_permalink( 'cart' ) );
+		wp_redirect( $this->get_return_url( $order ) );
 		exit();
 	}
 
@@ -719,7 +897,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * @return bool
 	 */
 	protected function authorize( $order, $card_token, $amount ) {
-
 		if ( (int) $amount !== $this->get_total( $order ) ) {
 			wc_add_notice( 'Amount mismatch', 'error' );
 			wp_redirect( wc_get_page_permalink( 'cart' ) );
@@ -797,20 +974,25 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 			$payment_id = get_post_meta( $order_id, '_transaction_id', true );
 
-			$refund = Simplify_Refund::createRefund( array(
+			$refund_data = array(
 				'amount'    => (int) round( (float) $amount * 100 ),
 				'payment'   => $payment_id,
 				'reason'    => $reason,
 				'reference' => $order_id
-			) );
+			);
 
-			if ( 'APPROVED' == $refund->paymentStatus ) {
-				$order->add_order_note( sprintf( __( 'Gateway refund approved (ID: %s, Amount: %s)', 'woocommerce-gateway-simplify-commerce' ),
+			$refund = Simplify_Refund::createRefund( $refund_data );
+
+			if ( 'APPROVED' === $refund->paymentStatus ) {
+				$order->add_order_note( sprintf( __( 'Gateway refund approved (ID: %s, Amount: %s)',
+					'woocommerce-gateway-simplify-commerce' ),
 					$refund->id, $amount ) );
 
 				return true;
 			} else {
-				throw new Simplify_ApiException( __( 'Refund was declined.', 'woocommerce-gateway-simplify-commerce' ) );
+				throw new Simplify_ApiException(
+					__( 'Refund was declined.', 'woocommerce-gateway-simplify-commerce' )
+				);
 			}
 
 		} catch ( Simplify_ApiException $e ) {
