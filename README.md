@@ -23,7 +23,7 @@ For any issues or enhancement requests you have with this plugin, please raise t
 * cURL
 
 The module has been tested and is supported with the following versions of WooCommerce:
-3.9.2 - 4.9.0
+3.9.2 - 5.5.2
 
 ### Steps 
 1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases/latest).
