@@ -108,8 +108,8 @@ class WC_Gateway_Simplify_Commerce_Loader {
 		add_filter( 'woocommerce_order_actions', function ( $actions ) {
 			$order = new WC_Order( $_REQUEST['post'] );
 			if ( $order->get_payment_method() == WC_Gateway_Simplify_Commerce::ID
-				 && $order->get_meta( '_simplify_order_captured' ) === '0'
-				 && $order->get_status() == 'processing'
+			     && $order->get_meta( '_simplify_order_captured' ) === '0'
+			     && $order->get_status() == 'processing'
 			) {
 				$actions[ WC_Gateway_Simplify_Commerce::ID . '_capture_payment' ] = __(
 					'Capture Authorized Amount',

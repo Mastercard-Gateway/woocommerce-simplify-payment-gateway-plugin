@@ -165,23 +165,83 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			) );
 
 			if ( $payment->paymentStatus === 'APPROVED' ) {
-				$order->add_order_note( sprintf( __( 'Gateway captured amount %s (ID: %s)',
-					'woocommerce-gateway-simplify-commerce' ),
-					$order->get_total(), $payment->id ) );
+				$this->process_capture_order_status( $order, $payment->id );
+				$order->add_order_note(
+					sprintf(
+						__( 'Gateway captured amount %s (ID: %s)', 'woocommerce-gateway-simplify-commerce' ),
+						$order->get_total(),
+						$payment->id
+					)
+				);
 			} else {
 				throw new Exception( 'Capture declined' );
 			}
 
-			$order->update_meta_data( '_simplify_order_captured', '1' );
-			$order->save_meta_data();
-
 		} catch ( Simplify_ApiException $e ) {
-			wp_die( $e->getMessage() . '<br>Ref: ' . $e->getReference() . '<br>Code: ' . $e->getErrorCode(),
-				__( 'Gateway Failure' ) );
+
+			if ( $this->is_payment_already_captured( $e ) ) {
+				$this->process_capture_order_status( $order );
+				$order->add_order_note(
+					__( 'Payment is already captured.', 'woocommerce-gateway-simplify-commerce' )
+				);
+
+			} else {
+				wp_die( $e->getMessage() . '<br>Ref: ' . $e->getReference() . '<br>Code: ' . $e->getErrorCode(),
+					__( 'Gateway Failure' ) );
+			}
 
 		} catch ( Exception $e ) {
 			wp_die( $e->getMessage(), __( 'Payment Process Failure' ) );
 		}
+	}
+
+	/**
+	 * @param Simplify_ApiException $e
+	 *
+	 * @return bool
+	 */
+	protected function is_payment_already_captured( Simplify_ApiException $e ) {
+		$field_errors = $e->getFieldErrors();
+		$error_codes  = array_map( function ( Simplify_FieldError $field_error ) {
+			return $field_error->getErrorCode();
+		}, $field_errors );
+
+		return in_array( 'payment.already.captured', $error_codes );
+	}
+
+	/**
+	 * @param WC_order $order
+	 * @param string $capture_id
+	 */
+	public function process_capture_order_status( $order, $capture_id = null ) {
+		if ( $capture_id ) {
+			$order->add_meta_data( '_simplify_capture', $capture_id );
+		}
+		$order->update_meta_data( '_simplify_order_captured', '1' );
+		$order->save_meta_data();
+
+		add_filter(
+			'woocommerce_valid_order_statuses_for_payment_complete',
+			array( $this, 'add_valid_order_statuses' )
+		);
+		$order->payment_complete();
+		remove_filter(
+			'woocommerce_valid_order_statuses_for_payment_complete',
+			array( $this, 'add_valid_order_statuses' )
+		);
+
+		$order->payment_complete( $capture_id );
+	}
+
+	/**
+	 * @param array $statuses
+	 *
+	 * @return array|string[]
+	 */
+	public function add_valid_order_statuses( $statuses ) {
+		$statuses[] = 'processing';
+
+		return $statuses;
 	}
 
 	/**
@@ -909,7 +969,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			'currency'  => strtoupper( $order->get_currency() ),
 		) );
 
-		return $this->process_order_status(
+		return $this->process_authorization_order_status(
 			$order,
 			$authorization->id,
 			$authorization->paymentStatus,
@@ -929,20 +989,23 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 *
 	 * @return bool
 	 */
-	public function process_order_status( $order, $payment_id, $status, $auth_code, $is_capture = false ) {
-		if ( 'APPROVED' == $status ) {
+	public function process_authorization_order_status( $order, $payment_id, $status, $auth_code, $is_capture = false ) {
+		if ( 'APPROVED' === $status ) {
 			$order->add_meta_data( '_simplify_order_captured', $is_capture ? '1' : '0' );
 			$order->add_meta_data( '_simplify_authorization', $payment_id );
 
-			// Payment complete
-			$order->payment_complete( $payment_id );
-
-			// Add order note
 			if ( $is_capture ) {
+				// Payment was captured, so call payment complete.
+				$order->payment_complete( $payment_id );
+
+				// Add order note
 				$order->add_order_note( sprintf( __( 'Gateway payment approved (ID: %s, Auth Code: %s)',
 					'woocommerce-gateway-simplify-commerce' ), $payment_id, $auth_code ) );
-
 			} else {
+				// Payment is authorized only. Must be captured at a later time.
+				$order->update_status( 'processing' );
+
+				// Add order note
 				$order->add_order_note( sprintf( __( 'Gateway authorization approved (ID: %s, Auth Code: %s)',
 					'woocommerce-gateway-simplify-commerce' ), $payment_id, $auth_code ) );
 			}
@@ -1008,4 +1071,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 		return false;
 	}
+
+
 }
