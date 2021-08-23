@@ -1035,7 +1035,18 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		try {
 			$order = wc_get_order( $order_id );
 
-			$payment_id = get_post_meta( $order_id, '_transaction_id', true );
+			$payment_id =
+				get_post_meta( $order_id, '_transaction_id', true ) ?:
+					get_post_meta( $order_id, '_simplify_capture', true );
+
+			if ( ! $payment_id ) {
+				throw new Simplify_ApiException(
+					__(
+						'It is not possible to refund this order using WooCommerce UI. Please, proceed with a refund in the Gateway UI.',
+						'woocommerce-gateway-simplify-commerce'
+					)
+				);
+			}
 
 			$refund_data = array(
 				'amount'    => (int) round( (float) $amount * 100 ),
@@ -1047,9 +1058,13 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			$refund = Simplify_Refund::createRefund( $refund_data );
 
 			if ( 'APPROVED' === $refund->paymentStatus ) {
-				$order->add_order_note( sprintf( __( 'Gateway refund approved (ID: %s, Amount: %s)',
-					'woocommerce-gateway-simplify-commerce' ),
-					$refund->id, $amount ) );
+				$order->add_order_note(
+					sprintf(
+						__( 'Gateway refund approved (ID: %s, Amount: %s)', 'woocommerce-gateway-simplify-commerce' ),
+						$refund->id,
+						$amount
+					)
+				);
 
 				return true;
 			} else {
