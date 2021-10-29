@@ -62,7 +62,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->id                   = static::ID;
+		$this->id                   = self::ID;
 		$this->method_title         = __(
 			'Mastercard Payment Gateway Services - Simplify',
 			'woocommerce-gateway-simplify-commerce'
