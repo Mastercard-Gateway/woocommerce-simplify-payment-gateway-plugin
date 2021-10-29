@@ -229,17 +229,14 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 * @since 1.0.0
 	 */
 	public function plugin_action_links( $links ) {
-		$plugin_links = array(
-			sprintf(
-				"<a href=\"%s\">%s</a>",
-				admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ),
-				__( 'Settings', 'woocommerce-gateway-simplify-commerce' )
-			),
-			sprintf(
-				"<a href=\"https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin\">%s</a>",
-				__( 'Docs', 'woocommerce-gateway-simplify-commerce' )
-			),
-		);
+		$plugin_links = [
+			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' .
+				__( 'Settings', 'woocommerce-gateway-simplify-commerce' ) .
+			'</a>',
+			'<a href="https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin\">' .
+				__( 'Docs', 'woocommerce-gateway-simplify-commerce' ) .
+			'</a>',
+		];
 
 		return array_merge( $plugin_links, $links );
 	}
@@ -249,10 +246,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 */
 	public function admin_notices() {
 		foreach ( (array) $this->notices as $notice_key => $notice ) {
-			echo sprintf(
-				"<div class='%s'><p>",
-				esc_attr( sanitize_html_class( $notice['class'] ) )
-			);
+			echo '<div class="' . esc_attr( sanitize_html_class( $notice['class'] ) ) . '"><p>';
 			echo wp_kses(
 				$notice['message'], array( 'a' => array( 'href' => array() ) )
 			);
