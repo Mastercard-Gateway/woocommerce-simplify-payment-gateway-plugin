@@ -140,7 +140,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	public function capture_authorized_order() {
 		try {
-			$this->init_simplify_sdk(); // re init static variables
 			$order = new WC_Order( $_REQUEST['post_ID'] );
 			if ( $order->get_payment_method() != $this->id ) {
 				throw new Exception( 'Wrong payment method' );
