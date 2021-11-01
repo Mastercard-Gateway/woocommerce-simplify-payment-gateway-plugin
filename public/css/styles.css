@@ -1,5 +1,5 @@
 iframe.simplify-embedded-payment-form {
     border: none;
-    width: 100%;
-    max-width: 450px;
+    min-height: 450px;
+    overflow: hidden;
 }

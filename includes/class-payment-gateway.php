@@ -62,7 +62,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->id                   = static::ID;
+		$this->id                   = self::ID;
 		$this->method_title         = __(
 			'Mastercard Payment Gateway Services - Simplify',
 			'woocommerce-gateway-simplify-commerce'
@@ -140,7 +140,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	public function capture_authorized_order() {
 		try {
-			$this->init_simplify_sdk(); // re init static variables
 			$order = new WC_Order( $_REQUEST['post_ID'] );
 			if ( $order->get_payment_method() != $this->id ) {
 				throw new Exception( 'Wrong payment method' );
@@ -368,13 +367,12 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			);
 		} // Check required fields
         elseif ( ! $this->public_key || ! $this->private_key ) {
-			echo sprintf(
-				"<div class=\"error\"><p>%s</p></div>",
-				__(
-					'Gateway Error: Please enter your public and private keys',
-					'woocommerce-gateway-simplify-commerce'
-				)
-			);
+			echo '<div class="error"><p>' .
+			     __(
+				     'Gateway Error: Please enter your public and private keys',
+				     'woocommerce-gateway-simplify-commerce'
+			     ) .
+			     '</p></div>';
 		}
 	}
 
@@ -817,13 +815,12 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	protected function get_modal_receipt_page( int $order_id ) {
 		$order = wc_get_order( $order_id );
-		echo sprintf(
-			"<p>%s</p>",
-			__(
-				'Thank you for your order, please click the button below to pay with credit card using Mastercard Payment Gateway Services - Simplify.',
-				'woocommerce-gateway-simplify-commerce'
-			)
-		);
+		echo "<p>" .
+		     __(
+			     'Thank you for your order, please click the button below to pay with credit card using Mastercard Payment Gateway Services - Simplify.',
+			     'woocommerce-gateway-simplify-commerce'
+		     ) .
+		     "</p>";
 
 		$args        = $this->get_hosted_payments_args( $order );
 		$button_args = array();
@@ -864,13 +861,12 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 	 */
 	protected function get_embedded_receipt_page( int $order_id ) {
 		$order = wc_get_order( $order_id );
-		echo sprintf(
-			"<p>%s</p>",
-			__(
-				'Thank you for your order, please click the button below to pay with credit card using Mastercard Payment Gateway Services - Simplify.',
-				'woocommerce-gateway-simplify-commerce'
-			)
-		);
+		echo '<p>' .
+		     __(
+			     'Thank you for your order, please click the button below to pay with credit card using Mastercard Payment Gateway Services - Simplify.',
+			     'woocommerce-gateway-simplify-commerce'
+		     ) .
+		     '</p>';
 
 		$args = $this->get_hosted_payments_args( $order );
 

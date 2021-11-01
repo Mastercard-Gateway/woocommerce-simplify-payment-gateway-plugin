@@ -27,8 +27,8 @@ $url_query_parts = $url_query ? explode( '&', $url_query ) : [];
 ?>
 
 <script type="text/javascript" src="https://www.simplify.com/commerce/simplify.pay.js"></script>
-<iframe name="embedded_pay" class="simplify-embedded-payment-form" width="100%"
-		height="450px" <?php echo implode( ' ', $iframe_args ) ?>></iframe>
+<iframe name="embedded_pay"
+        class="simplify-embedded-payment-form" <?php echo implode( ' ', $iframe_args ) ?>></iframe>
 
 <form id="embedded-form" style="display: none" action="<?php echo $redirect_url ?>" method="get">
 	<?php foreach ( $url_query_parts as $query_part ): ?>
