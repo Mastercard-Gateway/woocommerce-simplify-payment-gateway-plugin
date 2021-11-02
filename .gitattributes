@@ -9,3 +9,4 @@ Dockerfile export-ignore
 Dockerfile.dev export-ignore
 Makefile export-ignore
 woocommerce-simplify-extension.iml export-ignore
+* text=auto
