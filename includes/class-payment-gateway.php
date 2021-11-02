@@ -298,7 +298,17 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 		Simplify::$publicKey  = $this->public_key;
 		Simplify::$privateKey = $this->private_key;
-		Simplify::$userAgent  = 'SimplifyWooCommercePlugin/' . WC()->version;
+
+		try {
+			// try to extract version from main plugin file
+			$plugin_path = dirname( __FILE__ , 2 ) . '/woocommerce-simplify-payment-gateway.php' ;
+			$plugin_data = get_file_data($plugin_path, array('Version' => 'Version'));
+			$plugin_version = $plugin_data['Version'] ?: 'Unknown';
+		} catch ( Exception $e ) {
+			$plugin_version = 'UnknownError';
+		}
+
+		Simplify::$userAgent  = 'SimplifyWooCommercePlugin/' . WC()->version . '/' . $plugin_version;
 	}
 
 	/**
@@ -654,6 +664,11 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 					'woocommerce-gateway-simplify-commerce'
 				)
 			);
+		}
+
+		if ( (int) $amount !== $this->get_total( $order ) ) {
+			return new WP_Error( 'simplify_error',
+				__( 'Amount mismatch.', 'woocommerce' ) );
 		}
 
 		try {
@@ -1082,6 +1097,4 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 		return false;
 	}
-
-
 }
