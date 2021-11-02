@@ -38,7 +38,7 @@ $url_query_parts = $url_query ? explode( '&', $url_query ) : [];
 			continue;
 		}
 		?>
-		<input type="text" name="<?php echo $query[0] ?>" value="<?php echo $query[1] ?>">
+		<input type="text" name="<?php echo esc_attr($query[0]) ?>" value="<?php echo esc_attr($query[1]) ?>">
 	<?php endforeach; ?>
 	<input type="text" name="reference" value="">
 	<input type="text" name="amount" value="">
