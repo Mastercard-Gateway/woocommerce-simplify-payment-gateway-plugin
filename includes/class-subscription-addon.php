@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2017-2019 Mastercard
+ * Copyright (c) 2017-2021 Mastercard
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,9 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				array( $this, 'process_pre_order_release_payment' ) );
 		}
 
-		add_filter( 'woocommerce_simplify_commerce_hosted_args', array( $this, 'hosted_payment_args' ), 10, 2 );
-		add_action( 'woocommerce_api_wc_addons_gateway_simplify_commerce', array( $this, 'return_handler' ) );
-		add_action( 'woocommerce_api_wc_gateway_simplify_commerce', array( $this, 'return_handler' ) );
+		add_filter( 'woocommerce_' . $this->id . '_hosted_args', array( $this, 'hosted_payment_args' ), 10, 2 );
+		add_action( 'woocommerce_api_wc_addons_gateway_' . $this->id, array( $this, 'return_handler' ) );
+		add_action( 'woocommerce_api_wc_gateway_' . $this->id, array( $this, 'return_handler' ) );
 	}
 
 	/**
@@ -107,11 +107,11 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 		try {
 			if ( empty( $cart_token ) && empty ( $customer_token ) ) {
 				$error_msg = __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.',
-					'woocommerce' );
+					'woocommerce-gateway-simplify-commerce' );
 
 				if ( 'yes' == $this->sandbox ) {
 					$error_msg .= ' ' . __( 'Developers: Please make sure that you\'re including jQuery and there are no JavaScript errors on the page.',
-							'woocommerce' );
+							'woocommerce-gateway-simplify-commerce' );
 				}
 
 				throw new Simplify_ApiException( $error_msg );
@@ -160,7 +160,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 					$pass_tokens['customer'] = $customer->id;
 					unset( $pass_tokens['token'] );
 				} else {
-					$error_msg = __( 'Error creating user in gateway.', 'woocommerce' );
+					$error_msg = __( 'Error creating user in gateway.', 'woocommerce-gateway-simplify-commerce' );
 
 					throw new Simplify_ApiException( $error_msg );
 				}
@@ -232,18 +232,18 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			try {
 				if ( $order->get_total() * 100 < 50 ) {
 					$error_msg = __( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.',
-						'woocommerce' );
+						'woocommerce-gateway-simplify-commerce' );
 
 					throw new Simplify_ApiException( $error_msg );
 				}
 
 				if ( empty( $cart_token ) ) {
 					$error_msg = __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.',
-						'woocommerce' );
+						'woocommerce-gateway-simplify-commerce' );
 
 					if ( 'yes' == $this->sandbox ) {
 						$error_msg .= ' ' . __( 'Developers: Please make sure that you\'re including jQuery and there are no JavaScript errors on the page.',
-								'woocommerce' );
+								'woocommerce-gateway-simplify-commerce' );
 					}
 
 					throw new Simplify_ApiException( $error_msg );
@@ -263,7 +263,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 					// Store the customer ID in the order
 					update_post_meta( $order->get_id(), '_simplify_customer_id', $customer_id );
 				} else {
-					$error_msg = __( 'Error creating user in gateway.', 'woocommerce' );
+					$error_msg = __( 'Error creating user in gateway.', 'woocommerce-gateway-simplify-commerce' );
 
 					throw new Simplify_ApiException( $error_msg );
 				}
@@ -333,7 +333,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				$token    = WC_Payment_Tokens::get( $token_id );
 				if ( $token->get_user_id() !== get_current_user_id() ) {
 					wc_add_notice( __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.',
-						'woocommerce' ), 'error' );
+						'woocommerce-gateway-simplify-commerce' ), 'error' );
 
 					return;
 				}
@@ -373,20 +373,20 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 		if ( $amount * 100 < 50 ) {
 			return new WP_Error( 'simplify_error',
-				__( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.', 'woocommerce' ) );
+				__( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.', 'woocommerce-gateway-simplify-commerce' ) );
 		}
 
 		$customer_id = get_post_meta( $order->get_id(), '_simplify_customer_id', true );
 
 		if ( ! $customer_id ) {
-			return new WP_Error( 'simplify_error', __( 'Customer not found', 'woocommerce' ) );
+			return new WP_Error( 'simplify_error', __( 'Customer not found', 'woocommerce-gateway-simplify-commerce' ) );
 		}
 
 		try {
 			// Charge the customer
 			$data = array(
 				'amount'      => $amount * 100, // In cents.
-				'description' => sprintf( __( '%s - Order #%s', 'woocommerce' ), $order->get_order_number() ),
+				'description' => sprintf( __( '%s - Order #%s', 'woocommerce-gateway-simplify-commerce' ), $order->get_order_number() ),
 				'currency'    => strtoupper( get_woocommerce_currency() ),
 				'reference'   => $order->get_id()
 			);
@@ -411,7 +411,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				}
 			}
 
-			$order->add_order_note( sprintf( __( 'Gateway payment error: %s', 'woocommerce' ), $error_message ) );
+			$order->add_order_note( sprintf( __( 'Gateway payment error: %s', 'woocommerce-gateway-simplify-commerce' ), $error_message ) );
 
 			return new WP_Error( 'simplify_payment_declined', $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
@@ -421,15 +421,15 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			$order->payment_complete( $payment->id );
 
 			// Add order note
-			$order->add_order_note( sprintf( __( 'Gateway payment approved (ID: %s, Auth Code: %s)', 'woocommerce' ),
+			$order->add_order_note( sprintf( __( 'Gateway payment approved (ID: %s, Auth Code: %s)', 'woocommerce-gateway-simplify-commerce' ),
 				$payment->id, $payment->authCode ) );
 
 			return true;
 		} else {
-			$order->add_order_note( __( 'Gateway payment declined', 'woocommerce' ) );
+			$order->add_order_note( __( 'Gateway payment declined', 'woocommerce-gateway-simplify-commerce' ) );
 
 			return new WP_Error( 'simplify_payment_declined',
-				__( 'Payment was declined - please try another card.', 'woocommerce' ) );
+				__( 'Payment was declined - please try another card.', 'woocommerce-gateway-simplify-commerce' ) );
 		}
 	}
 
@@ -444,7 +444,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 		if ( is_wp_error( $result ) ) {
 			$renewal_order->update_status( 'failed',
-				sprintf( __( 'Gateway Transaction Failed (%s)', 'woocommerce' ), $result->get_error_message() ) );
+				sprintf( __( 'Gateway Transaction Failed (%s)', 'woocommerce-gateway-simplify-commerce' ), $result->get_error_message() ) );
 		}
 	}
 
@@ -526,14 +526,14 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 		try {
 			$order_items    = $order->get_items();
 			$order_item     = array_shift( $order_items );
-			$pre_order_name = sprintf( __( '%s - Pre-order for "%s"', 'woocommerce' ),
-					$order_item['name'] ) . ' ' . sprintf( __( '(Order #%s)', 'woocommerce' ),
+			$pre_order_name = sprintf( __( '%s - Pre-order for "%s"', 'woocommerce-gateway-simplify-commerce' ),
+					$order_item['name'] ) . ' ' . sprintf( __( '(Order #%s)', 'woocommerce-gateway-simplify-commerce' ),
 					$order->get_order_number() );
 
 			$customer_id = get_post_meta( $order->get_id(), '_simplify_customer_id', true );
 
 			if ( ! $customer_id ) {
-				return new WP_Error( 'simplify_error', __( 'Customer not found', 'woocommerce' ) );
+				return new WP_Error( 'simplify_error', __( 'Customer not found', 'woocommerce-gateway-simplify-commerce' ) );
 			}
 
 			// Charge the customer
@@ -551,13 +551,13 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 				// Add order note
 				$order->add_order_note( sprintf( __( 'Gateway payment approved (ID: %s, Auth Code: %s)',
-					'woocommerce' ), $payment->id, $payment->authCode ) );
+					'woocommerce-gateway-simplify-commerce' ), $payment->id, $payment->authCode ) );
 			} else {
 				return new WP_Error( 'simplify_payment_declined',
-					__( 'Payment was declined - the customer need to try another card.', 'woocommerce' ) );
+					__( 'Payment was declined - the customer need to try another card.', 'woocommerce-gateway-simplify-commerce' ) );
 			}
 		} catch ( Exception $e ) {
-			$order_note = sprintf( __( 'Gateway Transaction Failed (%s)', 'woocommerce' ), $e->getMessage() );
+			$order_note = sprintf( __( 'Gateway Transaction Failed (%s)', 'woocommerce-gateway-simplify-commerce' ), $e->getMessage() );
 
 			// Mark order as failed if not already set,
 			// otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
@@ -602,7 +602,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 					$redirect_url = $response['redirect'];
 				} else {
 					$order->update_status( 'failed',
-						__( 'Payment was declined by your gateway.', 'woocommerce' ) );
+						__( 'Payment was declined by your gateway.', 'woocommerce-gateway-simplify-commerce' ) );
 				}
 
 				wp_redirect( $redirect_url );
