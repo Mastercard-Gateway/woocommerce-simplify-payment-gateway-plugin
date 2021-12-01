@@ -6,7 +6,7 @@
  * Author: Mastercard Payment Gateway Services - Simplify
  * Author URI: http://www.simplify.com/
  * Text Domain: woocommerce-gateway-simplify-commerce
- * Version: 2.3.0
+ * Version: 2.3.1
  *
  * Copyright (c) 2017-2021 Mastercard
  *
