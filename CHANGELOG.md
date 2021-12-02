@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.3.1] - 2021-12-01
+### Fixed
+- Fixed a "false" Transaction Description issue that happened for some types of transactions
+
+
 ## [2.3.0] - 2021-10-19
 ### Changed
 - Add Embedded Payment Option

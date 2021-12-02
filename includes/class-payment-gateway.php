@@ -160,7 +160,11 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				'authorization' => $authCode,
 				'reference'     => $order->get_id(),
 				'currency'      => strtoupper( $order->get_currency() ),
-				'amount'        => $this->get_total( $order )
+				'amount'        => $this->get_total( $order ),
+				'description'   => sprintf(
+					__( 'Order #%s', 'woocommerce-gateway-simplify-commerce' ),
+					$order->get_order_number()
+				),
 			) );
 
 			if ( $payment->paymentStatus === 'APPROVED' ) {
@@ -277,7 +281,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				'reason'         => 'Reverse',
 				'refund_payment' => false,
 				'restock_items'  => true,
-				'amount'         => $order->get_remaining_refund_amount()
+				'amount'         => $order->get_remaining_refund_amount(),
 			) );
 
 		} catch ( Simplify_ApiException $e ) {
@@ -301,14 +305,14 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 
 		try {
 			// try to extract version from main plugin file
-			$plugin_path = dirname( __FILE__ , 2 ) . '/woocommerce-simplify-payment-gateway.php' ;
-			$plugin_data = get_file_data($plugin_path, array('Version' => 'Version'));
+			$plugin_path    = dirname( __FILE__, 2 ) . '/woocommerce-simplify-payment-gateway.php';
+			$plugin_data    = get_file_data( $plugin_path, array( 'Version' => 'Version' ) );
 			$plugin_version = $plugin_data['Version'] ?: 'Unknown';
 		} catch ( Exception $e ) {
 			$plugin_version = 'UnknownError';
 		}
 
-		Simplify::$userAgent  = 'SimplifyWooCommercePlugin/' . WC()->version . '/' . $plugin_version;
+		Simplify::$userAgent = 'SimplifyWooCommercePlugin/' . WC()->version . '/' . $plugin_version;
 	}
 
 	/**
@@ -974,10 +978,14 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 		}
 
 		$authorization = Simplify_Authorization::createAuthorization( array(
-			'amount'    => $amount,
-			'token'     => $card_token,
-			'reference' => $order->get_id(),
-			'currency'  => strtoupper( $order->get_currency() ),
+			'amount'      => $amount,
+			'token'       => $card_token,
+			'reference'   => $order->get_id(),
+			'currency'    => strtoupper( $order->get_currency() ),
+			'description' => sprintf(
+				__( 'Order #%s', 'woocommerce-gateway-simplify-commerce' ),
+				$order->get_order_number()
+			),
 		) );
 
 		return $this->process_authorization_order_status(
@@ -1059,11 +1067,16 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 				);
 			}
 
+            $defaultRefundReason = sprintf(
+	            __( 'Refund for Order #%s', 'woocommerce-gateway-simplify-commerce' ),
+	            $order->get_order_number()
+            );
+
 			$refund_data = array(
-				'amount'    => (int) round( (float) $amount * 100 ),
-				'payment'   => $payment_id,
-				'reason'    => $reason,
-				'reference' => $order_id
+				'amount'      => (int) round( (float) $amount * 100 ),
+				'payment'     => $payment_id,
+				'reason'      => $reason ?: $defaultRefundReason,
+				'reference'   => $order_id,
 			);
 
 			$refund = Simplify_Refund::createRefund( $refund_data );
