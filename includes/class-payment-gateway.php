@@ -670,7 +670,9 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
 			);
 		}
 
-		if ( (int) $amount !== $this->get_total( $order ) ) {
+		$amount = (int) round($amount * 100);
+
+		if ( $amount !== $this->get_total( $order ) ) {
 			return new WP_Error( 'simplify_error',
 				__( 'Amount mismatch.', 'woocommerce' ) );
 		}
