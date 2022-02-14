@@ -31,15 +31,16 @@ In local repo, enter following commands to create a dist zip file, in the exampl
 
 ```
 git fetch --tags --all
-git archive 1.0.1 -o module-dist.zip
+git checkout 1.0.1
+make
 ```
 
-Created file module-dist.zip contains the distributable code for this module.
+Created file woocommerce-simplifycommerce.zip contains the distributable code for this module.
 
 ## 4. Add assets and finalise the release
 In the Github UI, switch to edit the release you created in step 2. The URL will contain something like /edit/1.0.1, for example.
 
-Upload the module-dist.zip into the designated area in the release edit page.
+Upload the woocommerce-simplifycommerce.zip into the designated area in the release edit page.
 
 Populate the release description with the information about the version that you can find in the [CHANGELOG.md](CHANGELOG.md) file.
 
