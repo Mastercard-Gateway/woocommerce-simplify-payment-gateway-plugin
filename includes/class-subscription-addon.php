@@ -587,7 +587,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			$amount      = absint( $_REQUEST['amount'] );
 			$order_id    = absint( $_REQUEST['reference'] );
 			$order       = wc_get_order( $order_id );
-			$order_total = absint( $order->get_total() * 100 );
+			$order_total = (int) round( $order->get_total() * 100 );
 
 			if ( $amount === $order_total ) {
 				if ( $this->order_contains_subscription( $order->get_id() ) ) {
@@ -607,6 +607,9 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 				wp_redirect( $redirect_url );
 				exit();
+			} else {
+                                $order->update_status( 'failed',
+                   			__( 'Amount mismatch.', 'woocommerce-gateway-simplify-commerce' ) );
 			}
 		}
 
