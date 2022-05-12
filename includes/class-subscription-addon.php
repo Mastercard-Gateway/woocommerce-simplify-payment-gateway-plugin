@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2017-2021 Mastercard
+ * Copyright (c) 2017-2022 Mastercard
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -230,7 +230,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order->get_id() ) ) {
 
 			try {
-				if ( $order->get_total() * 100 < 50 ) {
+				if ( $this->get_total( $order ) < 50 ) {
 					$error_msg = __( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.',
 						'woocommerce-gateway-simplify-commerce' );
 
@@ -371,7 +371,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			return true;
 		}
 
-		if ( $amount * 100 < 50 ) {
+		if ( $this->get_total_amount( $amount ) < 50 ) {
 			return new WP_Error( 'simplify_error',
 				__( 'Sorry, the minimum allowed order total is 0.50 to use this payment method.', 'woocommerce-gateway-simplify-commerce' ) );
 		}
@@ -385,7 +385,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 		try {
 			// Charge the customer
 			$data = array(
-				'amount'      => $amount * 100, // In cents.
+				'amount'      => $this->get_total_amount( $amount ), // In cents.
 				'description' => sprintf( __( '%s - Order #%s', 'woocommerce-gateway-simplify-commerce' ), $order->get_order_number() ),
 				'currency'    => strtoupper( get_woocommerce_currency() ),
 				'reference'   => $order->get_id()
@@ -538,7 +538,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 			// Charge the customer
 			$payment = Simplify_Payment::createPayment( array(
-				'amount'      => $order->get_total() * 100, // In cents.
+				'amount'      => $this->get_total( $order ), // In cents.
 				'customer'    => $customer_id,
 				'description' => trim( substr( $pre_order_name, 0, 1024 ) ),
 				'currency'    => strtoupper( get_woocommerce_currency() ),
@@ -587,7 +587,7 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 			$amount      = absint( $_REQUEST['amount'] );
 			$order_id    = absint( $_REQUEST['reference'] );
 			$order       = wc_get_order( $order_id );
-			$order_total = absint( $order->get_total() * 100 );
+			$order_total = $this->get_total( $order );
 
 			if ( $amount === $order_total ) {
 				if ( $this->order_contains_subscription( $order->get_id() ) ) {

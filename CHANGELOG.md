@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.3.2] - 2022-05-11
+### Fixed
+- “Amount mismatch” error is triggered when a user purchases a product on recent versions of WooCommerce (WordPress 5.9.3 / Woocommerce 6.4.1)
+
+
 ## [2.3.1] - 2021-12-01
 ### Fixed
 - Fixed a "false" Transaction Description issue that happened for some types of transactions
