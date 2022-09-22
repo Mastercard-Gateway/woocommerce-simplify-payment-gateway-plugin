@@ -47,27 +47,8 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 				array( $this, 'process_pre_order_release_payment' ) );
 		}
 
-		add_filter( 'woocommerce_' . $this->id . '_hosted_args', array( $this, 'hosted_payment_args' ), 10, 2 );
 		add_action( 'woocommerce_api_wc_addons_gateway_' . $this->id, array( $this, 'return_handler' ) );
 		add_action( 'woocommerce_api_wc_gateway_' . $this->id, array( $this, 'return_handler' ) );
-	}
-
-	/**
-	 * Hosted payment args.
-	 *
-	 * @param array $args
-	 * @param int $order_id
-	 *
-	 * @return array
-	 */
-	public function hosted_payment_args( $args, $order_id ) {
-		if ( ( $this->order_contains_subscription( $order_id ) ) || ( $this->order_contains_pre_order( $order_id ) && WC_Pre_Orders_Order::order_requires_payment_tokenization( $order_id ) ) ) {
-			$args['operation'] = 'create.token';
-		}
-
-		$args['redirect-url'] = WC()->api_request_url( 'WC_Addons_Gateway_Simplify_Commerce' );
-
-		return $args;
 	}
 
 	/**
@@ -571,6 +552,8 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 
 	/**
 	 * Return handler for Hosted Payments.
+	 *
+	 * @deprecated 
 	 */
 	public function return_handler() {
 		if ( ! isset( $_REQUEST['cardToken'] ) ) {
@@ -585,8 +568,10 @@ class WC_Addons_Gateway_Simplify_Commerce extends WC_Gateway_Simplify_Commerce {
 		if ( isset( $_REQUEST['reference'] ) && isset( $_REQUEST['amount'] ) ) {
 			$cart_token  = $_REQUEST['cardToken'];
 			$amount      = absint( $_REQUEST['amount'] );
+
 			$order_id    = absint( $_REQUEST['reference'] );
 			$order       = wc_get_order( $order_id );
+
 			$order_total = $this->get_total( $order );
 
 			if ( $amount === $order_total ) {
