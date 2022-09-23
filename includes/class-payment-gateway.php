@@ -719,11 +719,13 @@
 
             <script type="text/javascript" src="https://www.simplify.com/commerce/simplify.pay.js"></script>
             <div class="simplifycommerce-buy-now-button-container">
-                <button class="simplifycommerce-buy-now-button" <?php echo implode( ' ', $iframe_args ) ?>>
-		            <?php echo __(
-			            'Buy Now',
-			            'woocommerce-gateway-simplify-commerce'
-		            ) ?>
+                <button class="simplifycommerce-buy-now-button" <?php
+					echo implode( ' ', $iframe_args ) ?>>
+					<?php
+						echo __(
+							'Buy Now',
+							'woocommerce-gateway-simplify-commerce'
+						) ?>
                 </button>
             </div>
 
