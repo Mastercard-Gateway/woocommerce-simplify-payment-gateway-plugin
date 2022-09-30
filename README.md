@@ -43,19 +43,19 @@ The module has been tested and is supported with the following versions of WooCo
 6. Select Transaction Mode
   ![Transaction Mode](./docs/transactionmode.png "Plugin Settings")
 
-There are two Transaction Modes:
-- Authorization: In "Authorization" mode, the transaction is only authorized, and the capturing of funds is a manual process that you do use the Woocommerce admin panel. 
-- Payment: The customer is charged immediately in "Payment" mode.
+  There are two Transaction Modes:
+  - Authorization: In "Authorization" mode, the transaction is only authorized, and the capturing of funds is a manual process that you do use the Woocommerce admin panel. 
+  - Payment: The customer is charged immediately in "Payment" mode.
 
 7. Select Integration Mode
 
-There are two Integration Modes:
+  There are two Integration Modes:
 
-- Embedded Form: The card detail form will appear on the checkout page below the payment method in this integration mode. So user can directly enter their card detail on the checkout page and place an order. 
+  - Embedded Form: The card detail form will appear on the checkout page below the payment method in this integration mode. So user can directly enter their card detail on the checkout page and place an order. 
   ![Embedded Form Admin](./docs/embeddedformadmin.png "Embedded Form Admin")
   ![Embedded Form Front](./docs/embeddedformfront.png "Embedded Form Front")  
 
-- Modal Form: In this integration mode, the form to input payment detail will appear as a popup. On the checkout page, the Buy Now button will be available, and once the user clicks on Buy now button, a popup will appear where the user can enter their payment detail.
+  - Modal Form: In this integration mode, the form to input payment detail will appear as a popup. On the checkout page, the Buy Now button will be available, and once the user clicks on Buy now button, a popup will appear where the user can enter their payment detail.
   ![Modal Form Admin](./docs/modalformadmin.png "Modal Form Admin")
   ![Modal Form Checkout](./docs/modalfrontcheckoutbuynow.png "Modal Form Checkout")  
   ![Modal Form Popup](./docs/modalformfrontpay.png "Modal Form Popup")    
