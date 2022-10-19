@@ -64,12 +64,12 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	}
 
 	/**
-	 * Private unserialize method to prevent unserializing of the *Singleton*
+	 * Public unserialize method to prevent unserializing of the *Singleton*
 	 * instance.
 	 *
 	 * @return void
 	 */
-	private function __wakeup() {
+	public function __wakeup() {
 	}
 
 	/** @var bool whether or not we need to load code for / support subscriptions */
