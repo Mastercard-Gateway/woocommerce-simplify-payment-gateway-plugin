@@ -6,7 +6,7 @@
  * Author: Mastercard Payment Gateway Services - Simplify
  * Author URI: http://www.simplify.com/
  * Text Domain: woocommerce-gateway-simplify-commerce
- * Version: 2.3.2
+ * Version: 3.0.0
  *
  * Copyright (c) 2017-2022 Mastercard
  *
@@ -64,12 +64,12 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	}
 
 	/**
-	 * Private unserialize method to prevent unserializing of the *Singleton*
+	 * Public unserialize method to prevent unserializing of the *Singleton*
 	 * instance.
 	 *
 	 * @return void
 	 */
-	private function __wakeup() {
+	public function __wakeup() {
 	}
 
 	/** @var bool whether or not we need to load code for / support subscriptions */
@@ -141,7 +141,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	}
 
 	/**
-	 * The primary sanity check, automatically disable the plugin on activation if it doesn't
+	 * The primary confidence check, automatically disable the plugin on activation if it doesn't
 	 * meet minimum requirements.
 	 *
 	 * Based on http://wptavern.com/how-to-prevent-wordpress-plugins-from-activating-on-sites-with-incompatible-hosting-environments
@@ -155,7 +155,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	}
 
 	/**
-	 * The backup sanity check, in case the plugin is activated in a weird way,
+	 * The backup confidence check, in case the plugin is activated in a weird way,
 	 * or the environment changes after activation.
 	 */
 	public function check_environment() {

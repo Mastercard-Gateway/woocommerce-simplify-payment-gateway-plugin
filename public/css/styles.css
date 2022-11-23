@@ -3,3 +3,7 @@ iframe.simplify-embedded-payment-form {
     min-height: 450px;
     overflow: hidden;
 }
+
+.simplifycommerce-buy-now-button-container {
+    margin-top: 1rem;
+}
