@@ -95,6 +95,10 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 * Init the plugin after plugins_loaded so environment variables are set.
 	 */
 	public function init() {
+
+		define( 'MPGS_PLUGIN_FILE', __FILE__ );
+		define( 'MPGS_PLUGIN_BASENAME', plugin_basename( MPGS_PLUGIN_FILE ) );
+		
 		// Don't hook anything else in the plugin if we're in an incompatible environment
 		if ( self::get_environment_warning() ) {
 			return;
@@ -104,6 +108,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 		$this->init_gateways();
 
 		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
+		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 
 		add_filter( 'woocommerce_order_actions', function ( $actions ) {
 			$order = new WC_Order( $_REQUEST['post'] );
@@ -243,6 +248,43 @@ class WC_Gateway_Simplify_Commerce_Loader {
 
 		return array_merge( $plugin_links, $links );
 	}
+
+	/**
+	 * Show row meta on the plugin screen.
+	 *
+	 * @param mixed $links Plugin Row Meta.
+	 * @param mixed $file  Plugin Base file.
+	 *
+	 * @return array
+	 */
+	public static function plugin_row_meta( $links, $file ) {
+
+		if ( MPGS_PLUGIN_BASENAME !== $file ) {
+			return $links;
+		}
+
+		/**
+		 * The MPGS documentation URL.
+		 *
+		 * @since 2.4.0
+		 */
+		$docs_url = apply_filters( 'mastercard_docs_url', 'https://mpgs.fingent.wiki/simplify-commerce/simplify-commerce-payment-gateway-for-woocommerce/getting-started/' );
+
+		/**
+		 * The Mastercard Support URL.
+		 *
+		 * @since 2.4.0
+		 */
+		$support_url = apply_filters( 'mastercard_support_url', 'https://mpgsfgs.atlassian.net/servicedesk/customer/portals/' );
+
+		$row_meta = array(
+			'docs'    => '<a href="' . esc_url( $docs_url ) . '" aria-label="' . esc_attr__( 'View mastercard documentation', 'mastercard-payment-gateway-services' ) . '">' . esc_html__( 'Docs', 'mastercard-payment-gateway-services' ) . '</a>',
+			'support' => '<a href="' . esc_url( $support_url ) . '" aria-label="' . esc_attr__( 'Visit mastercard support', 'mastercard-payment-gateway-services' ) . '">' . esc_html__( 'Support', 'mastercard-payment-gateway-services' ) . '</a>',
+		);
+
+		return array_merge( $links, $row_meta );
+	}
+
 
 	/**
 	 * Display any notices we've collected thus far (e.g. for connection, disconnection)
