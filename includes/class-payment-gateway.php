@@ -368,12 +368,12 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
         }
 
         // PHP Version
-        if ( version_compare( phpversion(), '5.3', '<' ) ) {
+        if ( version_compare( phpversion(), '7.4', '<' ) ) {
             echo sprintf(
                 "<div class=\"error\"><p>%s</p></div>",
                 sprintf(
                     __(
-                        'Gateway Error: Simplify commerce requires PHP 5.3 and above. You are using version %s.',
+                        'Gateway Error: Simplify commerce requires PHP 7.4 and above. You are using version %s.',
                         'woocommerce-gateway-simplify-commerce'
                     ),
                     phpversion()
@@ -695,16 +695,17 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
             $error_message = $e->getMessage();
 
             if ( $e instanceof Simplify_BadRequestException && $e->hasFieldErrors() && $e->getFieldErrors() ) {
-                $error_message = '';
+                $error_message = $err_msg = '';
                 foreach ( $e->getFieldErrors() as $error ) {
                     $error_message .= ' ' . $error->getFieldName() . ': "' . $error->getMessage() . '" (' . $error->getErrorCode() . ')';
+                    $err_msg = $error->getMessage();
                 }
             }
 
             $order->add_order_note( sprintf( __( 'Gateway payment error: %s', 'woocommerce-gateway-simplify-commerce' ),
                 $error_message ) );
 
-            return new WP_Error( 'simplify_payment_declined', $e->getMessage(), array( 'status' => $e->getCode() ) );
+            return new WP_Error( 'simplify_payment_declined', $err_msg, array( 'status' => $e->getCode() ) );
         }
 
         if ( 'APPROVED' == $payment->paymentStatus ) {
@@ -927,7 +928,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
      */
     public function return_handler() {
         @ob_clean();
-        header( 'HTTP/1.1 200 OK' );
+        header( 'HTTP/1.1 200 OK' ); 
 
         // Transaction mode = Payment/Purchase
         if ( isset( $_REQUEST['reference'] ) && isset( $_REQUEST['cardToken'] ) && $this->txn_mode === self::TXN_MODE_PURCHASE ) {
@@ -941,10 +942,21 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
                     __( 'Payment was declined by your gateway.', 'woocommerce-gateway-simplify-commerce' )
                 );
 
-                wc_add_notice(
-                    __( 'Your payment was declined.', 'woocommerce-gateway-simplify-commerce' ),
-                    'error'
-                );
+                if( $order_complete->errors['simplify_payment_declined'][0] != '' ) {
+
+                    $error_message = $order_complete->errors['simplify_payment_declined'][0];
+
+                    wc_add_notice(
+                        __( $error_message, 'woocommerce-gateway-simplify-commerce' ),
+                        'error'
+                    );
+                } else {
+                    wc_add_notice(
+                        __( 'Your payment was declined.', 'woocommerce-gateway-simplify-commerce' ),
+                        'error'
+                    );
+                }   
+
                 wp_redirect( wc_get_page_permalink( 'cart' ) );
                 exit();
             }
@@ -955,7 +967,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
             $order_id = absint( $_REQUEST['reference'] );
             $order    = wc_get_order( $order_id );
 
-            $order_complete = $this->authorize( $order, $_REQUEST['cardToken'], $_REQUEST['amount'] );
+            $order_complete = $this->authorize( $order, $_REQUEST['cardToken'], $_REQUEST['amount'] ); 
 
             if ( ! $order_complete ) {
                 $order->update_status( 'failed',
@@ -963,9 +975,10 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway_CC {
                 );
 
                 wc_add_notice(
-                    __( 'Your payment was declined.', 'woocommerce-gateway-simplify-commerce' ),
+                    __( 'Payment was declined by your gateway - please try another card.', 'woocommerce-gateway-simplify-commerce' ),
                     'error'
                 );
+
                 wp_redirect( wc_get_page_permalink( 'cart' ) );
                 exit();
             }
