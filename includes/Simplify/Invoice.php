@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2017 Mastercard International Incorporated
+ * Copyright (c) 2013 - 2023 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -11,7 +11,7 @@
  * Redistributions in binary form must reproduce the above copyright notice, this list of 
  * conditions and the following disclaimer in the documentation and/or other materials 
  * provided with the distribution.
- * Neither the name of the Mastercard International Incorporated nor the names of its
+ * Neither the name of the MasterCard International Incorporated nor the names of its 
  * contributors may be used to endorse or promote products derived from this software 
  * without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
@@ -52,6 +52,7 @@ class Simplify_Invoice extends Simplify_Object {
      *     <dt><tt>dueDate</tt></dt>    <dd>The date invoice payment is due.  If a late fee is provided this will be added to the invoice total is the due date has past. </dd>
      *     <dt><tt>email</tt></dt>    <dd>The email of the customer we are invoicing.  This is optional if customer or invoiceToCopy is provided.  A new customer will be created using the the name and email. </dd>
      *     <dt><tt>invoiceId</tt></dt>    <dd>User defined invoice id. If not provided the system will generate a numeric id. [max length: 255] </dd>
+     *     <dt><tt>invoiceLanguage</tt></dt>    <dd>The language in which invoice will be displayed. [max length: 5, min length: 5] </dd>
      *     <dt><tt>invoiceToCopy</tt></dt>    <dd>The id of an existing invoice to be copied.  This is optional if customer or a name and email are provided </dd>
      *     <dt><tt>items.amount</tt></dt>    <dd>Amount of the invoice item (the smallest unit of your currency). Example: 100 = $1.00 <strong>required </strong></dd>
      *     <dt><tt>items.description</tt></dt>    <dd>The description of the invoice item. [max length: 1024] </dd>
@@ -64,7 +65,7 @@ class Simplify_Invoice extends Simplify_Object {
      *     <dt><tt>memo</tt></dt>    <dd>A memo that is displayed to the customer on the invoice payment screen. [max length: 4000] </dd>
      *     <dt><tt>name</tt></dt>    <dd>The name of the customer we are invoicing.  This is optional if customer or invoiceToCopy is provided.  A new customer will be created using the the name and email. [max length: 50, min length: 2] </dd>
      *     <dt><tt>note</tt></dt>    <dd>This field can be used to store a note that is not displayed to the customer. [max length: 4000] </dd>
-     *     <dt><tt>reference</tt></dt>    <dd>User defined reference field. [max length: 255] </dd>
+     *     <dt><tt>reference</tt></dt>    <dd>User defined reference field. [max length: 40] </dd>
      *     <dt><tt>shippingAddress.city</tt></dt>    <dd>Address city of the location where the goods or services were supplied. [max length: 255, min length: 2] </dd>
      *     <dt><tt>shippingAddress.country</tt></dt>    <dd>Address country of the location where the goods or services were supplied. [max length: 2, min length: 2] </dd>
      *     <dt><tt>shippingAddress.line1</tt></dt>    <dd>Address line 1 of the location where the goods or services were supplied. [max length: 255] </dd>
@@ -180,6 +181,7 @@ class Simplify_Invoice extends Simplify_Object {
          *     <dt><tt>dueDate</tt></dt>    <dd>The date invoice payment is due.  If a late fee is provided this will be added to the invoice total is the due date has past. </dd>
          *     <dt><tt>email</tt></dt>    <dd>The email of the customer we are invoicing.  This is optional if customer or invoiceToCopy is provided.  A new customer will be created using the the name and email. </dd>
          *     <dt><tt>invoiceId</tt></dt>    <dd>User defined invoice id. If not provided the system will generate a numeric id. [max length: 255] </dd>
+         *     <dt><tt>invoiceLanguage</tt></dt>    <dd>The language in which invoice will be displayed. [max length: 5, min length: 5] </dd>
          *     <dt><tt>items.amount</tt></dt>    <dd>Amount of the invoice item in the smallest unit of your currency. Example: 100 = $1.00 <strong>required </strong></dd>
          *     <dt><tt>items.description</tt></dt>    <dd>The description of the invoice item. [max length: 1024] </dd>
          *     <dt><tt>items.invoice</tt></dt>    <dd>The ID of the invoice this item belongs to. </dd>
@@ -193,6 +195,7 @@ class Simplify_Invoice extends Simplify_Object {
          *     <dt><tt>note</tt></dt>    <dd>This field can be used to store a note that is not displayed to the customer. [max length: 4000] </dd>
          *     <dt><tt>payment</tt></dt>    <dd>The ID of the payment.  Use this ID to query the /payment API. [max length: 255] </dd>
          *     <dt><tt>reference</tt></dt>    <dd>User defined reference field. [max length: 255] </dd>
+         *     <dt><tt>sendMail</tt></dt>    <dd>Boolean flag.  If true the invoice will be sent to the customer if the invoice is in an OPEN state. [default: false] <strong>required </strong></dd>
          *     <dt><tt>shippingAddress.city</tt></dt>    <dd>Address city of the location where the goods or services were supplied. [max length: 255, min length: 2] </dd>
          *     <dt><tt>shippingAddress.country</tt></dt>    <dd>Address country of the location where the goods or services were supplied. [max length: 2, min length: 2] </dd>
          *     <dt><tt>shippingAddress.line1</tt></dt>    <dd>Address line 1 of the location where the goods or services were supplied. [max length: 255] </dd>

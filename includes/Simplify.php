@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2017 Mastercard International Incorporated
+ * Copyright (c) 2013 - 2023 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -11,7 +11,7 @@
  * Redistributions in binary form must reproduce the above copyright notice, this list of 
  * conditions and the following disclaimer in the documentation and/or other materials 
  * provided with the distribution.
- * Neither the name of the Mastercard International Incorporated nor the names of its
+ * Neither the name of the MasterCard International Incorporated nor the names of its 
  * contributors may be used to endorse or promote products derived from this software 
  * without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
@@ -67,11 +67,8 @@ require_once(dirname(__FILE__) . '/Simplify/Http.php');
 require_once(dirname(__FILE__) . '/Simplify/ResourceList.php');
 require_once(dirname(__FILE__) . '/Simplify/Authorization.php');
 require_once(dirname(__FILE__) . '/Simplify/CardToken.php');
-require_once(dirname(__FILE__) . '/Simplify/Chargeback.php');
 require_once(dirname(__FILE__) . '/Simplify/Coupon.php');
 require_once(dirname(__FILE__) . '/Simplify/Customer.php');
-require_once(dirname(__FILE__) . '/Simplify/DataToken.php');
-require_once(dirname(__FILE__) . '/Simplify/Deposit.php');
 require_once(dirname(__FILE__) . '/Simplify/Event.php');
 require_once(dirname(__FILE__) . '/Simplify/FraudCheck.php');
 require_once(dirname(__FILE__) . '/Simplify/Invoice.php');

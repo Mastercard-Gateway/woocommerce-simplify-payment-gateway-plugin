@@ -116,6 +116,7 @@ class Simplify_HTTP
         }
 
         $object = json_decode($data, true);
+                                     //'typ' => self::JWS_TYPE,
         $response = array('status' => $status, 'object' => $object);
 
         return $response;
@@ -140,31 +141,27 @@ class Simplify_HTTP
 
         $response = $this->request($url, $method, $authentication, $payload);
 
-        if( $response ) {
+        $status = $response['status'];
+        $object = $response['object'];
 
-            $status = $response['status'];
-            $object = $response['object'];
-
-            if ($status == self::HTTP_SUCCESS) {
-                return $object;
-            }
-
-            /*if ($status == self::HTTP_REDIRECTED) {
-                throw new Simplify_BadRequestException("Unexpected response code returned from the API, have you got the correct URL?", $status, $object);
-            } else if ($status == self::HTTP_BAD_REQUEST) {
-                // throw new Simplify_BadRequestException("Bad request", $status, $object);
-                throw new InvalidArgumentException('Must have a valid API key to connect to the API');
-            } else if ($status == self::HTTP_UNAUTHORIZED) {
-                throw new Simplify_AuthenticationException("You are not authorized to make this request.  Are you using the correct API keys?", $status, $object);
-            } else if ($status == self::HTTP_NOT_FOUND) {
-                throw new Simplify_ObjectNotFoundException("Object not found", $status, $object);
-            } else if ($status == self::HTTP_NOT_ALLOWED) {
-                throw new Simplify_NotAllowedException("Operation not allowed", $status, $object);
-            } else if ($status < 500) {
-                throw new Simplify_BadRequestException("Bad request", $status, $object);
-            }
-            throw new Simplify_SystemException("An unexpected error has been raised.  Looks like there's something wrong at our end." , $status, $object);*/
+        if ($status == self::HTTP_SUCCESS) {
+            return $object;
         }
+
+        /*if ($status == self::HTTP_REDIRECTED) {
+            throw new Simplify_BadRequestException("Unexpected response code returned from the API, have you got the correct URL?", $status, $object);
+        } else if ($status == self::HTTP_BAD_REQUEST) {
+            throw new Simplify_BadRequestException("Bad request", $status, $object);
+        } else if ($status == self::HTTP_UNAUTHORIZED) {
+            throw new Simplify_AuthenticationException("You are not authorized to make this request.  Are you using the correct API keys?", $status, $object);
+        } else if ($status == self::HTTP_NOT_FOUND) {
+            throw new Simplify_ObjectNotFoundException("Object not found", $status, $object);
+        } else if ($status == self::HTTP_NOT_ALLOWED) {
+            throw new Simplify_NotAllowedException("Operation not allowed", $status, $object);
+        } else if ($status < 500) {
+            throw new Simplify_BadRequestException("Bad request", $status, $object);
+        }
+        throw new Simplify_SystemException("An unexpected error has been raised.  Looks like there's something wrong at our end." , $status, $object);*/
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2017 Mastercard International Incorporated
+ * Copyright (c) 2013 - 2023 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -11,7 +11,7 @@
  * Redistributions in binary form must reproduce the above copyright notice, this list of 
  * conditions and the following disclaimer in the documentation and/or other materials 
  * provided with the distribution.
- * Neither the name of the Mastercard International Incorporated nor the names of its
+ * Neither the name of the MasterCard International Incorporated nor the names of its 
  * contributors may be used to endorse or promote products derived from this software 
  * without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
@@ -32,11 +32,11 @@ class Simplify_Coupon extends Simplify_Object {
      * Creates an Simplify_Coupon object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
      *     <dt><tt>amountOff</tt></dt>    <dd>Amount off of the price of the product in the smallest units of the currency of the merchant. While this field is optional, you must provide either amountOff or percentOff for a coupon. Example: 100 = $1.00 [min value: 1] </dd>
-     *     <dt><tt>couponCode</tt></dt>    <dd>Code that identifies the coupon to be used. [min length: 2] <strong>required </strong></dd>
-     *     <dt><tt>description</tt></dt>    <dd>A brief section that describes the coupon. </dd>
+     *     <dt><tt>couponCode</tt></dt>    <dd>Code that identifies the coupon to be used. [max length: 25, min length: 3] <strong>required </strong></dd>
+     *     <dt><tt>description</tt></dt>    <dd>A brief section that describes the coupon. [max length: 1024] </dd>
      *     <dt><tt>durationInMonths</tt></dt>    <dd>DEPRECATED - Duration in months that the coupon will be applied after it has first been selected. [min value: 1, max value: 9999] </dd>
      *     <dt><tt>endDate</tt></dt>    <dd>Last date of the coupon in UTC millis that the coupon can be applied to a subscription. This ends at 23:59:59 of the merchant timezone. </dd>
-     *     <dt><tt>maxRedemptions</tt></dt>    <dd>Maximum number of redemptions allowed for the coupon. A redemption is defined as when the coupon is applied to the subscription for the first time. [min value: 1] </dd>
+     *     <dt><tt>maxRedemptions</tt></dt>    <dd>Maximum number of redemptions allowed for the coupon. A redemption is defined as when the coupon is applied to the subscription for the first time. [min value: 1, max value: 10000] </dd>
      *     <dt><tt>numTimesApplied</tt></dt>    <dd>The number of times a coupon will be applied on a customer's subscription. [min value: 1, max value: 9999] </dd>
      *     <dt><tt>percentOff</tt></dt>    <dd>Percentage off of the price of the product. While this field is optional, you must provide either amountOff or percentOff for a coupon. The percent off is a whole number. [min value: 1, max value: 100] </dd>
      *     <dt><tt>startDate</tt></dt>    <dd>First date of the coupon in UTC millis that the coupon can be applied to a subscription. This starts at midnight of the merchant timezone. <strong>required </strong></dd></dl>

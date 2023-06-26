@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2017 Mastercard International Incorporated
+ * Copyright (c) 2013 - 2023 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -11,7 +11,7 @@
  * Redistributions in binary form must reproduce the above copyright notice, this list of 
  * conditions and the following disclaimer in the documentation and/or other materials 
  * provided with the distribution.
- * Neither the name of the Mastercard International Incorporated nor the names of its
+ * Neither the name of the MasterCard International Incorporated nor the names of its 
  * contributors may be used to endorse or promote products derived from this software 
  * without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
@@ -36,13 +36,16 @@ class Simplify_Subscription extends Simplify_Object {
      *     <dt><tt>billingCycleLimit</tt></dt>    <dd>The number of fixed billing cycles for a plan. Only used if the billingCycle parameter is set to FIXED. Example: 4 </dd>
      *     <dt><tt>coupon</tt></dt>    <dd>Coupon ID associated with the subscription </dd>
      *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. </dd>
+     *     <dt><tt>currentPeriodEnd</tt></dt>    <dd>End date of subscription's current period </dd>
+     *     <dt><tt>currentPeriodStart</tt></dt>    <dd>Start date of subscription's current period </dd>
      *     <dt><tt>customer</tt></dt>    <dd>Customer that is enrolling in the subscription. </dd>
      *     <dt><tt>frequency</tt></dt>    <dd>Frequency of payment for the plan. Used in conjunction with frequencyPeriod. Valid values are "DAILY", "WEEKLY", "MONTHLY" and "YEARLY". </dd>
      *     <dt><tt>frequencyPeriod</tt></dt>    <dd>Period of frequency of payment for the plan. Example: if the frequency is weekly, and periodFrequency is 2, then the subscription is billed bi-weekly. </dd>
-     *     <dt><tt>name</tt></dt>    <dd>Name describing subscription </dd>
+     *     <dt><tt>name</tt></dt>    <dd>Name describing subscription [max length: 50] </dd>
      *     <dt><tt>plan</tt></dt>    <dd>The ID of the plan that should be used for the subscription. </dd>
      *     <dt><tt>quantity</tt></dt>    <dd>Quantity of the plan for the subscription. [min value: 1] </dd>
-     *     <dt><tt>renewalReminderLeadDays</tt></dt>    <dd>If set, how many days before the next billing cycle that a renewal reminder is sent to the customer. If null, then no emails are sent. Minimum value is 7 if set. </dd></dl>
+     *     <dt><tt>renewalReminderLeadDays</tt></dt>    <dd>If set, how many days before the next billing cycle that a renewal reminder is sent to the customer. If null, then no emails are sent. Minimum value is 7 if set. </dd>
+     *     <dt><tt>source</tt></dt>    <dd>Source of where subscription was created </dd></dl>
      * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.<i/>
      * @return    Subscription a Subscription object.
      */
@@ -132,6 +135,8 @@ class Simplify_Subscription extends Simplify_Object {
          *     <dt><tt>billingCycleLimit</tt></dt>    <dd>The number of fixed billing cycles for a plan. Only used if the billingCycle parameter is set to FIXED. Example: 4 </dd>
          *     <dt><tt>coupon</tt></dt>    <dd>Coupon being assigned to this subscription </dd>
          *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. </dd>
+         *     <dt><tt>currentPeriodEnd</tt></dt>    <dd>End date of subscription's current period </dd>
+         *     <dt><tt>currentPeriodStart</tt></dt>    <dd>Start date of subscription's current period </dd>
          *     <dt><tt>frequency</tt></dt>    <dd>Frequency of payment for the plan. Used in conjunction with frequencyPeriod. Valid values are "DAILY", "WEEKLY", "MONTHLY" and "YEARLY". </dd>
          *     <dt><tt>frequencyPeriod</tt></dt>    <dd>Period of frequency of payment for the plan. Example: if the frequency is weekly, and periodFrequency is 2, then the subscription is billed bi-weekly. [min value: 1] </dd>
          *     <dt><tt>name</tt></dt>    <dd>Name describing subscription </dd>
