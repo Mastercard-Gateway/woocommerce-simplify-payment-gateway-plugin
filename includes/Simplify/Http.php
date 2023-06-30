@@ -148,7 +148,7 @@ class Simplify_HTTP
             return $object;
         }
 
-        /*if ($status == self::HTTP_REDIRECTED) {
+        if ($status == self::HTTP_REDIRECTED) {
             throw new Simplify_BadRequestException("Unexpected response code returned from the API, have you got the correct URL?", $status, $object);
         } else if ($status == self::HTTP_BAD_REQUEST) {
             throw new Simplify_BadRequestException("Bad request", $status, $object);
@@ -161,7 +161,7 @@ class Simplify_HTTP
         } else if ($status < 500) {
             throw new Simplify_BadRequestException("Bad request", $status, $object);
         }
-        throw new Simplify_SystemException("An unexpected error has been raised.  Looks like there's something wrong at our end." , $status, $object);*/
+        throw new Simplify_SystemException("An unexpected error has been raised.  Looks like there's something wrong at our end." , $status, $object);
     }
 
     /**

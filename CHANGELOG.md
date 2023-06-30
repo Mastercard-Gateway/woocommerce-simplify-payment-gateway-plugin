@@ -1,10 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [2.4.0] - 2023-06-11
+## [2.4.0] - 2023-06-30
 ### Improvements
 - PHP 8.1 compatibility
 - Compatibility with Wordpress 6.2 and WooCommerce 7.7
+- Added a new setting that allows admin to input custom gateway URL.
 ### Changed
 - Updated the SDK version to 1.7.0
 
