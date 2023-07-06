@@ -1,6 +1,6 @@
 # Simplify Commerce Payment Gateway for WooCommerce
 
-The Simplify Commerce payment gateway plugin for WooCommerce 3.6+ lets you to take card payments directly on your WooCommerce store.
+The Simplify Commerce payment gateway plugin for WooCommerce 7.3+ lets you to take card payments directly on your WooCommerce store.
 
 The Standard payment form in some of the previous releases is now deprecated and out of support.
 
@@ -18,12 +18,18 @@ For any issues or enhancement requests you have with this plugin, please raise t
 
 **Minimum Requirements**
 
-* WooCommerce 3.9.2 or greater
-* PHP version 5.3 or greater
+* WooCommerce 7.3 or greater
+* PHP version 7.4 or greater
 * cURL
 
 The module has been tested and is supported with the following versions of WooCommerce:
-3.9.2 - 5.8.0
+7.3 - 7.7.1
+
+## Documentation
+The official documentation for this module is available on: [https://mpgs.fingent.wiki/simplify-commerce/simplify-commerce-payment-gateway-for-woocommerce/getting-started/](https://mpgs.fingent.wiki/simplify-commerce/simplify-commerce-payment-gateway-for-woocommerce/getting-started/)
+
+## Support
+For customer support:[https://mpgsfgs.atlassian.net/servicedesk/customer/portals](https://mpgsfgs.atlassian.net/servicedesk/customer/portals/)
 
 ### Steps 
 1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases/latest).
@@ -43,7 +49,6 @@ The module has been tested and is supported with the following versions of WooCo
 6. Enter API Keys and other settings
   ![API Keys and other settings](./docs/SimplifyCommerce_Plugin_APIKeys.png "API Keys & Other Settings") 
    
-
 ## Why choose Simplify Commerce?
 
 With Simplify Commerce, you can easily integrate online payments from most major card brands and start selling right away. Our powerful dashboard and features, including e-invoices and recurring payments, make it easy to immediately meet your needs.

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 - 2017 Mastercard International Incorporated
+ * Copyright (c) 2013 - 2023 MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -11,7 +11,7 @@
  * Redistributions in binary form must reproduce the above copyright notice, this list of 
  * conditions and the following disclaimer in the documentation and/or other materials 
  * provided with the distribution.
- * Neither the name of the Mastercard International Incorporated nor the names of its
+ * Neither the name of the MasterCard International Incorporated nor the names of its 
  * contributors may be used to endorse or promote products derived from this software 
  * without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
@@ -67,11 +67,7 @@ class Simplify_TransactionReview extends Simplify_Object {
 
        /**
         * Retrieve Simplify_TransactionReview objects.
-        * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-        *     <dt><tt>filter</tt></dt>    <dd><table class="filter_list"><tr><td>filter.id</td><td>Filter by the Id of the transaction review</td></tr><tr><td>filter.label</td><td>Filter by the status of the transaction review</td></tr></table>  </dd>
-        *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [min value: 0, max value: 50, default: 20]  </dd>
-        *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [min value: 0, default: 0]  </dd>
-        *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> dateCreated</tt><tt> status</tt>.</dd></dl>
+        * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;"></dl>
         * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
         * @return    ResourceList a ResourceList object that holds the list of TransactionReview objects and the total
         *            number of TransactionReview objects available for the given criteria.
@@ -114,8 +110,7 @@ class Simplify_TransactionReview extends Simplify_Object {
          * Updates an Simplify_TransactionReview object.
          *
          * The properties that can be updated:
-         * <dl style="padding-left:10px;">
-         *     <dt><tt>status</tt></dt>    <dd>Status of the transaction review. </dd></dl>
+         * <dl style="padding-left:10px;"></dl>
          * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
          * @return    TransactionReview a TransactionReview object.
          */

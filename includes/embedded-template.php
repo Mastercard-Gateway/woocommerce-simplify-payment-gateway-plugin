@@ -26,7 +26,7 @@ $url_query_parts = $url_query ? explode( '&', $url_query ) : [];
 
 ?>
 
-<script type="text/javascript" src="https://www.simplify.com/commerce/simplify.pay.js"></script>
+<script type="text/javascript" src="https://<?php echo $clean_gateway_url;?>/commerce/simplify.pay.js"></script>
 <iframe name="embedded_pay"
         class="simplify-embedded-payment-form" <?php echo implode( ' ', $iframe_args ) ?>></iframe>
 
@@ -60,7 +60,7 @@ $url_query_parts = $url_query ? explode( '&', $url_query ) : [];
 	$embeddedForm = jQuery('#embedded-form');
 
 	SimplifyCommerce.hostedPayments(
-		function (data) {
+		function (data) { 
 			if (data.close && data.close === true) {
 				return;
 			}

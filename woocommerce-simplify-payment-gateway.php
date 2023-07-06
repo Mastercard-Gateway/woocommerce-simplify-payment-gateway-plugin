@@ -2,13 +2,13 @@
 /**
  * Plugin Name: Mastercard Payment Gateway Services - Simplify
  * Plugin URI: https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/
- * Description: Mastercard Payment Gateway Services - Simplify plugin from Mastercard lets you to take card payments directly on your WooCommerce store. Requires PHP 5.3+ & WooCommerce 2.6+
+ * Description: Mastercard Payment Gateway Services - Simplify plugin from Mastercard lets you to take card payments directly on your WooCommerce store. Requires PHP 8.1+ & WooCommerce 7.3+
  * Author: Mastercard Payment Gateway Services - Simplify
  * Author URI: http://www.simplify.com/
  * Text Domain: woocommerce-gateway-simplify-commerce
- * Version: 2.3.2
+ * Version: 2.4.0
  *
- * Copyright (c) 2017-2022 Mastercard
+ * Copyright (c) 2017-2023 Mastercard
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums
  */
-define( 'WC_SIMPLIFY_COMMERCE_MIN_PHP_VER', '5.3.0' );
-define( 'WC_SIMPLIFY_COMMERCE_MIN_WC_VER', '2.6.0' );
+define( 'WC_SIMPLIFY_COMMERCE_MIN_PHP_VER', '7.4.0' );
+define( 'WC_SIMPLIFY_COMMERCE_MIN_WC_VER', '6.8.0' );
 define( 'WC_SIMPLIFY_COMMERCE_FILE', __FILE__ );
 
 class WC_Gateway_Simplify_Commerce_Loader {
@@ -60,7 +60,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 *
 	 * @return void
 	 */
-	private function __clone() {
+	public function __clone() {
 	}
 
 	/**
@@ -69,7 +69,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 *
 	 * @return void
 	 */
-	private function __wakeup() {
+	public function __wakeup() {
 	}
 
 	/** @var bool whether or not we need to load code for / support subscriptions */
@@ -95,6 +95,10 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 * Init the plugin after plugins_loaded so environment variables are set.
 	 */
 	public function init() {
+
+		define( 'MPGS_PLUGIN_FILE', __FILE__ );
+		define( 'MPGS_PLUGIN_BASENAME', plugin_basename( MPGS_PLUGIN_FILE ) );
+		
 		// Don't hook anything else in the plugin if we're in an incompatible environment
 		if ( self::get_environment_warning() ) {
 			return;
@@ -104,6 +108,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 		$this->init_gateways();
 
 		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
+		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 
 		add_filter( 'woocommerce_order_actions', function ( $actions ) {
 			$order = new WC_Order( $_REQUEST['post'] );
@@ -226,20 +231,60 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	/**
 	 * Adds plugin action links
 	 *
-	 * @since 1.0.0
+	 * @since 2.4.0
 	 */
 	public function plugin_action_links( $links ) {
 		$plugin_links = [
 			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' .
 				__( 'Settings', 'woocommerce-gateway-simplify-commerce' ) .
 			'</a>',
-			'<a href="https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin\">' .
+			'<a href="https://mpgs.fingent.wiki/simplify-commerce/simplify-commerce-payment-gateway-for-woocommerce/getting-started/">' .
 				__( 'Docs', 'woocommerce-gateway-simplify-commerce' ) .
+			'</a>',
+			'<a href="https://mpgs.fingent.wiki/target/woocommerce-mastercard-payment-gateway-services/installation/">' .
+				__( 'Support', 'woocommerce-gateway-simplify-commerce' ) .
 			'</a>',
 		];
 
 		return array_merge( $plugin_links, $links );
 	}
+
+	/**
+	 * Show row meta on the plugin screen.
+	 *
+	 * @param mixed $links Plugin Row Meta.
+	 * @param mixed $file  Plugin Base file.
+	 *
+	 * @return array
+	 */
+	public static function plugin_row_meta( $links, $file ) {
+
+		if ( MPGS_PLUGIN_BASENAME !== $file ) {
+			return $links;
+		}
+
+		/**
+		 * The MPGS documentation URL.
+		 *
+		 * @since 2.4.0
+		 */
+		$docs_url = apply_filters( 'mastercard_docs_url', 'https://mpgs.fingent.wiki/simplify-commerce/simplify-commerce-payment-gateway-for-woocommerce/getting-started/' );
+
+		/**
+		 * The Mastercard Support URL.
+		 *
+		 * @since 2.4.0
+		 */
+		$support_url = apply_filters( 'mastercard_support_url', 'https://mpgsfgs.atlassian.net/servicedesk/customer/portals/' );
+
+		$row_meta = array(
+			'docs'    => '<a href="' . esc_url( $docs_url ) . '" aria-label="' . esc_attr__( 'View mastercard documentation', 'mastercard-payment-gateway-services' ) . '">' . esc_html__( 'Docs', 'mastercard-payment-gateway-services' ) . '</a>',
+			'support' => '<a href="' . esc_url( $support_url ) . '" aria-label="' . esc_attr__( 'Visit mastercard support', 'mastercard-payment-gateway-services' ) . '">' . esc_html__( 'Support', 'mastercard-payment-gateway-services' ) . '</a>',
+		);
+
+		return array_merge( $links, $row_meta );
+	}
+
 
 	/**
 	 * Display any notices we've collected thus far (e.g. for connection, disconnection)
@@ -257,7 +302,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	/**
 	 * Initialize the gateway. Called very early - in the context of the plugins_loaded action
 	 *
-	 * @since 1.0.0
+	 * @since 2.2.0
 	 */
 	public function init_gateways() {
 		if ( class_exists( 'WC_Subscriptions_Order' ) && function_exists( 'wcs_create_renewal_order' ) ) {
@@ -286,7 +331,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	/**
 	 * Add the gateways to WooCommerce
 	 *
-	 * @since 1.0.0
+	 * @since 2.2.0
 	 */
 	public function add_gateways( $methods ) {
 		if ( $this->subscription_support_enabled ) {
@@ -306,7 +351,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 * And fits on your back?
 	 * It's log, log, log
 	 *
-	 * @since 1.0.0
+	 * @since 2.2.0
 	 */
 	public function log( $context, $message ) {
 		if ( empty( $this->log ) ) {
