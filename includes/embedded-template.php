@@ -60,7 +60,7 @@ $url_query_parts = $url_query ? explode( '&', $url_query ) : [];
 	$embeddedForm = jQuery('#embedded-form');
 
 	SimplifyCommerce.hostedPayments(
-		function (data) { console.log(data);
+		function (data) { 
 			if (data.close && data.close === true) {
 				return;
 			}
