@@ -1,26 +1,38 @@
 # Simplify Commerce Payment Gateway for WooCommerce
 
-The Simplify Commerce payment gateway plugin for WooCommerce 2.6+ lets you to take credit card payments directly on your WooCommerce store.
+The Simplify Commerce payment gateway plugin for WooCommerce 7.3+ lets you to take card payments directly on your WooCommerce store.
+
+The Standard payment form in some of the previous releases is now deprecated and out of support.
+
+## Support
+
+For any issues or enhancement requests you have with this plugin, please raise them with the bank's support team. Please make sure you also provide your plugin, woocommerce and wordpress version as well as your merchant ID where applicable. This will help to speed up the troubleshooting of any issues you are having.
 
 ## Getting Started 
 
-* Sign up and confirm your Simplify Commerce account [here](https://www.simplify.com/commerce/login/signup).
-* Get your API keys from Simplify at [Settings/API Keys](https://www.simplify.com/commerce/login/auth#/account/apiKeys).
+* Get your API keys from your merchant dashboard in your Account Settings - API Keys.
 * Follow the plugin installation instructions below 
 * You're ready to take payments in your WooCommerce store!
 
 ## Installation
 
-Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simplify Commerce was bundled with WooCommerce core.
-
 **Minimum Requirements**
 
-* WordPress 4.4 or greater
-* PHP version 5.3 or greater
+* WooCommerce 7.3 or greater
+* PHP version 7.4 or greater
 * cURL
 
+The module has been tested and is supported with the following versions of WooCommerce:
+7.3 - 7.7.1
+
+## Documentation
+The official documentation for this module is available on: [https://mpgs.fingent.wiki/simplify-commerce/simplify-commerce-payment-gateway-for-woocommerce/getting-started/](https://mpgs.fingent.wiki/simplify-commerce/simplify-commerce-payment-gateway-for-woocommerce/getting-started/)
+
+## Support
+For customer support:[https://mpgsfgs.atlassian.net/servicedesk/customer/portals](https://mpgsfgs.atlassian.net/servicedesk/customer/portals/)
+
 ### Steps 
-1. Download the plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/raw/master/dist/simplifycommerce.zip)
+1. Download the latest plugin zip file from [this link](https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/releases/latest).
 
 2. Add New Plugin
   ![Add New Plugin](./docs/Wordpress_AddNew_Plugin.png "Add New Plugin") 
@@ -37,7 +49,6 @@ Please note this plugin requires WooCommerce 2.6 and above. Prior to 2.6, Simpli
 6. Enter API Keys and other settings
   ![API Keys and other settings](./docs/SimplifyCommerce_Plugin_APIKeys.png "API Keys & Other Settings") 
    
-
 ## Why choose Simplify Commerce?
 
 With Simplify Commerce, you can easily integrate online payments from most major card brands and start selling right away. Our powerful dashboard and features, including e-invoices and recurring payments, make it easy to immediately meet your needs.
@@ -47,17 +58,11 @@ Choose Simplify Commerce as your WooCommerce payment gateway to get access to yo
 
 ## Frequently Asked Questions
 
-### What countries does this plugin support?
-Simplify Commerce is currently supported in the US, Ireland, Australia and Qatar. We are constantly adding more countries. So, please check back in our website to see if we have the country you are looking for.
-
 ### Does this support recurring payments, like for subscriptions?
 Yes!
 
 ### Does this support both production mode and sandbox mode for testing?
 Yes it does - production and sandbox mode is driven by the API keys you use.
 
-### Where can I find documentation, help and support?
-For help setting up and configuring, please refer to our [support page](https://simplify.desk.com/customer/en/portal/articles/2759641-woocommerce-installation-guide)
-
 ### License
-This software is Open Source, released under the BSD 3-Clause license. See [LICENSE.txt](LICENSE.txt) for more info.
+This software is Open Source, released under the Apache License 2.0. See [LICENSE.txt](LICENSE.txt) for more info.

@@ -1,14 +1,26 @@
 <?php
 /**
- * Plugin Name: Simplify Commerce Payment Gateway for WooCommerce
+ * Plugin Name: Mastercard Payment Gateway Services - Simplify
  * Plugin URI: https://github.com/simplifycom/woocommerce-simplify-payment-gateway-plugin/
- * Description: Simplify Commerce payment gateway plugin from Mastercard lets you to take credit card payments directly on your WooCommerce store. Requires PHP 5.3+ & WooCommerce 2.6+
- * Author: Simplify Commerce
+ * Description: Mastercard Payment Gateway Services - Simplify plugin from Mastercard lets you to take card payments directly on your WooCommerce store. Requires PHP 8.1+ & WooCommerce 7.3+
+ * Author: Mastercard Payment Gateway Services - Simplify
  * Author URI: http://www.simplify.com/
- * Version: 1.4.2
+ * Text Domain: woocommerce-gateway-simplify-commerce
+ * Version: 2.4.0
  *
- * Copyright (c) 2017 Mastercard
+ * Copyright (c) 2017-2023 Mastercard
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,26 +30,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums
  */
-define( 'WC_SIMPLIFY_COMMERCE_MIN_PHP_VER', '5.3.0' );
-define( 'WC_SIMPLIFY_COMMERCE_MIN_WC_VER', '2.6.0' );
+define( 'WC_SIMPLIFY_COMMERCE_MIN_PHP_VER', '7.4.0' );
+define( 'WC_SIMPLIFY_COMMERCE_MIN_WC_VER', '6.8.0' );
 define( 'WC_SIMPLIFY_COMMERCE_FILE', __FILE__ );
 
 class WC_Gateway_Simplify_Commerce_Loader {
 
 	/**
-	 * @var Singleton The reference the *Singleton* instance of this class
+	 * @var WC_Gateway_Simplify_Commerce_Loader The reference the *Singleton* instance of this class
 	 */
 	private static $instance;
 
 	/**
 	 * Returns the *Singleton* instance of this class.
 	 *
-	 * @return Singleton The *Singleton* instance.
+	 * @return WC_Gateway_Simplify_Commerce_Loader The *Singleton* instance.
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
+
 		return self::$instance;
 	}
 
@@ -47,7 +60,8 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 *
 	 * @return void
 	 */
-	private function __clone() {}
+	public function __clone() {
+	}
 
 	/**
 	 * Private unserialize method to prevent unserializing of the *Singleton*
@@ -55,9 +69,10 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 *
 	 * @return void
 	 */
-	private function __wakeup() {}
+	public function __wakeup() {
+	}
 
-	/** @var whether or not we need to load code for / support subscriptions */
+	/** @var bool whether or not we need to load code for / support subscriptions */
 	private $subscription_support_enabled = false;
 
 	/**
@@ -80,6 +95,10 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 * Init the plugin after plugins_loaded so environment variables are set.
 	 */
 	public function init() {
+
+		define( 'MPGS_PLUGIN_FILE', __FILE__ );
+		define( 'MPGS_PLUGIN_BASENAME', plugin_basename( MPGS_PLUGIN_FILE ) );
+		
 		// Don't hook anything else in the plugin if we're in an incompatible environment
 		if ( self::get_environment_warning() ) {
 			return;
@@ -89,6 +108,31 @@ class WC_Gateway_Simplify_Commerce_Loader {
 		$this->init_gateways();
 
 		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
+		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+
+		add_filter( 'woocommerce_order_actions', function ( $actions ) {
+			$order = new WC_Order( $_REQUEST['post'] );
+			if ( $order->get_payment_method() == WC_Gateway_Simplify_Commerce::ID
+			     && $order->get_meta( '_simplify_order_captured' ) === '0'
+			     && $order->get_status() == 'processing'
+			) {
+				$actions[ WC_Gateway_Simplify_Commerce::ID . '_capture_payment' ] = __(
+					'Capture Authorized Amount',
+					'woocommerce-gateway-simplify-commerce'
+				);
+				$actions[ WC_Gateway_Simplify_Commerce::ID . '_void_payment' ]    = __(
+					'Reverse Authorization',
+					'woocommerce-gateway-simplify-commerce'
+				);
+			}
+
+			return $actions;
+		} );
+
+		add_action(
+			'wp_enqueue_scripts',
+			array( $this, 'enqueue_scripts' )
+		);
 	}
 
 	/**
@@ -135,30 +179,50 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 * found or false if the environment has no problems.
 	 */
 	static function get_environment_warning( $during_activation = false ) {
-
 		if ( version_compare( phpversion(), WC_SIMPLIFY_COMMERCE_MIN_PHP_VER, '<' ) ) {
 			if ( $during_activation ) {
-				$message = __( 'The plugin could not be activated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.', 'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce' );
+				$message = __(
+					'The plugin could not be activated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.',
+					'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce'
+				);
 			} else {
-				$message = __( 'The WooCommerce Simplify Commerce plugin has been deactivated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.', 'woocommerce-gateway-simplify-commerce' );
+				$message = __(
+					'The Mastercard Payment Gateway Services - Simplify plugin has been deactivated. The minimum PHP version required for this plugin is %1$s. You are running %2$s.',
+					'woocommerce-gateway-simplify-commerce'
+				);
 			}
+
 			return sprintf( $message, WC_SIMPLIFY_COMMERCE_MIN_PHP_VER, phpversion() );
 		}
 
 		if ( version_compare( WC_VERSION, WC_SIMPLIFY_COMMERCE_MIN_WC_VER, '<' ) ) {
 			if ( $during_activation ) {
-				$message = __( 'The plugin could not be activated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.', 'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce' );
+				$message = __(
+					'The plugin could not be activated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.',
+					'woocommerce-gateway-simplify-commerce', 'woocommerce-gateway-simplify-commerce'
+				);
 			} else {
-				$message = __( 'The WooCommerce Simplify Commerce plugin has been deactivated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.', 'woocommerce-gateway-simplify-commerce' );
+				$message = __(
+					'The Mastercard Payment Gateway Services - Simplify plugin has been deactivated. The minimum WooCommerce version required for this plugin is %1$s. You are running %2$s.',
+					'woocommerce-gateway-simplify-commerce'
+				);
 			}
+
 			return sprintf( $message, WC_SIMPLIFY_COMMERCE_MIN_WC_VER, WC_VERSION );
 		}
 
 		if ( ! function_exists( 'curl_init' ) ) {
 			if ( $during_activation ) {
-				return __( 'The plugin could not be activated. cURL is not installed.', 'woocommerce-gateway-simplify-commerce' );
+				return __(
+					'The plugin could not be activated. cURL is not installed.',
+					'woocommerce-gateway-simplify-commerce'
+				);
 			}
-			return __( 'The WooCommerce Simplify Commerce plugin has been deactivated. cURL is not installed.', 'woocommerce-gateway-simplify-commerce' );
+
+			return __(
+				'The Mastercard Payment Gateway Services - Simplify plugin has been deactivated. cURL is not installed.',
+				'woocommerce-gateway-simplify-commerce'
+			);
 		}
 
 		return false;
@@ -167,24 +231,70 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	/**
 	 * Adds plugin action links
 	 *
-	 * @since 1.0.0
+	 * @since 2.4.0
 	 */
 	public function plugin_action_links( $links ) {
-		$plugin_links = array(
-			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' . __( 'Settings', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
-			'<a href="https://simplify.desk.com/customer/en/portal/articles/2639101-woocommerce-installation-guide">' . __( 'Docs', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
-			'<a href="https://simplify.desk.com/customer/en/portal/articles/2639101-woocommerce-installation-guide">' . __( 'Support', 'woocommerce-gateway-simplify-commerce' ) . '</a>',
-		);
+		$plugin_links = [
+			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=simplify_commerce' ) . '">' .
+				__( 'Settings', 'woocommerce-gateway-simplify-commerce' ) .
+			'</a>',
+			'<a href="https://mpgs.fingent.wiki/simplify-commerce/simplify-commerce-payment-gateway-for-woocommerce/getting-started/">' .
+				__( 'Docs', 'woocommerce-gateway-simplify-commerce' ) .
+			'</a>',
+			'<a href="https://mpgs.fingent.wiki/target/woocommerce-mastercard-payment-gateway-services/installation/">' .
+				__( 'Support', 'woocommerce-gateway-simplify-commerce' ) .
+			'</a>',
+		];
+
 		return array_merge( $plugin_links, $links );
 	}
+
+	/**
+	 * Show row meta on the plugin screen.
+	 *
+	 * @param mixed $links Plugin Row Meta.
+	 * @param mixed $file  Plugin Base file.
+	 *
+	 * @return array
+	 */
+	public static function plugin_row_meta( $links, $file ) {
+
+		if ( MPGS_PLUGIN_BASENAME !== $file ) {
+			return $links;
+		}
+
+		/**
+		 * The MPGS documentation URL.
+		 *
+		 * @since 2.4.0
+		 */
+		$docs_url = apply_filters( 'mastercard_docs_url', 'https://mpgs.fingent.wiki/simplify-commerce/simplify-commerce-payment-gateway-for-woocommerce/getting-started/' );
+
+		/**
+		 * The Mastercard Support URL.
+		 *
+		 * @since 2.4.0
+		 */
+		$support_url = apply_filters( 'mastercard_support_url', 'https://mpgsfgs.atlassian.net/servicedesk/customer/portals/' );
+
+		$row_meta = array(
+			'docs'    => '<a href="' . esc_url( $docs_url ) . '" aria-label="' . esc_attr__( 'View mastercard documentation', 'mastercard-payment-gateway-services' ) . '">' . esc_html__( 'Docs', 'mastercard-payment-gateway-services' ) . '</a>',
+			'support' => '<a href="' . esc_url( $support_url ) . '" aria-label="' . esc_attr__( 'Visit mastercard support', 'mastercard-payment-gateway-services' ) . '">' . esc_html__( 'Support', 'mastercard-payment-gateway-services' ) . '</a>',
+		);
+
+		return array_merge( $links, $row_meta );
+	}
+
 
 	/**
 	 * Display any notices we've collected thus far (e.g. for connection, disconnection)
 	 */
 	public function admin_notices() {
 		foreach ( (array) $this->notices as $notice_key => $notice ) {
-			echo "<div class='" . esc_attr( sanitize_html_class( $notice['class'] ) ) . "'><p>";
-			echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) );
+			echo '<div class="' . esc_attr( sanitize_html_class( $notice['class'] ) ) . '"><p>';
+			echo wp_kses(
+				$notice['message'], array( 'a' => array( 'href' => array() ) )
+			);
 			echo "</p></div>";
 		}
 	}
@@ -192,7 +302,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	/**
 	 * Initialize the gateway. Called very early - in the context of the plugins_loaded action
 	 *
-	 * @since 1.0.0
+	 * @since 2.2.0
 	 */
 	public function init_gateways() {
 		if ( class_exists( 'WC_Subscriptions_Order' ) && function_exists( 'wcs_create_renewal_order' ) ) {
@@ -205,7 +315,12 @@ class WC_Gateway_Simplify_Commerce_Loader {
 
 		require_once( plugin_basename( 'includes/class-payment-gateway.php' ) );
 
-		load_plugin_textdomain( 'woocommerce-gateway-simplify-commerce', false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) );
+		load_plugin_textdomain(
+			'woocommerce-gateway-simplify-commerce',
+			false,
+			trailingslashit( dirname( plugin_basename( __FILE__ ) ) )
+		);
+
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateways' ) );
 
 		if ( $this->subscription_support_enabled ) {
@@ -216,7 +331,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	/**
 	 * Add the gateways to WooCommerce
 	 *
-	 * @since 1.0.0
+	 * @since 2.2.0
 	 */
 	public function add_gateways( $methods ) {
 		if ( $this->subscription_support_enabled ) {
@@ -224,6 +339,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 		} else {
 			$methods[] = 'WC_Gateway_Simplify_Commerce';
 		}
+
 		return $methods;
 	}
 
@@ -235,7 +351,7 @@ class WC_Gateway_Simplify_Commerce_Loader {
 	 * And fits on your back?
 	 * It's log, log, log
 	 *
-	 * @since 1.0.0
+	 * @since 2.2.0
 	 */
 	public function log( $context, $message ) {
 		if ( empty( $this->log ) ) {
@@ -247,6 +363,20 @@ class WC_Gateway_Simplify_Commerce_Loader {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			error_log( $context . " - " . $message );
 		}
+	}
+
+	/**
+	 * Adds Styles on the Checkout Page
+	 */
+	public function enqueue_scripts() {
+		if ( ! is_checkout() ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'simplify_checkout_styles',
+			plugin_dir_url( __FILE__ ) . 'public/css/styles.css'
+		);
 	}
 }
 
